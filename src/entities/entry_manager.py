@@ -1,6 +1,15 @@
 from entities.entry import Entry
+from pathlib import Path
 
-ENTRIES_FILE = "/home/james/Dropbox/RecipeApp/entries.txt"
+ENTRY_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/entries.txt", "/home/james/Dropbox/RecipeApp/entries.txt"]
+
+
+def _get_entry_file():
+    for entry_filename in ENTRY_FILES:
+        entry_file = Path(entry_filename)
+        if entry_file.is_file():
+            return entry_filename
+    return ""
 
 
 class EntryManager:
@@ -9,7 +18,7 @@ class EntryManager:
         self._entries = {}
 
     @staticmethod
-    def create_and_initialize_entry_manager(filename: str=ENTRIES_FILE):
+    def create_and_initialize_entry_manager(filename: str=_get_entry_file()):
         entry_manager = EntryManager()
         entry_file = open(filename, "r")
         for entry_line in entry_file:
@@ -24,7 +33,7 @@ class EntryManager:
         assert entry.id is not None, "Entry id should not be None"
         self._entries[entry.id] = entry
 
-    def add_new_entry(self, entry: Entry, filename: str=ENTRIES_FILE):
+    def add_new_entry(self, entry: Entry, filename: str=_get_entry_file()):
         assert entry.id is None, "Entry id should be None"
         entry_id = self._generate_entry_id()
         entry.id = entry_id

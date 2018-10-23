@@ -1,6 +1,15 @@
 from entities.recipe import Recipe
+from pathlib import Path
 
-RECIPES_FILE = "/home/james/Dropbox/RecipeApp/recipes.txt"
+RECIPE_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/recipes.txt", "/home/james/Dropbox/RecipeApp/recipes.txt"]
+
+
+def _get_recipe_file():
+    for recipe_filename in RECIPE_FILES:
+        recipe_file = Path(recipe_filename)
+        if recipe_file.is_file():
+            return recipe_filename
+    return ""
 
 
 class RecipeManager:
@@ -9,7 +18,7 @@ class RecipeManager:
         self._recipes = {}
 
     @staticmethod
-    def create_and_initialize_recipe_manager(filename: str=RECIPES_FILE):
+    def create_and_initialize_recipe_manager(filename: str=_get_recipe_file()):
         recipe_manager = RecipeManager()
         recipe_file = open(filename, "r")
         for recipe_line in recipe_file:
@@ -24,7 +33,7 @@ class RecipeManager:
         assert recipe.id is not None, "Recipe id should not be None"
         self._recipes[recipe.id] = recipe
 
-    def add_new_recipe(self, recipe: Recipe, filename: str=RECIPES_FILE):
+    def add_new_recipe(self, recipe: Recipe, filename: str=_get_recipe_file()):
         assert recipe.id is None, "Recipe id should be None"
         recipe_id = self._generate_recipe_id()
         recipe.id = recipe_id

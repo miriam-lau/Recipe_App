@@ -1,6 +1,15 @@
 from entities.cookbook import Cookbook
+from pathlib import Path
 
-COOKBOOKS_FILE = "/home/james/Dropbox/RecipeApp/cookbooks.txt"
+COOKBOOKS_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/cookbooks.txt", "/home/james/Dropbox/RecipeApp/cookbooks.txt"]
+
+
+def _get_cookbook_file():
+    for cookbook_filename in COOKBOOKS_FILES:
+        cookbook_file = Path(cookbook_filename)
+        if cookbook_file.is_file():
+            return cookbook_filename
+    return ""
 
 
 class CookbookManager:
@@ -9,7 +18,7 @@ class CookbookManager:
         self._cookbooks = {}
 
     @staticmethod
-    def create_and_initialize_cookbook_manager(filename: str=COOKBOOKS_FILE):
+    def create_and_initialize_cookbook_manager(filename: str=_get_cookbook_file()):
         cookbook_manager = CookbookManager()
         cookbook_file = open(filename, "r")
         for cookbook_line in cookbook_file:
@@ -24,7 +33,7 @@ class CookbookManager:
         assert cookbook.id is not None, "Cookbook id should not be None"
         self._cookbooks[cookbook.id] = cookbook
 
-    def add_new_cookbook(self, cookbook: Cookbook, filename: str=COOKBOOKS_FILE):
+    def add_new_cookbook(self, cookbook: Cookbook, filename: str=_get_cookbook_file()):
         assert cookbook.id is None, "Cookbook id should be None"
         cookbook_id = self._generate_cookbook_id()
         cookbook.id = cookbook_id
