@@ -30,7 +30,7 @@ def render_cookbooks():
 
 @app.route("/addcookbook", methods=["POST"])
 def add_cookbook():
-    cookbook = Cookbook(None, request.form["cookbook_name"])
+    cookbook = Cookbook(None, request.form["cookbook_name"], request.form["cookbook_notes"])
     cookbook_manager.add_new_cookbook(cookbook)
     return redirect(url_for("render_cookbooks"))
 
@@ -48,7 +48,7 @@ def add_recipe():
     cookbook_id = int(request.form["recipe_cookbook_id"])
     priority_input = request.form["recipe_priority"]
     recipe = Recipe(None, cookbook_id, request.form["recipe_name"], int(priority_input) if priority_input else 0,
-                    "", request.form["recipe_category"])
+                    False, request.form["recipe_category"], request.form["recipe_notes"])
     recipe_manager.add_new_recipe(recipe)
     return redirect(url_for("render_cookbook", id=cookbook_id))
 

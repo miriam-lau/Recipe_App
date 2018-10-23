@@ -9,6 +9,7 @@
       <th>Name</th>
       <th>Priority</th>
       <th>Category</th>
+      <th>Notes</th>
     </tr>
   {% for recipe in recipes%}
     <tr>
@@ -20,6 +21,9 @@
       </td>
       <td>
         {{recipe.category}}
+      </td>
+      <td>
+        {{recipe.notes}}
       </td>
     </tr>
   {% endfor %}
@@ -52,6 +56,14 @@
         </div>
         <div class="col-75">
           <input type="text" id="recipe_priority" name="recipe_priority" placeholder="Recipe priority">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="recipe_notes">Notes</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="recipe_notes" name="recipe_notes" placeholder="Recipe notes">
         </div>
       </div>
       <div class="row">

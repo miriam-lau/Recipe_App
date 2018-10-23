@@ -1,6 +1,6 @@
-1,Atelier Crenn
-2,Momofuku
-3,Smitten Kitchen
-4,Joy of Cooking
-5,America's Test Kitchen
+1,Atelier Crenn,Superb
+2,Momofuku,Okay
+3,Smitten Kitchen,Meh
+4,Joy of Cooking,Great
+5,America's Test Kitchen,Bad
 

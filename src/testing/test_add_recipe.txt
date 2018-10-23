@@ -1,6 +1,6 @@
-1,5,Beef stew,2,beef.jpg,Lunch
-2,6,Sashimi,1,sashimi.jpg,Lunch
-3,5,Steak,0,steak.jpg,Dinner
-4,7,Chicken pot pie,3,chicken.jpg,Dinner
-5,7,Mushroom soup,3,mushroomsoup.jpg,Soup
+1,5,Beef stew,2,True,Lunch,Needs salt
+2,6,Sashimi,1,True,Lunch,Great
+3,5,Steak,0,False,Dinner,Not like a steakhouse
+4,7,Chicken pot pie,3,True,Dinner,Okay
+5,7,Mushroom soup,3,False,Soup,Too much garlic
 
