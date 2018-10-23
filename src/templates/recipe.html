@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<a href="/cookbook/{{cookbook.id}}">Back to {{cookbook.name}} page</a>
+<h1>{{cookbook.name}}: {{recipe.name}}</h1>
+<div class="entry-list">
+  <table class="table">
+    <tr>
+      <th>Date</th>
+      <th>Miriam's Rating</th>
+      <th>Miriam's Comments</th>
+      <th>James' Rating</th>
+      <th>James' Comments</th>
+    </tr>
+  {% for entry in entries %}
+    <tr>
+      <td>
+        {{entry.date}}
+      </td>
+      <td>
+        {{entry.miriam_rating}}
+      </td>
+      <td>
+        {{entry.james_rating}}
+      </td>
+      <td>
+        {{entry.miriam_comments}}
+      </td>
+      <td>
+        {{entry.james_comments}}
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+</div>
+
+<div class="add-entry">
+  <h2>Add entry</h2>
+  <div class="container">
+    <form action="/addentry">
+      <div class="row">
+        <div class="col-25">
+          <label for="entry_date">Date</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="entry_date" name="entry_date" placeholder="Entry date" autofocus>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="entry_miriam_rating">Miriam's Rating</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="entry_miriam_rating" name="entry_miriam_rating" placeholder="Miriam's rating">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="entry_miriam_comments">Miram's Comments</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="entry_miriam_comments" name="entry_miriam_comments" placeholder="Miriam's comments">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="entry_james_rating">James' Rating</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="entry_james_rating" name="entry_james_rating" placeholder="James' rating">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="entry_james_comments">James' Comments</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="entry_james_comments" name="entry_james_comments" placeholder="James' comments">
+        </div>
+      </div>
+      <div class="row">
+        <input type="submit" value="Submit" formmethod="post">
+      </div>
+      <input type="hidden" name="entry_recipe_id" value="{{recipe.id}}">
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+
+

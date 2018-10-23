@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<a href="/">Back to main page</a>
+<h1>{{cookbook.name}}</h1>
+<div class="recipe-list">
+  <table class="table">
+    <tr>
+      <th>Name</th>
+      <th>Priority</th>
+      <th>Category</th>
+    </tr>
+  {% for recipe in recipes%}
+    <tr>
+      <td>
+        <a href="/recipe/{{recipe.id}}">{{recipe.name}}</a><br/>
+      </td>
+      <td>
+        {{recipe.priority}}
+      </td>
+      <td>
+        {{recipe.category}}
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+</div>
+
+<div class="add-recipe">
+  <h2>Add recipe</h2>
+  <div class="container">
+    <form action="/addrecipe">
+      <div class="row">
+        <div class="col-25">
+          <label for="recipe_name">Name</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="recipe_name" name="recipe_name" placeholder="Recipe name" autofocus>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="recipe_category">Category</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="recipe_category" name="recipe_category" placeholder="Recipe category">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="recipe_priority">Priority</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="recipe_priority" name="recipe_priority" placeholder="Recipe priority">
+        </div>
+      </div>
+      <div class="row">
+        <input type="submit" value="Submit" formmethod="post">
+      </div>
+      <input type="hidden" name="recipe_cookbook_id" value="{{cookbook.id}}">
+    </form>
+  </div>
+</div>
+{% endblock %}

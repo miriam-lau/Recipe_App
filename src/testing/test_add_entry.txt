@@ -1,0 +1,6 @@
+1,5,2017-05-24,7.0,6.0,Okay,Meh
+2,6,2018-10-22,9.5,9.1,Good,Delicious
+3,5,2018-04-05,2.0,1.0,Bland,Gross
+4,7,2018-01-02,4.0,2.0,Terrible,Disgusting
+5,7,2018-07-19,9.0,8.0,Excellent,Good
+

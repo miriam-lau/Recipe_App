@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<h1>Cookbooks</h1>
+<div class="cookbook-list">
+  <table class="table">
+    <tr>
+      <th>Name</th>
+    </tr>
+  {% for cookbook in cookbooks %}
+    <tr>
+      <td>
+        <a href="/cookbook/{{cookbook.id}}">{{cookbook.name}}</a><br/>
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+</div>
+
+<div class="add-cookbook">
+  <h2>Add cookbook</h2>
+  <div class="container">
+    <form action="/addcookbook">
+      <div class="row">
+        <div class="col-25">
+          <label for="cookbook_name">Name</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="cookbook_name" name="cookbook_name" placeholder="Cookbook name" autofocus>
+        </div>
+      </div>
+      <div class="row">
+        <input type="submit" value="Submit" formmethod="post">
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
