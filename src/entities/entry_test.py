@@ -32,9 +32,9 @@ class TestEntry(unittest.TestCase):
         self.assertEqual(entry.miriam_comments, "Good")
         self.assertEqual(entry.james_comments, "Delicious")
 
-    def test_to_line(self):
+    def test_to_tuple(self):
         entry = Entry(123, 234, "2018-01-02", 9.5, 9.1, "Good", "Delicious")
-        self.assertEqual(entry.to_line(), "123,234,2018-01-02,9.5,9.1,Good,Delicious\n")
+        self.assertEqual(entry.to_tuple(), (123, 234, "2018-01-02", 9.5, 9.1, "Good", "Delicious"))
 
     def test_get_overall_rating_no_ratings_set(self):
         entry = Entry(0, 0, "default", 0, 0, "default", "default")

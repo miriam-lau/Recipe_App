@@ -32,9 +32,9 @@ class TestRecipe(unittest.TestCase):
         self.assertEqual(recipe.category, "Lunch")
         self.assertEqual(recipe.notes, "Okay")
 
-    def test_to_line(self):
+    def test_to_tuple(self):
         recipe = Recipe(123, 234, "Chicken pot pie", 3, True, "Lunch", "Okay")
-        self.assertEqual(recipe.to_line(), "123,234,Chicken pot pie,3,True,Lunch,Okay\n")
+        self.assertEqual(recipe.to_tuple(), (123, 234, "Chicken pot pie", 3, True, "Lunch", "Okay"))
 
 
 if __name__ == '__main__':

@@ -3,4 +3,3 @@
 3,Smitten Kitchen,Meh
 4,Joy of Cooking,Great
 5,America's Test Kitchen,Bad
-

@@ -20,9 +20,9 @@ class TestCookbook(unittest.TestCase):
         self.assertEqual(cookbook.name, "Harry Potter Cookbook")
         self.assertEqual(cookbook.notes, "Magical")
 
-    def test_to_line(self):
+    def test_to_tuple(self):
         cookbook = Cookbook(123, "Harry Potter Cookbook", "Magical")
-        self.assertEqual(cookbook.to_line(), "123,Harry Potter Cookbook,Magical\n")
+        self.assertEqual(cookbook.to_tuple(), (123, "Harry Potter Cookbook", "Magical"))
 
 
 if __name__ == '__main__':
