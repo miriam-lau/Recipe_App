@@ -1,4 +1,5 @@
 from typing import List
+from entities.recipe import Recipe
 
 
 class Cookbook:
@@ -7,6 +8,10 @@ class Cookbook:
         self._id: int = id
         self._name: str = name
         self._notes: str = notes
+        self._recipes: List[Recipe] = []
+
+    def add_recipe(self, recipe: Recipe):
+        self._recipes.append(recipe)
 
     @property
     def id(self):
@@ -31,6 +36,10 @@ class Cookbook:
     @notes.setter
     def notes(self, notes):
         self._notes = notes
+
+    @property
+    def recipes(self):
+        return self._recipes
 
     # Generates a cookbook from a text string that represents it.
     @staticmethod

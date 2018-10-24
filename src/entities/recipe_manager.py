@@ -2,6 +2,7 @@ from entities.recipe import Recipe
 from pathlib import Path
 import csv
 from entities.files.atomic_write import atomic_write
+from entities.cookbook_manager import CookbookManager
 
 RECIPE_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/recipes.csv", "/home/james/Dropbox/RecipeApp/recipes.csv"]
 
@@ -20,13 +21,14 @@ class RecipeManager:
         self._recipes = {}
 
     @staticmethod
-    def create_and_initialize_recipe_manager(filename: str=_get_recipe_file()):
+    def create_and_initialize_recipe_manager(cookbook_manager: CookbookManager, filename: str=_get_recipe_file()):
         recipe_manager = RecipeManager()
         with open(filename, 'rt') as csvfile:
             csv_reader = csv.reader(csvfile, dialect=csv.excel)
             for recipe_values in csv_reader:
                 recipe = Recipe.from_values(recipe_values)
                 recipe_manager.add_existing_recipe(recipe)
+                cookbook_manager.get_cookbook(recipe.cookbook_id).add_recipe(recipe)
         return recipe_manager
 
     # Adds recipes that already have an id.
@@ -34,11 +36,12 @@ class RecipeManager:
         assert recipe.id is not None, "Recipe id should not be None"
         self._recipes[recipe.id] = recipe
 
-    def add_new_recipe(self, recipe: Recipe, filename: str=_get_recipe_file()):
+    def add_new_recipe(self, cookbook_manager: CookbookManager, recipe: Recipe, filename: str=_get_recipe_file()):
         assert recipe.id is None, "Recipe id should be None"
         recipe_id = self._generate_recipe_id()
         recipe.id = recipe_id
         self._recipes[recipe_id] = recipe
+        cookbook_manager.get_cookbook(recipe.cookbook_id).add_recipe(recipe)
         self._write_recipes_to_file(filename)
 
     def _write_recipes_to_file(self, filename: str):
@@ -55,11 +58,6 @@ class RecipeManager:
 
     def get_recipes(self):
         return sorted(self._recipes.values(), key=lambda recipe: recipe.name.lower())
-
-    def get_recipes_for_cookbook(self, id: int):
-        recipes = self._recipes.values()
-        recipes = filter(lambda recipe: recipe.cookbook_id == id, recipes)
-        return sorted(recipes, key=lambda recipe: recipe.name.lower())
 
     def get_recipe(self, id: int):
         return self._recipes[id]

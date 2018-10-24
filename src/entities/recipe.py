@@ -1,4 +1,5 @@
 from typing import List
+from entities.entry import Entry
 
 
 class Recipe:
@@ -11,6 +12,10 @@ class Recipe:
         self._has_image: bool = has_image
         self._category: str = category
         self._notes: str = notes
+        self._entries: List[Entry] = []
+
+    def add_entry(self, entry: Entry):
+        self._entries.append(entry)
 
     @property
     def id(self):
@@ -67,6 +72,10 @@ class Recipe:
     @notes.setter
     def notes(self, notes):
         self._notes = notes
+
+    @property
+    def entries(self):
+        return self._entries
 
     # Generates a recipe from a text string that represents it.
     @staticmethod
