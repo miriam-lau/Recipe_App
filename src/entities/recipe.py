@@ -80,7 +80,7 @@ class Recipe:
     # Generates a recipe from a text string that represents it.
     @staticmethod
     def from_values(values: List[str]):
-        return Recipe(int(values[0]), int(values[1]), values[2], int(values[3]), bool(values[4]), \
+        return Recipe(int(values[0]), int(values[1]), values[2], int(values[3]), values[4].lower() == 'true', \
                       values[5], values[6])
 
     def to_tuple(self):
