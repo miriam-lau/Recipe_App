@@ -1,10 +1,11 @@
 import math
 from typing import List
+import datetime
 
 
 class Entry:
 
-    def __init__(self, id: int, recipe_id: int, date: str, miriam_rating: float, james_rating: float, \
+    def __init__(self, id: int, recipe_id: int, date: datetime, miriam_rating: float, james_rating: float, \
                  miriam_comments: str, james_comments: str):
         self._id: int = id
         self._recipe_id: int = recipe_id
@@ -73,12 +74,15 @@ class Entry:
     # Generates an entry from a text string that represents it.
     @staticmethod
     def from_values(values: List[str]):
-        return Entry(int(values[0]), int(values[1]), values[2], float(values[3]), \
-                     float(values[4]), values[5], values[6])
+        return Entry(int(values[0]), int(values[1]), datetime.datetime.strptime(values[2], '%Y-%m-%d'), \
+                     float(values[3]), float(values[4]), values[5], values[6])
 
     def to_tuple(self):
-        return self._id, self._recipe_id, self._date, self._miriam_rating, self._james_rating, self._miriam_comments, \
-               self._james_comments
+        return self._id, self._recipe_id, self._date.strftime("%Y-%m-%d"), self._miriam_rating, self._james_rating, \
+               self._miriam_comments, self._james_comments
+
+    def date_string(self):
+        return self._date.strftime("%Y-%m-%d")
 
     def get_overall_rating(self):
         rating = 0.0

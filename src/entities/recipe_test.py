@@ -4,6 +4,7 @@ from entities.recipe_manager import RecipeManager
 from entities.recipe import Recipe
 from entities.entry import Entry
 from entities.cookbook_manager import CookbookManager
+import datetime
 
 
 class TestRecipe(unittest.TestCase):
@@ -45,11 +46,14 @@ class TestRecipe(unittest.TestCase):
         recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "testing/recipes.txt")
         entry_manager = EntryManager.create_and_initialize_entry_manager(recipe_manager, "testing/entries.txt")
         entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, "2017-05-24", 7, 6, "Okay", "Meh"), "testing/test_add_entry.txt")
+            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
+            "testing/test_add_entry.txt")
         entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, "2017-05-24", 7, 6, "Okay", "Meh"), "testing/test_add_entry.txt")
+            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
+            "testing/test_add_entry.txt")
         entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, "2017-05-24", 7, 6, "Okay", "Meh"), "testing/test_add_entry.txt")
+            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
+            "testing/test_add_entry.txt")
         recipe = recipe_manager.get_recipe(8)
         self.assertEqual(recipe.get_num_times_made(), 4)
 
@@ -58,11 +62,14 @@ class TestRecipe(unittest.TestCase):
         recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "testing/recipes.txt")
         entry_manager = EntryManager.create_and_initialize_entry_manager(recipe_manager, "testing/entries.txt")
         entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, "2017-05-24", 7, 6, "Okay", "Meh"), "testing/test_add_entry.txt")
+            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
+            "testing/test_add_entry.txt")
         entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, "2017-05-24", 7, 6, "Okay", "Meh"), "testing/test_add_entry.txt")
+            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
+            "testing/test_add_entry.txt")
         entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, "2017-05-24", 7, 6, "Okay", "Meh"), "testing/test_add_entry.txt")
+            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
+            "testing/test_add_entry.txt")
         recipe = recipe_manager.get_recipe(8)
         self.assertAlmostEqual(recipe.get_best_rating(), 9.3)
 

@@ -4,12 +4,12 @@
 <a href="/cookbook/{{cookbook.id}}">Back to {{cookbook.name}} page</a>
 <h1>{{cookbook.name}}: {{recipe.name}}</h1>
 <div class="recipe-info">
+Best rating: {{recipe.get_best_rating()}}<br/>
+Num times made: {{recipe.get_num_times_made()}}<br/>
+Category: {{recipe.category}}<br/>
 Priority: {{recipe.priority}}<br/>
 Has image: {{recipe.has_image}}<br/>
-Category: {{recipe.category}}<br/>
 Notes: {{recipe.notes}}<br/>
-Num times made: {{recipe.get_num_times_made()}}<br/>
-Best rating: {{recipe.get_best_rating()}}<br/>
 </div>
 <div class="entry-list">
   <table class="table">
@@ -24,7 +24,7 @@ Best rating: {{recipe.get_best_rating()}}<br/>
   {% for entry in recipe.entries %}
     <tr>
       <td>
-        {{entry.date}}
+        {{entry.date_string()}}
       </td>
       <td>
         {{entry.get_overall_rating()}}

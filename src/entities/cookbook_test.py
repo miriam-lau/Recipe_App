@@ -5,6 +5,7 @@ from entities.recipe_manager import RecipeManager
 from entities.recipe import Recipe
 from entities.entry import Entry
 from entities.cookbook_manager import CookbookManager
+import datetime
 
 
 class TestCookbook(unittest.TestCase):
@@ -47,7 +48,8 @@ class TestCookbook(unittest.TestCase):
         recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Test", 2, True, "Lunch", "Needs salt"),
                                       "testing/test_add_recipe.txt")
         entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 1, "2017-05-24", 7, 6, "Okay", "Meh"), "testing/test_add_entry.txt")
+            recipe_manager, Entry(None, 1, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
+            "testing/test_add_entry.txt")
         cookbook = cookbook_manager.get_cookbook(6)
         self.assertEqual(cookbook.num_recipes_made(), 2)
 
@@ -60,7 +62,8 @@ class TestCookbook(unittest.TestCase):
         recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Test", 0, True, "Lunch", "Needs salt"),
                                       "testing/test_add_recipe.txt")
         entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 1, "2017-05-24", 7, 6, "Okay", "Meh"), "testing/test_add_entry.txt")
+            recipe_manager, Entry(None, 1, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
+            "testing/test_add_entry.txt")
         cookbook = cookbook_manager.get_cookbook(6)
         self.assertEqual(cookbook.num_recipes_want_to_make(), 2)
 
@@ -73,7 +76,8 @@ class TestCookbook(unittest.TestCase):
         recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Test", 0, True, "Lunch", "Needs salt"),
                                       "testing/test_add_recipe.txt")
         entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 1, "2017-05-24", 7, 6, "Okay", "Meh"), "testing/test_add_entry.txt")
+            recipe_manager, Entry(None, 1, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
+            "testing/test_add_entry.txt")
         cookbook = cookbook_manager.get_cookbook(6)
         self.assertEqual(cookbook.success_percentage(), 50)
 

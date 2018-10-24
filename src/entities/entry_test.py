@@ -1,12 +1,13 @@
 import unittest
 from entities.entry import Entry
+import datetime
 
 
 class TestEntry(unittest.TestCase):
 
     def test_setters(self):
         entry = Entry(0, 0, "default", 0, 0, "default", "default")
-        entry.date = "2018-01-02"
+        entry.date = datetime.datetime(2018, 1, 2)
         entry.id = 2
         entry.recipe_id = 7
         entry.miriam_rating = 9.5
@@ -15,7 +16,7 @@ class TestEntry(unittest.TestCase):
         entry.james_comments = "Delicious"
         self.assertEqual(entry.id, 2)
         self.assertEqual(entry.recipe_id, 7)
-        self.assertEqual(entry.date, "2018-01-02")
+        entry.date = datetime.datetime(2018, 1, 2)
         self.assertAlmostEqual(entry.miriam_rating, 9.5)
         self.assertAlmostEqual(entry.james_rating, 9.1)
         self.assertEqual(entry.miriam_comments, "Good")
@@ -26,14 +27,14 @@ class TestEntry(unittest.TestCase):
         entry = Entry.from_values(values)
         self.assertEqual(entry.id, 123)
         self.assertEqual(entry.recipe_id, 234)
-        self.assertEqual(entry.date, "2018-01-02")
+        entry.date = datetime.datetime(2018, 1, 2)
         self.assertAlmostEqual(entry.miriam_rating, 9.5)
         self.assertAlmostEqual(entry.james_rating, 9.1)
         self.assertEqual(entry.miriam_comments, "Good")
         self.assertEqual(entry.james_comments, "Delicious")
 
     def test_to_tuple(self):
-        entry = Entry(123, 234, "2018-01-02", 9.5, 9.1, "Good", "Delicious")
+        entry = Entry(123, 234, datetime.datetime(2018, 1, 2), 9.5, 9.1, "Good", "Delicious")
         self.assertEqual(entry.to_tuple(), (123, 234, "2018-01-02", 9.5, 9.1, "Good", "Delicious"))
 
     def test_get_overall_rating_no_ratings_set(self):
