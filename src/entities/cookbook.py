@@ -44,6 +44,9 @@ class Cookbook:
     def recipes(self):
         return self._recipes
 
+    def recipes_by_best_rating_descending(self):
+        return sorted(self.recipes, key=lambda recipe: recipe.get_best_rating(), reverse=True)
+
     # Generates a cookbook from a text string that represents it.
     @staticmethod
     def from_values(values: List[str]):

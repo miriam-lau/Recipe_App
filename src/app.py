@@ -5,6 +5,7 @@ from entities.recipe import Recipe
 from entities.recipe_manager import RecipeManager
 from entities.entry import Entry
 from entities.entry_manager import EntryManager
+import datetime
 
 app = Flask(__name__)
 cookbook_manager: CookbookManager = None
@@ -63,7 +64,7 @@ def render_recipe(id: int):
 @app.route("/addentry", methods=["POST"])
 def add_entry():
     recipe_id = int(request.form["entry_recipe_id"])
-    entry = Entry(None, recipe_id, request.form["entry_date"], \
+    entry = Entry(None, recipe_id, datetime.datetime.strptime(request.form["entry_date"], '%Y-%m-%d'), \
                   float(request.form["entry_miriam_rating"]), float(request.form["entry_james_rating"]), \
                   request.form["entry_miriam_comments"], request.form["entry_james_comments"])
     entry_manager.add_new_entry(recipe_manager, entry)

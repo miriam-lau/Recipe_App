@@ -1,5 +1,6 @@
 from typing import List
 from entities.entry import Entry
+import datetime
 
 # TODO: There's a bug where has image is true but it should be false.
 class Recipe:
@@ -98,5 +99,18 @@ class Recipe:
                 rating = entry_rating
         return rating
 
+    def entries_by_date_descending(self):
+        return sorted(self.entries, key=lambda entry: entry.date, reverse=True)
+
+    def get_latest_rating(self):
+        if len(self.entries) == 0:
+            return 0.0
+        entities_by_date = self.entries_by_date_descending()
+        return entities_by_date[0].get_overall_rating()
+
     def get_num_times_made(self):
         return len(self.entries)
+
+    # Hack: Should not be here. Only here so that recipe.html can use it. Can probably call it directly from there.
+    def get_today_date(self):
+        return datetime.datetime.today().strftime('%Y-%m-%d')

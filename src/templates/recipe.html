@@ -5,6 +5,7 @@
 <h1>{{cookbook.name}}: {{recipe.name}}</h1>
 <div class="recipe-info">
 Best rating: {{recipe.get_best_rating()}}<br/>
+Latest rating: {{recipe.get_latest_rating()}}<br/>
 Num times made: {{recipe.get_num_times_made()}}<br/>
 Category: {{recipe.category}}<br/>
 Priority: {{recipe.priority}}<br/>
@@ -21,7 +22,7 @@ Notes: {{recipe.notes}}<br/>
       <th>James' Rating</th>
       <th>James' Comments</th>
     </tr>
-  {% for entry in recipe.entries %}
+  {% for entry in recipe.entries_by_date_descending() %}
     <tr>
       <td>
         {{entry.date_string()}}
@@ -55,7 +56,7 @@ Notes: {{recipe.notes}}<br/>
           <label for="entry_date">Date</label>
         </div>
         <div class="col-75">
-          <input type="text" id="entry_date" name="entry_date" placeholder="Entry date">
+          <input type="text" id="entry_date" name="entry_date" value="{{recipe.get_today_date()}}">
         </div>
       </div>
       <div class="row">

@@ -15,10 +15,11 @@ Notes: {{cookbook.notes}}<br/>
       <th>Name</th>
       <th>Num times made</th>
       <th>Best rating</th>
+      <th>Latest rating</th>
       <th>Priority</th>
       <th>Category</th>
     </tr>
-  {% for recipe in cookbook.recipes%}
+  {% for recipe in cookbook.recipes_by_best_rating_descending() %}
     <tr>
       <td>
         <a href="/recipe/{{recipe.id}}">{{recipe.name}}</a><br/>
@@ -28,6 +29,9 @@ Notes: {{cookbook.notes}}<br/>
       </td>
       <td>
         {{recipe.get_best_rating()}}
+      </td>
+      <td>
+        {{recipe.get_latest_rating()}}
       </td>
       <td>
         {{recipe.priority}}
