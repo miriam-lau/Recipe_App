@@ -7,6 +7,7 @@
   <table class="table">
     <tr>
       <th>Date</th>
+      <th>Overall Rating</th>
       <th>Miriam's Rating</th>
       <th>Miriam's Comments</th>
       <th>James' Rating</th>
@@ -16,6 +17,9 @@
     <tr>
       <td>
         {{entry.date}}
+      </td>
+      <td>
+        {{entry.get_overall_rating()}}
       </td>
       <td>
         {{entry.miriam_rating}}

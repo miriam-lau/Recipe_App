@@ -39,19 +39,19 @@ class Entry:
 
     @property
     def miriam_rating(self):
-        return self._miriam_rating
+        return round(self._miriam_rating, 1)
 
     @miriam_rating.setter
     def miriam_rating(self, miriam_rating):
-        self._miriam_rating = miriam_rating
+        self._miriam_rating = round(miriam_rating, 1)
 
     @property
     def james_rating(self):
-        return self._james_rating
+        return round(self._james_rating, 1)
 
     @james_rating.setter
     def james_rating(self, james_rating):
-        self._james_rating = james_rating
+        self._james_rating = round(james_rating, 1)
 
     @property
     def james_comments(self):
@@ -80,6 +80,16 @@ class Entry:
     def to_line(self):
         return "%i,%i,%s,%.1f,%.1f,%s,%s\n" % (self._id, self._recipe_id, self._date, self._miriam_rating, \
                                                self._james_rating, self._miriam_comments, self._james_comments)
+
+    def get_overall_rating(self):
+        rating = 0.0
+        if (not math.isclose(self.miriam_rating, 0)) and (not math.isclose(self.james_rating, 0)):
+            rating = (self.miriam_rating + self.james_rating) / 2
+        elif math.isclose(self.miriam_rating, 0):
+            rating = self.james_rating
+        elif math.isclose(self.james_rating, 0):
+            rating = self.miriam_rating
+        return round(rating, 1)
 
     def __eq__(self, other):
         return self.id == other.id and self.recipe_id == other.recipe_id and self.date == other.date and \
