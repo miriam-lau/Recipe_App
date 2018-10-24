@@ -1,5 +1,5 @@
 import unittest
-from entities.entry import Entry
+from .entry import Entry
 import datetime
 
 

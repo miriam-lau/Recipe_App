@@ -1,5 +1,5 @@
 from typing import List
-from entities.entry import Entry
+from .entry import Entry
 import datetime
 
 # TODO: There's a bug where has image is true but it should be false.

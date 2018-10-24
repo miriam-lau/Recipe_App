@@ -1,6 +1,6 @@
 import unittest
-from entities.cookbook_manager import CookbookManager
-from entities.cookbook import Cookbook
+from .cookbook_manager import CookbookManager
+from .cookbook import Cookbook
 
 
 

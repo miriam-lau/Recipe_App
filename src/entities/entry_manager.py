@@ -1,8 +1,8 @@
-from entities.entry import Entry
+from .entry import Entry
 from pathlib import Path
 import csv
-from entities.files.atomic_write import atomic_write
-from entities.recipe_manager import RecipeManager
+from .files.atomic_write import atomic_write
+from .recipe_manager import RecipeManager
 
 ENTRY_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/entries.csv", "/home/james/Dropbox/RecipeApp/entries.csv"]
 
@@ -45,7 +45,7 @@ class EntryManager:
         self._write_entries_to_file(filename)
 
     def _write_entries_to_file(self, filename: str):
-        with atomic_write(filename) as f:
+        with atomic_write(filename, keep=False) as f:
             writer = csv.writer(f, dialect=csv.excel)
             for entry in sorted(self._entries.values(), key=lambda entry: entry.id):
                 writer.writerow(entry.to_tuple())

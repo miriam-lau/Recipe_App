@@ -1,8 +1,8 @@
 import unittest
-from entities.entry_manager import EntryManager
-from entities.entry import Entry
-from entities.recipe_manager import RecipeManager
-from entities.cookbook_manager import CookbookManager
+from .entry_manager import EntryManager
+from .entry import Entry
+from .recipe_manager import RecipeManager
+from .cookbook_manager import CookbookManager
 import datetime
 
 

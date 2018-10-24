@@ -1,10 +1,10 @@
 import unittest
-from entities.cookbook import Cookbook
-from entities.entry_manager import EntryManager
-from entities.recipe_manager import RecipeManager
-from entities.recipe import Recipe
-from entities.entry import Entry
-from entities.cookbook_manager import CookbookManager
+from .cookbook import Cookbook
+from .entry_manager import EntryManager
+from .recipe_manager import RecipeManager
+from .recipe import Recipe
+from .entry import Entry
+from .cookbook_manager import CookbookManager
 import datetime
 
 

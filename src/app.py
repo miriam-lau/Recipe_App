@@ -1,11 +1,12 @@
 from flask import Flask, flash, redirect, render_template, request, session, abort, url_for
-from entities.cookbook import Cookbook
-from entities.cookbook_manager import CookbookManager
-from entities.recipe import Recipe
-from entities.recipe_manager import RecipeManager
-from entities.entry import Entry
-from entities.entry_manager import EntryManager
+from .entities.cookbook import Cookbook
+from .entities.cookbook_manager import CookbookManager
+from .entities.recipe import Recipe
+from .entities.recipe_manager import RecipeManager
+from .entities.entry import Entry
+from .entities.entry_manager import EntryManager
 import datetime
+
 
 app = Flask(__name__)
 cookbook_manager: CookbookManager = None
@@ -14,6 +15,7 @@ entry_manager: EntryManager = None
 
 
 def initialize_app():
+
     global cookbook_manager
     global recipe_manager
     global entry_manager

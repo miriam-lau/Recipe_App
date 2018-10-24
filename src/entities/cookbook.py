@@ -1,9 +1,10 @@
 from typing import List
-from entities.recipe import Recipe
+from .recipe import Recipe
 
 
 SUCCESS_THRESHOLD = 6.99
 PRIORITY_THRESHOLD = 0.99
+
 
 class Cookbook:
 

@@ -1,7 +1,7 @@
 import unittest
-from entities.recipe_manager import RecipeManager
-from entities.recipe import Recipe
-from entities.cookbook_manager import CookbookManager
+from .recipe_manager import RecipeManager
+from .recipe import Recipe
+from .cookbook_manager import CookbookManager
 
 
 class TestRecipeManager(unittest.TestCase):

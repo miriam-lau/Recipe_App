@@ -1,7 +1,7 @@
-from entities.cookbook import Cookbook
+from .cookbook import Cookbook
 from pathlib import Path
 import csv
-from entities.files.atomic_write import atomic_write
+from .files.atomic_write import atomic_write
 
 COOKBOOKS_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/cookbooks.csv", "/home/james/Dropbox/RecipeApp/cookbooks.csv"]
 
@@ -42,7 +42,7 @@ class CookbookManager:
         self._write_cookbooks_to_file(filename)
 
     def _write_cookbooks_to_file(self, filename: str):
-        with atomic_write(filename) as f:
+        with atomic_write(filename, keep=False) as f:
             writer = csv.writer(f, dialect=csv.excel)
             for cookbook in sorted(self._cookbooks.values(), key=lambda cookbook: cookbook.id):
                 writer.writerow(cookbook.to_tuple())
