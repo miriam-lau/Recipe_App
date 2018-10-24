@@ -6,11 +6,23 @@
   <table class="table">
     <tr>
       <th>Name</th>
+      <th>Num recipes made</th>
+      <th>Success rate</th>
+      <th>Num recipes we want to make</th>
     </tr>
   {% for cookbook in cookbooks %}
     <tr>
       <td>
         <a href="/cookbook/{{cookbook.id}}">{{cookbook.name}}</a><br/>
+      </td>
+      <td>
+        {{cookbook.num_recipes_made()}}
+      </td>
+      <td>
+        {{cookbook.success_percentage()}}%
+      </td>
+      <td>
+        {{cookbook.success_percentage()}}
       </td>
     </tr>
   {% endfor %}

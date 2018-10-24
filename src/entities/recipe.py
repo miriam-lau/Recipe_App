@@ -1,7 +1,7 @@
 from typing import List
 from entities.entry import Entry
 
-
+# TODO: There's a bug where has image is true but it should be false.
 class Recipe:
 
     def __init__(self, id: int, cookbook_id: int, name: str, priority: int, has_image: bool, category: str, notes: str):
@@ -89,3 +89,14 @@ class Recipe:
     def __eq__(self, other):
         return self.id == other.id and self.cookbook_id == other.cookbook_id and self.name == other.name and \
                self.priority == other.priority and self.has_image == other.has_image and self.category == other.category
+
+    def get_best_rating(self):
+        rating = 0.0
+        for entry in self.entries:
+            entry_rating = entry.get_overall_rating()
+            if (entry_rating > rating):
+                rating = entry_rating
+        return rating
+
+    def get_num_times_made(self):
+        return len(self.entries)

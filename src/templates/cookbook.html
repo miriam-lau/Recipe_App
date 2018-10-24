@@ -3,13 +3,20 @@
 
 <a href="/">Back to main page</a>
 <h1>{{cookbook.name}}</h1>
+<div class="cookbook-info">
+Notes: {{cookbook.notes}}<br/>
+Num recipes made: {{cookbook.num_recipes_made()}}<br/>
+Success rate: {{cookbook.success_percentage()}}%<br/>
+Num recipes we want to make: {{cookbook.num_recipes_want_to_make()}}<br/>
+</div>
 <div class="recipe-list">
   <table class="table">
     <tr>
       <th>Name</th>
+      <th>Num times made</th>
+      <th>Best rating</th>
       <th>Priority</th>
       <th>Category</th>
-      <th>Notes</th>
     </tr>
   {% for recipe in cookbook.recipes%}
     <tr>
@@ -17,13 +24,16 @@
         <a href="/recipe/{{recipe.id}}">{{recipe.name}}</a><br/>
       </td>
       <td>
+        {{recipe.get_num_times_made()}}
+      </td>
+      <td>
+        {{recipe.get_best_rating()}}
+      </td>
+      <td>
         {{recipe.priority}}
       </td>
       <td>
         {{recipe.category}}
-      </td>
-      <td>
-        {{recipe.notes}}
       </td>
     </tr>
   {% endfor %}
