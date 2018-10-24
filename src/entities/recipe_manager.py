@@ -27,14 +27,14 @@ class RecipeManager:
             csv_reader = csv.reader(csvfile, dialect=csv.excel)
             for recipe_values in csv_reader:
                 recipe = Recipe.from_values(recipe_values)
-                recipe_manager.add_existing_recipe(recipe)
-                cookbook_manager.get_cookbook(recipe.cookbook_id).add_recipe(recipe)
+                recipe_manager.add_existing_recipe(cookbook_manager, recipe)
         return recipe_manager
 
     # Adds recipes that already have an id.
-    def add_existing_recipe(self, recipe: Recipe):
+    def add_existing_recipe(self, cookbook_manager: CookbookManager, recipe: Recipe):
         assert recipe.id is not None, "Recipe id should not be None"
         self._recipes[recipe.id] = recipe
+        cookbook_manager.get_cookbook(recipe.cookbook_id).add_recipe(recipe)
 
     def add_new_recipe(self, cookbook_manager: CookbookManager, recipe: Recipe, filename: str=_get_recipe_file()):
         assert recipe.id is None, "Recipe id should be None"
