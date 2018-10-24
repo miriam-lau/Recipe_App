@@ -1,7 +1,8 @@
 from entities.cookbook import Cookbook
 from pathlib import Path
+import csv
 
-COOKBOOKS_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/cookbooks.txt", "/home/james/Dropbox/RecipeApp/cookbooks.txt"]
+COOKBOOKS_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/cookbooks.csv", "/home/james/Dropbox/RecipeApp/cookbooks.csv"]
 
 
 def _get_cookbook_file():
@@ -20,12 +21,11 @@ class CookbookManager:
     @staticmethod
     def create_and_initialize_cookbook_manager(filename: str=_get_cookbook_file()):
         cookbook_manager = CookbookManager()
-        cookbook_file = open(filename, "r")
-        for cookbook_line in cookbook_file:
-            if cookbook_line.strip("\n"):
-                cookbook = Cookbook.from_line(cookbook_line)
+        with open(filename, 'rt') as csvfile:
+            csv_reader = csv.reader(csvfile, dialect=csv.excel)
+            for cookbook_values in csv_reader:
+                cookbook = Cookbook.from_values(cookbook_values)
                 cookbook_manager.add_existing_cookbook(cookbook)
-        cookbook_file.close()
         return cookbook_manager
 
     # Adds cookbooks that already have an id.
@@ -42,9 +42,9 @@ class CookbookManager:
 
     def _write_cookbooks_to_file(self, filename: str):
         with open(filename, "w") as f:
+            writer = csv.writer(f, dialect=csv.excel)
             for cookbook in sorted(self._cookbooks.values(), key=lambda cookbook: cookbook.id):
-                f.write(cookbook.to_line())
-            f.write("\n")
+                writer.writerow(cookbook.to_tuple())
 
     def _generate_cookbook_id(self):
         i = 1

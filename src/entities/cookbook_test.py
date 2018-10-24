@@ -13,9 +13,9 @@ class TestCookbook(unittest.TestCase):
         self.assertEqual(cookbook.name, "changed_name")
         self.assertEqual(cookbook.notes, "Okay")
 
-    def test_from_line(self):
-        line = "123,Harry Potter Cookbook,Magical\n"
-        cookbook = Cookbook.from_line(line)
+    def test_from_values(self):
+        values = ["123", "Harry Potter Cookbook", "Magical"]
+        cookbook = Cookbook.from_values(values)
         self.assertEqual(cookbook.id, 123)
         self.assertEqual(cookbook.name, "Harry Potter Cookbook")
         self.assertEqual(cookbook.notes, "Magical")

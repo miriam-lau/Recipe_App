@@ -1,7 +1,8 @@
 from entities.recipe import Recipe
 from pathlib import Path
+import csv
 
-RECIPE_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/recipes.txt", "/home/james/Dropbox/RecipeApp/recipes.txt"]
+RECIPE_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/recipes.csv", "/home/james/Dropbox/RecipeApp/recipes.csv"]
 
 
 def _get_recipe_file():
@@ -20,12 +21,11 @@ class RecipeManager:
     @staticmethod
     def create_and_initialize_recipe_manager(filename: str=_get_recipe_file()):
         recipe_manager = RecipeManager()
-        recipe_file = open(filename, "r")
-        for recipe_line in recipe_file:
-            if recipe_line.strip("\n"):
-                recipe = Recipe.from_line(recipe_line)
+        with open(filename, 'rt') as csvfile:
+            csv_reader = csv.reader(csvfile, dialect=csv.excel)
+            for recipe_values in csv_reader:
+                recipe = Recipe.from_values(recipe_values)
                 recipe_manager.add_existing_recipe(recipe)
-        recipe_file.close()
         return recipe_manager
 
     # Adds recipes that already have an id.
@@ -42,9 +42,9 @@ class RecipeManager:
 
     def _write_recipes_to_file(self, filename: str):
         with open(filename, "w") as f:
+            writer = csv.writer(f, dialect=csv.excel)
             for recipe in sorted(self._recipes.values(), key=lambda recipe: recipe.id):
-                f.write(recipe.to_line())
-            f.write("\n")
+                writer.writerow(recipe.to_tuple())
 
     def _generate_recipe_id(self):
         i = 1

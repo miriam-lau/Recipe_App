@@ -21,9 +21,9 @@ class TestEntry(unittest.TestCase):
         self.assertEqual(entry.miriam_comments, "Good")
         self.assertEqual(entry.james_comments, "Delicious")
 
-    def test_from_line(self):
-        line = "123,234,2018-01-02,9.5,9.1,Good,Delicious\n"
-        entry = Entry.from_line(line)
+    def test_from_values(self):
+        values = ["123", "234", "2018-01-02", "9.5", "9.1", "Good", "Delicious"]
+        entry = Entry.from_values(values)
         self.assertEqual(entry.id, 123)
         self.assertEqual(entry.recipe_id, 234)
         self.assertEqual(entry.date, "2018-01-02")

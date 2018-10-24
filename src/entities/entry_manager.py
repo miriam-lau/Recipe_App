@@ -1,7 +1,8 @@
 from entities.entry import Entry
 from pathlib import Path
+import csv
 
-ENTRY_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/entries.txt", "/home/james/Dropbox/RecipeApp/entries.txt"]
+ENTRY_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/entries.csv", "/home/james/Dropbox/RecipeApp/entries.csv"]
 
 
 def _get_entry_file():
@@ -20,12 +21,11 @@ class EntryManager:
     @staticmethod
     def create_and_initialize_entry_manager(filename: str=_get_entry_file()):
         entry_manager = EntryManager()
-        entry_file = open(filename, "r")
-        for entry_line in entry_file:
-            if entry_line.strip("\n"):
-                entry = Entry.from_line(entry_line)
+        with open(filename, 'rt') as csvfile:
+            csv_reader = csv.reader(csvfile, dialect=csv.excel)
+            for entry_values in csv_reader:
+                entry = Entry.from_values(entry_values)
                 entry_manager.add_existing_entry(entry)
-        entry_file.close()
         return entry_manager
 
     # Adds entries that already have an id.
@@ -42,9 +42,9 @@ class EntryManager:
 
     def _write_entries_to_file(self, filename: str):
         with open(filename, "w") as f:
+            writer = csv.writer(f, dialect=csv.excel)
             for entry in sorted(self._entries.values(), key=lambda entry: entry.id):
-                f.write(entry.to_line())
-            f.write("\n")
+                writer.writerow(entry.to_tuple())
 
     def _generate_entry_id(self):
         i = 1

@@ -1,4 +1,5 @@
 import math
+from typing import List
 
 
 class Entry:
@@ -71,15 +72,13 @@ class Entry:
 
     # Generates an entry from a text string that represents it.
     @staticmethod
-    def from_line(line: str):
-        line = line.strip("\n")
-        split_line = line.split(",")
-        return Entry(int(split_line[0]), int(split_line[1]), split_line[2], float(split_line[3]), \
-                     float(split_line[4]), split_line[5], split_line[6])
+    def from_values(values: List[str]):
+        return Entry(int(values[0]), int(values[1]), values[2], float(values[3]), \
+                     float(values[4]), values[5], values[6])
 
-    def to_line(self):
-        return "%i,%i,%s,%.1f,%.1f,%s,%s\n" % (self._id, self._recipe_id, self._date, self._miriam_rating, \
-                                               self._james_rating, self._miriam_comments, self._james_comments)
+    def to_tuple(self):
+        return self._id, self._recipe_id, self._date, self._miriam_rating, self._james_rating, self._miriam_comments, \
+               self._james_comments
 
     def get_overall_rating(self):
         rating = 0.0

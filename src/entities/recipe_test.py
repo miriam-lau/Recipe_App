@@ -21,9 +21,9 @@ class TestRecipe(unittest.TestCase):
         self.assertEqual(recipe.has_image, True)
         self.assertEqual(recipe.notes, "Okay")
 
-    def test_from_line(self):
-        line = "123,234,Chicken pot pie,3,True,Lunch,Okay\n"
-        recipe = Recipe.from_line(line)
+    def test_from_values(self):
+        values = ["123", "234", "Chicken pot pie", "3", "True", "Lunch", "Okay"]
+        recipe = Recipe.from_values(values)
         self.assertEqual(recipe.id, 123)
         self.assertEqual(recipe.cookbook_id, 234)
         self.assertEqual(recipe.name, "Chicken pot pie")
