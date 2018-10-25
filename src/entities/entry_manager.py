@@ -29,7 +29,7 @@ class EntryManager:
         self._entries = {}
 
     @staticmethod
-    def create_and_initialize_entry_manager(recipe_manager: RecipeManager, filename: str=_get_entry_file()):
+    def create_and_initialize_entry_manager(recipe_manager, filename: str=_get_entry_file()):
         entry_manager = EntryManager()
         with open(filename, 'rt') as csvfile:
             csv_reader = csv.reader(csvfile, dialect=csv.excel)
@@ -44,7 +44,7 @@ class EntryManager:
         assert entry.id is not None, "Entry id should not be None"
         self._entries[entry.id] = entry
 
-    def add_new_entry(self, recipe_manager: RecipeManager, entry: Entry, filename: str=_get_entry_file()):
+    def add_new_entry(self, recipe_manager, entry: Entry, filename: str=_get_entry_file()):
         assert entry.id is None, "Entry id should be None"
         entry_id = self._generate_entry_id()
         entry.id = entry_id
@@ -60,6 +60,12 @@ class EntryManager:
         entry.james_rating = james_rating
         entry.miriam_comments = miriam_comments
         entry.james_comments = james_comments
+        self._write_entries_to_file(filename)
+
+    def delete_entry(self, recipe_manager, id: int, filename: str=_get_entry_file()):
+        entry = self.get_entry(id)
+        recipe_manager.get_recipe(entry.recipe_id).remove_entry(entry)
+        del self._entries[id]
         self._write_entries_to_file(filename)
 
     def _write_entries_to_file(self, filename: str):

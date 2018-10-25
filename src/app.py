@@ -39,10 +39,19 @@ def add_cookbook():
     return redirect(url_for("render_cookbooks"))
 
 
-@app.route("/editcookbook/<int:id>", methods=["POST"])
+@app.route("/cookbook/edit/<int:id>", methods=["POST"])
 def edit_cookbook(id: int):
     cookbook_manager.modify_cookbook(id, request.form["cookbook_name"], request.form["cookbook_notes"])
     return redirect(url_for("render_cookbook", id=id))
+
+
+@app.route("/deletecookbook/<int:id>", methods=["POST"])
+def delete_cookbook(id: int):
+    if request.form["cookbook_delete"] != "delete":
+        return redirect(url_for("edit_cookbook", id=id))
+
+    cookbook_manager.delete_cookbook(recipe_manager, entry_manager, id)
+    return redirect(url_for("render_cookbooks"))
 
 
 @app.route("/cookbook/view/<int:id>")
@@ -69,12 +78,22 @@ def add_recipe():
     return redirect(url_for("render_cookbook", id=cookbook_id))
 
 
-@app.route("/editrecipe/<int:id>", methods=["POST"])
+@app.route("/recipe/edit/<int:id>", methods=["POST"])
 def edit_recipe(id: int):
     recipe_manager.modify_recipe(
         id, request.form["recipe_name"], request.form["recipe_category"], int(request.form["recipe_priority"]), \
         request.form["recipe_has_image"].lower() == 'true', request.form["recipe_notes"])
     return redirect(url_for("render_recipe", id=id))
+
+
+@app.route("/deleterecipe/<int:id>", methods=["POST"])
+def delete_recipe(id: int):
+    if request.form["recipe_delete"] != "delete":
+        return redirect(url_for("edit_recipe", id=id))
+
+    cookbook_id = recipe_manager.get_recipe(id).cookbook_id
+    recipe_manager.delete_recipe(cookbook_manager, entry_manager, id)
+    return redirect(url_for("render_cookbook", id=cookbook_id))
 
 
 @app.route("/recipe/view/<int:id>")
@@ -103,13 +122,23 @@ def add_entry():
     return redirect(url_for("render_recipe", id=recipe_id))
 
 
-@app.route("/editentry/<int:id>", methods=["POST"])
+@app.route("/entry/edit/<int:id>", methods=["POST"])
 def edit_entry(id: int):
     entry_manager.modify_entry(
         id, datetime.datetime.strptime(request.form["entry_date"], '%Y-%m-%d'), \
         float(request.form["entry_miriam_rating"]), float(request.form["entry_james_rating"]), \
         request.form["entry_miriam_comments"], request.form["entry_james_comments"])
     return redirect(url_for("render_entry", id=id))
+
+
+@app.route("/deleteentry/<int:id>", methods=["POST"])
+def delete_entry(id: int):
+    if request.form["entry_delete"] != "delete":
+        return redirect(url_for("edit_entry", id=id))
+
+    recipe_id = entry_manager.get_entry(id).recipe_id
+    entry_manager.delete_entry(recipe_manager, id)
+    return redirect(url_for("render_recipe", id=recipe_id))
 
 
 @app.route("/entry/view/<int:id>")

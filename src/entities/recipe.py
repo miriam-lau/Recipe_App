@@ -18,6 +18,9 @@ class Recipe:
     def add_entry(self, entry: Entry):
         self._entries.append(entry)
 
+    def remove_entry(self, entry: Entry):
+        self._entries.remove(entry)
+
     @property
     def id(self):
         return self._id

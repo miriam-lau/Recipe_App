@@ -5,8 +5,8 @@
 <a href="/recipe/view/{{recipe.id}}">View page</a><br/>
 <h1>{{cookbook.name}}: {{recipe.name}}</h1>
 <div class="recipe-info">
-  <form action="/editrecipe/{{recipe.id}}">
-    <table class="infotable">
+  <table class="infotable">
+    <form action="/editrecipe/{{recipe.id}}">
       <tr>
         <td>Name</td><td><input type="text" id="recipe_name" name="recipe_name" value="{{recipe.name}}"></td>
       </tr>
@@ -23,7 +23,11 @@
         <td>Notes</td><td><input type="text" id="recipe_notes" name="recipe_notes" value="{{recipe.notes}}"></td>
       </tr>
       <tr><td></td><td><input type="submit" value="Submit" formmethod="post"></td></tr>
-    </table>
-  </form>
+    </form>
+    <form action="/deleterecipe/{{recipe.id}}">
+      <tr><td>Type "delete" to delete this recipe</td><td><input type="text" id="recipe_delete" name="recipe_delete"/></td>
+      <tr><td></td><td><input type="submit" value="Delete" formmethod="post"></td></tr>
+    </form>
+  </table>
 </div>
 {% endblock %}

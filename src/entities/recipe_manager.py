@@ -29,7 +29,7 @@ class RecipeManager:
         self._recipes = {}
 
     @staticmethod
-    def create_and_initialize_recipe_manager(cookbook_manager: CookbookManager, filename: str=_get_recipe_file()):
+    def create_and_initialize_recipe_manager(cookbook_manager, filename: str=_get_recipe_file()):
         recipe_manager = RecipeManager()
         with open(filename, 'rt') as csvfile:
             csv_reader = csv.reader(csvfile, dialect=csv.excel)
@@ -39,12 +39,12 @@ class RecipeManager:
         return recipe_manager
 
     # Adds recipes that already have an id.
-    def add_existing_recipe(self, cookbook_manager: CookbookManager, recipe: Recipe):
+    def add_existing_recipe(self, cookbook_manager, recipe: Recipe):
         assert recipe.id is not None, "Recipe id should not be None"
         self._recipes[recipe.id] = recipe
         cookbook_manager.get_cookbook(recipe.cookbook_id).add_recipe(recipe)
 
-    def add_new_recipe(self, cookbook_manager: CookbookManager, recipe: Recipe, filename: str=_get_recipe_file()):
+    def add_new_recipe(self, cookbook_manager, recipe: Recipe, filename: str=_get_recipe_file()):
         assert recipe.id is None, "Recipe id should be None"
         recipe_id = self._generate_recipe_id()
         recipe.id = recipe_id
@@ -60,6 +60,17 @@ class RecipeManager:
         recipe.priority = priority
         recipe.has_image = has_image
         recipe.notes = notes
+        self._write_recipes_to_file(filename)
+
+    def delete_recipe(self, cookbook_manager, entry_manager, id: int, filename: str=_get_recipe_file()):
+        recipe = self.get_recipe(id)
+        recipe_entries = []
+        for entry in recipe.entries:
+            recipe_entries.append(entry)
+        for entry in recipe_entries:
+            entry_manager.delete_entry(self, entry.id)
+        cookbook_manager.get_cookbook(recipe.cookbook_id).remove_recipe(recipe)
+        del self._recipes[id]
         self._write_recipes_to_file(filename)
 
     def _write_recipes_to_file(self, filename: str):

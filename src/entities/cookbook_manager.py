@@ -54,6 +54,16 @@ class CookbookManager:
         cookbook.notes = notes
         self._write_cookbooks_to_file(filename)
 
+    def delete_cookbook(self, recipe_manager, entry_manager, id: int, filename: str=_get_cookbook_file()):
+        cookbook = self.get_cookbook(id)
+        cookbook_recipes = []
+        for recipe in cookbook.recipes:
+            cookbook_recipes.append(recipe)
+        for recipe in cookbook_recipes:
+            recipe_manager.delete_recipe(self, entry_manager, recipe.id)
+        del self._cookbooks[id]
+        self._write_cookbooks_to_file(filename)
+
     def _write_cookbooks_to_file(self, filename: str):
         with atomic_write(filename, keep=False) as f:
             writer = csv.writer(f, dialect=csv.excel)

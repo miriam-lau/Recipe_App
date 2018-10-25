@@ -5,16 +5,20 @@
 <a href="/cookbook/view/{{cookbook.id}}">View page</a><br/>
 <h1>{{cookbook.name}}</h1>
 <div class="cookbook-info">
-  <form action="/editcookbook/{{cookbook.id}}">
-    <table class="infotable">
-      <tr>
-        <td>Name</td><td><input type="text" id="cookbook_name" name="cookbook_name" value="{{cookbook.name}}"></td>
-      </tr>
-      <tr>
-        <td>Notes</td><td><input type="text" id="cookbook_notes" name="cookbook_notes" value="{{cookbook.notes}}"></td>
-      </tr>
-      <tr><td></td><td><input type="submit" value="Submit" formmethod="post"></td></tr>
-    </table>
-  </form>
+  <table class="infotable">
+    <form action="/editcookbook/{{cookbook.id}}">
+    <tr>
+      <td>Name</td><td><input type="text" id="cookbook_name" name="cookbook_name" value="{{cookbook.name}}"></td>
+    </tr>
+    <tr>
+      <td>Notes</td><td><input type="text" id="cookbook_notes" name="cookbook_notes" value="{{cookbook.notes}}"></td>
+    </tr>
+    <tr><td></td><td><input type="submit" value="Submit" formmethod="post"></td></tr>
+    </form>
+    <form action="/deletecookbook/{{cookbook.id}}">
+      <tr><td>Type "delete" to delete this cookbook</td><td><input type="text" id="cookbook_delete" name="cookbook_delete"/></td>
+      <tr><td></td><td><input type="submit" value="Delete" formmethod="post"></td></tr>
+    </form>
+  </table>
 </div>
 {% endblock %}

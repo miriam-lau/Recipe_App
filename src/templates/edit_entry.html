@@ -5,8 +5,8 @@
 <a href="/entry/view/{{entry.id}}">View page</a><br/>
 <h1>Entry for: {{recipe.name}}</h1>
 <div class="entry-info">
-  <form action="/editentry/{{entry.id}}">
-    <table class="infotable">
+  <table class="infotable">
+    <form action="/editentry/{{entry.id}}">
       <tr>
         <td>Date</td><td class="values"><input type="text" id="entry_date" name="entry_date" value="{{entry.date_string()}}"/></td>
       </tr>
@@ -23,7 +23,11 @@
         <td>James' comments</td><td class="values"><textarea rows="10" id="entry_james_comments" name="entry_james_comments">{{entry.james_comments}}</textarea></td>
       </tr>
       <tr><td></td><td><input type="submit" value="Submit" formmethod="post"></td></tr>
-    </table>
-  </form>
+    </form>
+    <form action="/deleteentry/{{entry.id}}">
+      <tr><td>Type "delete" to delete this entry</td><td><input type="text" id="entry_delete" name="entry_delete"/></td>
+      <tr><td></td><td><input type="submit" value="Delete" formmethod="post"></td></tr>
+    </form>
+  </table>
 </div>
 {% endblock %}

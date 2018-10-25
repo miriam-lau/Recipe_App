@@ -17,6 +17,9 @@ class Cookbook:
     def add_recipe(self, recipe: Recipe):
         self._recipes.append(recipe)
 
+    def remove_recipe(self, recipe: Recipe):
+        self._recipes.remove(recipe)
+
     @property
     def id(self):
         return self._id
