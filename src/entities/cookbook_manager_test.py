@@ -15,10 +15,9 @@ class TestCookbookManager(unittest.TestCase):
 
     def test_add_cookbook(self):
         cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("src/testing/cookbooks.txt")
-        cookbook_manager.add_new_cookbook(Cookbook(None, "Atelier Crenn", "Superb"), "src/testing/test_add_cookbook.txt")
-        cookbook_manager.add_new_cookbook(Cookbook(None, "Smitten Kitchen", "Meh"), "src/testing/test_add_cookbook.txt")
-        cookbook_manager.add_new_cookbook(Cookbook(None, "America's Test Kitchen", "Bad"), \
-                                          "src/testing/test_add_cookbook.txt")
+        cookbook_manager.add_new_cookbook("Atelier Crenn", "Superb", "src/testing/test_add_cookbook.txt")
+        cookbook_manager.add_new_cookbook("Smitten Kitchen", "Meh", "src/testing/test_add_cookbook.txt")
+        cookbook_manager.add_new_cookbook("America's Test Kitchen", "Bad", "src/testing/test_add_cookbook.txt")
         cookbooks = cookbook_manager.get_cookbooks()
 
         self.assertEqual(len(cookbooks), 5)

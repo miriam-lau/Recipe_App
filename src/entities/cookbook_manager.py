@@ -34,12 +34,12 @@ class CookbookManager:
         assert cookbook.id is not None, "Cookbook id should not be None"
         self._cookbooks[cookbook.id] = cookbook
 
-    def add_new_cookbook(self, cookbook: Cookbook, filename: str=_get_cookbook_file()):
-        assert cookbook.id is None, "Cookbook id should be None"
+    def add_new_cookbook(self, name, notes, filename: str=_get_cookbook_file()):
         cookbook_id = self._generate_cookbook_id()
-        cookbook.id = cookbook_id
+        cookbook = Cookbook(cookbook_id, name, notes)
         self._cookbooks[cookbook_id] = cookbook
         self._write_cookbooks_to_file(filename)
+        return cookbook
 
     def modify_cookbook(self, id: int, name: str, notes: str, filename: str=_get_cookbook_file()):
         cookbook = self.get_cookbook(id)

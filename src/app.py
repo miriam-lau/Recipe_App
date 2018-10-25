@@ -34,8 +34,7 @@ def render_cookbooks():
 
 @app.route("/addcookbook", methods=["POST"])
 def add_cookbook():
-    cookbook = Cookbook(None, request.form["cookbook_name"], request.form["cookbook_notes"])
-    cookbook_manager.add_new_cookbook(cookbook)
+    cookbook = cookbook_manager.add_new_cookbook(request.form["cookbook_name"], request.form["cookbook_notes"])
     return redirect(url_for("render_cookbooks"))
 
 
