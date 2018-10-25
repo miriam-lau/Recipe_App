@@ -6,21 +6,14 @@ from .recipe_manager import RecipeManager
 from ..settings import settings
 import datetime
 
-ENTRIES_FILE_PREFIXES = ["/Users/miriamlau", "/home/james"]
-DROPBOX_FILE = "/Dropbox/RecipeApp/"
-PROD_ENTRIES_FILE_POSTFIX = "Recipe Database - entries.csv"
-DEBUG_ENTRIES_FILE_POSTFIX = "Recipe Database - entries (copy).csv"
+PROD_FILE = "Recipe Database - entries.csv"
+DEBUG_FILE = "Recipe Database - entries (copy).csv"
 
 
 def _get_entry_file():
-    entries_filename = ""
-    entries_file_postfix = DEBUG_ENTRIES_FILE_POSTFIX if settings.get_debug_mode() else PROD_ENTRIES_FILE_POSTFIX
-    for entries_file_prefix in ENTRIES_FILE_PREFIXES:
-        entries_filename = entries_file_prefix + DROPBOX_FILE + entries_file_postfix
-        cookbook_file = Path(entries_filename)
-        if cookbook_file.is_file():
-            return entries_filename
-    return ""
+    file_prefix = settings.get_dropbox_directory()
+    file_postfix = DEBUG_FILE if settings.get_debug_mode() else PROD_FILE
+    return file_prefix + file_postfix
 
 
 class EntryManager:

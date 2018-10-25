@@ -1,6 +1,8 @@
 from typing import List
 from .entry import Entry
 import datetime
+from src.settings import settings
+
 
 # TODO: There's a bug where has image is true but it should be false.
 class Recipe:
@@ -117,3 +119,9 @@ class Recipe:
     # Hack: Should not be here. Only here so that recipe.html can use it. Can probably call it directly from there.
     def get_today_date(self):
         return datetime.datetime.today().strftime('%Y-%m-%d')
+
+    def get_image_filename(self):
+        dropbox_directory = settings.get_dropbox_directory()
+        return "%sRecipeImages/%s.jpg" % (dropbox_directory, self.id)
+
+

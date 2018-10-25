@@ -4,6 +4,9 @@
 <a href="/cookbook/view/{{cookbook.id}}">Back to {{cookbook.name}} page</a><br/>
 <a href="/recipe/edit/{{recipe.id}}">Edit page</a><br/>
 <h1>{{cookbook.name}}: {{recipe.name}}</h1>
+{% if recipe.has_image %}
+<img class="recipe-image" src="/serveimage/{{recipe.id}}.jpg"/>
+{% endif %}
 <div class="recipe-info">
   <table class="infotable">
     <tr>
@@ -20,9 +23,6 @@
     </tr>
     <tr>
       <td>Priority:</td><td>{{recipe.priority}}</td>
-    </tr>
-    <tr>
-      <td>Has image:</td><td>{{recipe.has_image}}</td>
     </tr>
     <tr>
       <td>Notes:</td><td>{{recipe.notes}}</td>

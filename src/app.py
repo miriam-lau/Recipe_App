@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, render_template, request, session, abort, url_for
+from flask import Flask, flash, redirect, render_template, request, session, abort, url_for, send_from_directory
 from .entities.cookbook import Cookbook
 from .entities.cookbook_manager import CookbookManager
 from .entities.recipe import Recipe
@@ -39,7 +39,7 @@ def add_cookbook():
     return redirect(url_for("render_cookbooks"))
 
 
-@app.route("/cookbook/edit/<int:id>", methods=["POST"])
+@app.route("/editcookbook/<int:id>", methods=["POST"])
 def edit_cookbook(id: int):
     cookbook_manager.modify_cookbook(id, request.form["cookbook_name"], request.form["cookbook_notes"])
     return redirect(url_for("render_cookbook", id=id))
@@ -78,11 +78,20 @@ def add_recipe():
     return redirect(url_for("render_cookbook", id=cookbook_id))
 
 
-@app.route("/recipe/edit/<int:id>", methods=["POST"])
+@app.route("/recipe/uploadimage/<int:id>", methods=["POST", "GET"])
+def upload_recipe_image(id: int):
+    recipe_manager.upload_recipe_image(id, request.files['file'])
+    return redirect(url_for("render_recipe", id=id))
+
+
+@app.route("/editrecipe/<int:id>", methods=["POST"])
 def edit_recipe(id: int):
+    recipe_has_image = False
+    if "recipe_has_image" in request.form:
+        recipe_has_image = request.form["recipe_has_image"].lower() == "true"
     recipe_manager.modify_recipe(
         id, request.form["recipe_name"], request.form["recipe_category"], int(request.form["recipe_priority"]), \
-        request.form["recipe_has_image"].lower() == 'true', request.form["recipe_notes"])
+        recipe_has_image, request.form["recipe_notes"])
     return redirect(url_for("render_recipe", id=id))
 
 
@@ -155,6 +164,12 @@ def render_edit_entry(id: int):
     entry = entry_manager.get_entry(id)
     recipe = recipe_manager.get_recipe(entry.recipe_id)
     return render_template('edit_entry.html',**locals())
+
+
+@app.route('/serveimage/<path:filename>')
+def serve_image(filename):
+    return send_from_directory(settings.get_dropbox_directory() + "RecipeImages/",
+                               filename, as_attachment=True)
 
 
 initialize_app()

@@ -3,24 +3,18 @@ from pathlib import Path
 import csv
 from .files.atomic_write import atomic_write
 from .cookbook_manager import CookbookManager
+import os
 
-from ..settings import settings
+from src.settings import settings
 
-RECIPES_FILE_PREFIXES = ["/Users/miriamlau", "/home/james"]
-DROPBOX_FILE = "/Dropbox/RecipeApp/"
-PROD_RECIPES_FILE_POSTFIX = "Recipe Database - recipes.csv"
-DEBUG_RECIPES_FILE_POSTFIX = "Recipe Database - recipes (copy).csv"
+PROD_FILE  = "Recipe Database - recipes.csv"
+DEBUG_FILE = "Recipe Database - recipes (copy).csv"
 
 
 def _get_recipe_file():
-    recipes_filename = ""
-    recipes_file_postfix = DEBUG_RECIPES_FILE_POSTFIX if settings.get_debug_mode() else PROD_RECIPES_FILE_POSTFIX
-    for recipes_file_prefix in RECIPES_FILE_PREFIXES:
-        recipes_filename = recipes_file_prefix + DROPBOX_FILE + recipes_file_postfix
-        cookbook_file = Path(recipes_filename)
-        if cookbook_file.is_file():
-            return recipes_filename
-    return ""
+    file_prefix = settings.get_dropbox_directory()
+    file_postfix = DEBUG_FILE if settings.get_debug_mode() else PROD_FILE
+    return file_prefix + file_postfix
 
 
 class RecipeManager:
@@ -59,7 +53,18 @@ class RecipeManager:
         recipe.category = category
         recipe.priority = priority
         recipe.has_image = has_image
+        if not has_image:
+            image_filename = recipe.get_image_filename()
+            if os.path.exists(image_filename):
+                os.remove(image_filename)
         recipe.notes = notes
+        self._write_recipes_to_file(filename)
+
+    # file is of type file found in flask
+    def upload_recipe_image(self, id: int, file, filename: str=_get_recipe_file()):
+        recipe = self.get_recipe(id)
+        file.save(recipe.get_image_filename())
+        recipe.has_image = True
         self._write_recipes_to_file(filename)
 
     def delete_recipe(self, cookbook_manager, entry_manager, id: int, filename: str=_get_recipe_file()):
