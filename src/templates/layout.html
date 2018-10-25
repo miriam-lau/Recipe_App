@@ -130,6 +130,11 @@ input[type=submit]:hover {
 
 </head>
 <body>
- {% block body %}{% endblock %}
+    {% if debug_mode %}
+    Debug mode
+    {% else %}
+    Production mode
+    {% endif %}<br/>
+    {% block body %}{% endblock %}
 </body>
 </html>

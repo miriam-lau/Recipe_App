@@ -4,14 +4,22 @@ import csv
 from .files.atomic_write import atomic_write
 from .cookbook_manager import CookbookManager
 
-RECIPE_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/recipes.csv", "/home/james/Dropbox/RecipeApp/recipes.csv"]
+from ..settings import settings
+
+RECIPES_FILE_PREFIXES = ["/Users/miriamlau", "/home/james"]
+DROPBOX_FILE = "/Dropbox/RecipeApp/"
+PROD_RECIPES_FILE_POSTFIX = "Recipe Database - recipes.csv"
+DEBUG_RECIPES_FILE_POSTFIX = "Recipe Database - recipes (copy).csv"
 
 
 def _get_recipe_file():
-    for recipe_filename in RECIPE_FILES:
-        recipe_file = Path(recipe_filename)
-        if recipe_file.is_file():
-            return recipe_filename
+    recipes_filename = ""
+    recipes_file_postfix = DEBUG_RECIPES_FILE_POSTFIX if settings.get_debug_mode() else PROD_RECIPES_FILE_POSTFIX
+    for recipes_file_prefix in RECIPES_FILE_PREFIXES:
+        recipes_filename = recipes_file_prefix + DROPBOX_FILE + recipes_file_postfix
+        cookbook_file = Path(recipes_filename)
+        if cookbook_file.is_file():
+            return recipes_filename
     return ""
 
 

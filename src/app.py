@@ -5,6 +5,7 @@ from .entities.recipe import Recipe
 from .entities.recipe_manager import RecipeManager
 from .entities.entry import Entry
 from .entities.entry_manager import EntryManager
+from .settings import settings
 import datetime
 
 
@@ -15,7 +16,6 @@ entry_manager: EntryManager = None
 
 
 def initialize_app():
-
     global cookbook_manager
     global recipe_manager
     global entry_manager
@@ -26,6 +26,7 @@ def initialize_app():
 
 @app.route("/")
 def render_cookbooks():
+    debug_mode = settings.get_debug_mode()
     cookbooks = cookbook_manager.get_cookbooks()
     return render_template(
         'cookbooks.html',**locals())
@@ -40,6 +41,7 @@ def add_cookbook():
 
 @app.route("/cookbook/<int:id>")
 def render_cookbook(id: int):
+    debug_mode = settings.get_debug_mode()
     cookbook = cookbook_manager.get_cookbook(id)
     return render_template(
         'cookbook.html',**locals())
@@ -57,6 +59,7 @@ def add_recipe():
 
 @app.route("/recipe/<int:id>")
 def render_recipe(id: int):
+    debug_mode = settings.get_debug_mode()
     recipe = recipe_manager.get_recipe(id)
     cookbook = cookbook_manager.get_cookbook(recipe.cookbook_id)
     return render_template(

@@ -2,15 +2,22 @@ from .cookbook import Cookbook
 from pathlib import Path
 import csv
 from .files.atomic_write import atomic_write
+from ..settings import settings
 
-COOKBOOKS_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/cookbooks.csv", "/home/james/Dropbox/RecipeApp/cookbooks.csv"]
+COOKBOOKS_FILE_PREFIXES = ["/Users/miriamlau", "/home/james"]
+DROPBOX_FILE = "/Dropbox/RecipeApp/"
+PROD_COOKBOOKS_FILE_POSTFIX = "Recipe Database - cookbooks.csv"
+DEBUG_COOKBOOKS_FILE_POSTFIX = "Recipe Database - cookbooks (copy).csv"
 
 
 def _get_cookbook_file():
-    for cookbook_filename in COOKBOOKS_FILES:
-        cookbook_file = Path(cookbook_filename)
+    cookbooks_filename = ""
+    cookbooks_file_postfix = DEBUG_COOKBOOKS_FILE_POSTFIX if settings.get_debug_mode() else PROD_COOKBOOKS_FILE_POSTFIX
+    for cookbooks_file_prefix in COOKBOOKS_FILE_PREFIXES:
+        cookbooks_filename = cookbooks_file_prefix + DROPBOX_FILE + cookbooks_file_postfix
+        cookbook_file = Path(cookbooks_filename)
         if cookbook_file.is_file():
-            return cookbook_filename
+            return cookbooks_filename
     return ""
 
 

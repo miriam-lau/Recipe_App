@@ -3,15 +3,22 @@ from pathlib import Path
 import csv
 from .files.atomic_write import atomic_write
 from .recipe_manager import RecipeManager
+from ..settings import settings
 
-ENTRY_FILES = ["/Users/miriamlau/Dropbox/RecipeApp/entries.csv", "/home/james/Dropbox/RecipeApp/entries.csv"]
+ENTRIES_FILE_PREFIXES = ["/Users/miriamlau", "/home/james"]
+DROPBOX_FILE = "/Dropbox/RecipeApp/"
+PROD_ENTRIES_FILE_POSTFIX = "Recipe Database - entries.csv"
+DEBUG_ENTRIES_FILE_POSTFIX = "Recipe Database - entries (copy).csv"
 
 
 def _get_entry_file():
-    for entry_filename in ENTRY_FILES:
-        entry_file = Path(entry_filename)
-        if entry_file.is_file():
-            return entry_filename
+    entries_filename = ""
+    entries_file_postfix = DEBUG_ENTRIES_FILE_POSTFIX if settings.get_debug_mode() else PROD_ENTRIES_FILE_POSTFIX
+    for entries_file_prefix in ENTRIES_FILE_PREFIXES:
+        entries_filename = entries_file_prefix + DROPBOX_FILE + entries_file_postfix
+        cookbook_file = Path(entries_filename)
+        if cookbook_file.is_file():
+            return entries_filename
     return ""
 
 
