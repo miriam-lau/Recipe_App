@@ -4,6 +4,7 @@ import csv
 from .files.atomic_write import atomic_write
 from .recipe_manager import RecipeManager
 from ..settings import settings
+import datetime
 
 ENTRIES_FILE_PREFIXES = ["/Users/miriamlau", "/home/james"]
 DROPBOX_FILE = "/Dropbox/RecipeApp/"
@@ -51,6 +52,16 @@ class EntryManager:
         recipe_manager.get_recipe(entry.recipe_id).add_entry(entry)
         self._write_entries_to_file(filename)
 
+    def modify_entry(self, id: int, date: datetime, miriam_rating: float, james_rating: float, \
+                     miriam_comments: str, james_comments: str, filename: str=_get_entry_file()):
+        entry = self.get_entry(id)
+        entry.date = date
+        entry.miriam_rating = miriam_rating
+        entry.james_rating = james_rating
+        entry.miriam_comments = miriam_comments
+        entry.james_comments = james_comments
+        self._write_entries_to_file(filename)
+
     def _write_entries_to_file(self, filename: str):
         with atomic_write(filename, keep=False) as f:
             writer = csv.writer(f, dialect=csv.excel)
@@ -65,3 +76,6 @@ class EntryManager:
 
     def get_entries(self):
         return sorted(self._entries.values(), key=lambda entry: entry.id)
+
+    def get_entry(self, id: int):
+        return self._entries[id]

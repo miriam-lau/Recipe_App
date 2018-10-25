@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<a href="/cookbook/{{cookbook.id}}">Back to {{cookbook.name}} page</a>
+<a href="/cookbook/view/{{cookbook.id}}">Back to {{cookbook.name}} page</a><br/>
+<a href="/recipe/edit/{{recipe.id}}">Edit page</a><br/>
 <h1>{{cookbook.name}}: {{recipe.name}}</h1>
 <div class="recipe-info">
 Best rating: {{recipe.get_best_rating()}}<br/>
@@ -25,7 +26,7 @@ Notes: {{recipe.notes}}<br/>
   {% for entry in recipe.entries_by_date_descending() %}
     <tr>
       <td>
-        {{entry.date_string()}}
+        <a href="/entry/view/{{entry.id}}">{{entry.date_string()}}</a><br/>
       </td>
       <td>
         {{entry.get_overall_rating()}}
@@ -99,6 +100,3 @@ Notes: {{recipe.notes}}<br/>
   </div>
 </div>
 {% endblock %}
-
-
-

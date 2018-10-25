@@ -52,6 +52,16 @@ class RecipeManager:
         cookbook_manager.get_cookbook(recipe.cookbook_id).add_recipe(recipe)
         self._write_recipes_to_file(filename)
 
+    def modify_recipe(self, id: int, name: str, category: str, priority: int, has_image: bool, notes: str, \
+                      filename: str=_get_recipe_file()):
+        recipe = self.get_recipe(id)
+        recipe.name = name
+        recipe.category = category
+        recipe.priority = priority
+        recipe.has_image = has_image
+        recipe.notes = notes
+        self._write_recipes_to_file(filename)
+
     def _write_recipes_to_file(self, filename: str):
         with atomic_write(filename, keep=False) as f:
             writer = csv.writer(f, dialect=csv.excel)

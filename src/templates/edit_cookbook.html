@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<a href="/">Back to main page</a><br/>
+<a href="/cookbook/view/{{cookbook.id}}">View page</a><br/>
+<h1>{{cookbook.name}}</h1>
+<div class="cookbook-info">
+  <form action="/editcookbook/{{cookbook.id}}">
+    Name: <input class="input" type="text" id="cookbook_name" name="cookbook_name" value="{{cookbook.name}}"><br/>
+    Notes: <input class="input" type="text" id="cookbook_notes" name="cookbook_notes" value="{{cookbook.notes}}"><br/>
+    <input type="submit" value="Submit" formmethod="post"><br/>
+  </form>
+</div>
+{% endblock %}

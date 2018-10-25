@@ -48,6 +48,12 @@ class CookbookManager:
         self._cookbooks[cookbook_id] = cookbook
         self._write_cookbooks_to_file(filename)
 
+    def modify_cookbook(self, id: int, name: str, notes: str, filename: str=_get_cookbook_file()):
+        cookbook = self.get_cookbook(id)
+        cookbook.name = name
+        cookbook.notes = notes
+        self._write_cookbooks_to_file(filename)
+
     def _write_cookbooks_to_file(self, filename: str):
         with atomic_write(filename, keep=False) as f:
             writer = csv.writer(f, dialect=csv.excel)

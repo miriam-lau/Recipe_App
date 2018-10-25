@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<a href="/cookbook/view/{{cookbook.id}}">Back to {{cookbook.name}} page</a><br/>
+<a href="/recipe/view/{{recipe.id}}">View page</a><br/>
+<h1>{{cookbook.name}}: {{recipe.name}}</h1>
+<div class="recipe-info">
+  <form action="/editrecipe/{{recipe.id}}">
+    Name: <input class="input" type="text" id="recipe_name" name="recipe_name" value="{{recipe.name}}"><br/>
+    Category: <input class="input" type="text" id="recipe_category" name="recipe_category" value="{{recipe.category}}"><br/>
+    Priority: <input class="input" type="text" id="recipe_priority" name="recipe_priority" value="{{recipe.priority}}"><br/>
+    Has image: <input class="input" type="text" id="recipe_has_image" name="recipe_has_image" value="{{recipe.has_image}}"><br/>
+    Notes: <input class="input" type="text" id="recipe_notes" name="recipe_notes" value="{{recipe.notes}}"><br/>
+    <input type="submit" value="Submit" formmethod="post"><br/>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<a href="/recipe/view/{{recipe.id}}">Back to {{recipe.name}} page</a><br/>
+<a href="/entry/view/{{entry.id}}">View page</a><br/>
+<h1>Entry for: {{recipe.name}}</h1>
+<div class="entry-info">
+  <form action="/editentry/{{entry.id}}">
+    Date: <input class="input" type="text" id="entry_date" name="entry_date" value="{{entry.date_string()}}"/><br/>
+    Miriam's rating: <input class="input" type="text" id="entry_miriam_rating" name="entry_miriam_rating" value="{{entry.miriam_rating}}"/><br/>
+    James' rating: <input class="input" type="text" id="entry_james_rating" name="entry_james_rating" value="{{entry.james_rating}}"/><br/>
+    Miriam's comments: <textarea style="width:auto" rows="10" cols="70" id="entry_miriam_comments" name="entry_miriam_comments">{{entry.miriam_comments}}</textarea><br/>
+    James' comments: <textarea style="width:auto" rows="10" cols="70" id="entry_james_comments" name="entry_james_comments">{{entry.james_comments}}</textarea><br/>
+    <input type="submit" value="Submit" formmethod="post"><br/>
+  </form>
+</div>
+{% endblock %}

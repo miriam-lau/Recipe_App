@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<a href="/">Back to main page</a>
+<a href="/">Back to main page</a><br/>
+<a href="/cookbook/edit/{{cookbook.id}}">Edit page</a><br/>
 <h1>{{cookbook.name}}</h1>
 <div class="cookbook-info">
 Num recipes made: {{cookbook.num_recipes_made()}}<br/>
@@ -22,7 +23,7 @@ Notes: {{cookbook.notes}}<br/>
   {% for recipe in cookbook.recipes_by_best_rating_descending() %}
     <tr>
       <td>
-        <a href="/recipe/{{recipe.id}}">{{recipe.name}}</a><br/>
+        <a href="/recipe/view/{{recipe.id}}">{{recipe.name}}</a><br/>
       </td>
       <td>
         {{recipe.get_num_times_made()}}
