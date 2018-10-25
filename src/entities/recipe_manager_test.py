@@ -7,8 +7,8 @@ from .cookbook_manager import CookbookManager
 class TestRecipeManager(unittest.TestCase):
 
     def test_create_and_initialize_recipe_manager(self):
-        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("testing/cookbooks.txt")
-        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "testing/recipes.txt")
+        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("src/testing/cookbooks.txt")
+        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "src/testing/recipes.txt")
         recipes = recipe_manager.get_recipes()
         self.assertEqual(len(recipes), 2)
         self.assertEqual(recipes[0], Recipe(9, 7, "Chicken pot pie", 3, True, "Dinner", "Okay"))
@@ -17,14 +17,14 @@ class TestRecipeManager(unittest.TestCase):
         self.assertEqual(cookbook_manager.get_cookbook(recipes[1].cookbook_id).recipes, [recipes[1]])
 
     def test_add_recipe(self):
-        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("testing/cookbooks.txt")
-        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "testing/recipes.txt")
+        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("src/testing/cookbooks.txt")
+        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "src/testing/recipes.txt")
         recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Beef stew", 2, True, "Lunch", "Needs salt"),
-                                      "testing/test_add_recipe.txt")
+                                      "src/testing/test_add_recipe.txt")
         recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Steak", 0, False, "Dinner", \
-                                                               "Not like a steakhouse"), "testing/test_add_recipe.txt")
+                                                               "Not like a steakhouse"), "src/testing/test_add_recipe.txt")
         recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 7, "Mushroom soup", 3, False, "Soup", \
-                                                               "Too much garlic"), "testing/test_add_recipe.txt")
+                                                               "Too much garlic"), "src/testing/test_add_recipe.txt")
         recipes = recipe_manager.get_recipes()
 
         self.assertEqual(len(recipes), 5)
