@@ -5,13 +5,29 @@
 <a href="/recipe/edit/{{recipe.id}}">Edit page</a><br/>
 <h1>{{cookbook.name}}: {{recipe.name}}</h1>
 <div class="recipe-info">
-Best rating: {{recipe.get_best_rating()}}<br/>
-Latest rating: {{recipe.get_latest_rating()}}<br/>
-Num times made: {{recipe.get_num_times_made()}}<br/>
-Category: {{recipe.category}}<br/>
-Priority: {{recipe.priority}}<br/>
-Has image: {{recipe.has_image}}<br/>
-Notes: {{recipe.notes}}<br/>
+  <table class="infotable">
+    <tr>
+      <td>Best rating:</td><td>{{recipe.get_best_rating()}}</td>
+    </tr>
+    <tr>
+      <td>Latest rating:</td><td>{{recipe.get_latest_rating()}}</td>
+    </tr>
+    <tr>
+      <td>Num times made:</td><td>{{recipe.get_num_times_made()}}</td>
+    </tr>
+    <tr>
+      <td>Category:</td><td>{{recipe.category}}</td>
+    </tr>
+    <tr>
+      <td>Priority:</td><td>{{recipe.priority}}</td>
+    </tr>
+    <tr>
+      <td>Has image:</td><td>{{recipe.has_image}}</td>
+    </tr>
+    <tr>
+      <td>Notes:</td><td>{{recipe.notes}}</td>
+    </tr>
+  </table>
 </div>
 <div class="entry-list">
   <table class="table">

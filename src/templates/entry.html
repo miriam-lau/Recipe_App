@@ -5,10 +5,22 @@
 <a href="/entry/edit/{{entry.id}}">Edit page</a><br/>
 <h1>Entry for: {{recipe.name}}</h1>
 <div class="entry-info">
-Date: {{entry.date_string()}}<br/>
-Miriam's rating: {{entry.miriam_rating}}<br/>
-James' rating: {{entry.james_rating}}<br/>
-Miriam's comments: {{entry.miriam_comments}}<br/>
-James' comments: {{entry.james_comments}}
+  <table class="infotable">
+    <tr>
+      <td>Date:</td><td class="values">{{entry.date_string()}}</td>
+    </tr>
+    <tr>
+      <td>Miriam's rating:</td><td class="values">{{entry.miriam_rating}}</td>
+    </tr>
+    <tr>
+      <td>James' rating:</td><td class="values">{{entry.james_rating}}</td>
+    </tr>
+    <tr>
+      <td>Miriam's comments:</td><td class="values">{{entry.miriam_comments}}</td>
+    </tr>
+    <tr>
+      <td>James' comments:</td><td class="values">{{entry.james_comments}}</td>
+    </tr>
+  </table>
 </div>
 {% endblock %}

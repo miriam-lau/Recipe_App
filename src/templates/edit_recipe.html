@@ -6,12 +6,24 @@
 <h1>{{cookbook.name}}: {{recipe.name}}</h1>
 <div class="recipe-info">
   <form action="/editrecipe/{{recipe.id}}">
-    Name: <input class="input" type="text" id="recipe_name" name="recipe_name" value="{{recipe.name}}"><br/>
-    Category: <input class="input" type="text" id="recipe_category" name="recipe_category" value="{{recipe.category}}"><br/>
-    Priority: <input class="input" type="text" id="recipe_priority" name="recipe_priority" value="{{recipe.priority}}"><br/>
-    Has image: <input class="input" type="text" id="recipe_has_image" name="recipe_has_image" value="{{recipe.has_image}}"><br/>
-    Notes: <input class="input" type="text" id="recipe_notes" name="recipe_notes" value="{{recipe.notes}}"><br/>
-    <input type="submit" value="Submit" formmethod="post"><br/>
+    <table class="infotable">
+      <tr>
+        <td>Name</td><td><input type="text" id="recipe_name" name="recipe_name" value="{{recipe.name}}"></td>
+      </tr>
+      <tr>
+        <td>Category</td><td><input type="text" id="recipe_category" name="recipe_category" value="{{recipe.category}}"></td>
+      </tr>
+      <tr>
+        <td>Priority</td><td><input type="text" id="recipe_priority" name="recipe_priority" value="{{recipe.priority}}"></td>
+      </tr>
+      <tr>
+        <td>Has image</td><td><input type="text" id="recipe_has_image" name="recipe_has_image" value="{{recipe.has_image}}"></td>
+      </tr>
+      <tr>
+        <td>Notes</td><td><input type="text" id="recipe_notes" name="recipe_notes" value="{{recipe.notes}}"></td>
+      </tr>
+      <tr><td></td><td><input type="submit" value="Submit" formmethod="post"></td></tr>
+    </table>
   </form>
 </div>
 {% endblock %}

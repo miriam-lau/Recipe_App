@@ -11,11 +11,6 @@
     font-size: 1.4em;
 }
 
-input[type="text"].input
-{
-  width: 500px;
-}
-
 /* Header */
 h1{
     text-align: center;
@@ -30,27 +25,34 @@ h2{
 }
 
 /* Table */
+
+.values {
+  width: 500px;
+}
+
 .entry-list, .recipe-list, .cookbook-list {
     margin-bottom: 30px;
 }
 
-.table {
+.table,.infotable {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    text-align: center;
     margin: auto;
+}
+
+.infotable td, .infotable th, .table td, .table th {
+    padding: 8px;
 }
 
 .table td, .table th {
     border: 1px solid #ddd;
-    padding: 8px;
 }
 
 .table tr:nth-child(even){background-color: #f2f2f2;}
 
 .table tr:hover {background-color: #ddd;}
 
-.table th {
+.infotable th, .table th {
     padding-top: 12px;
     padding-bottom: 12px;
     background-color: blue;

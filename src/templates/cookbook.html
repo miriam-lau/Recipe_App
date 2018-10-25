@@ -5,10 +5,20 @@
 <a href="/cookbook/edit/{{cookbook.id}}">Edit page</a><br/>
 <h1>{{cookbook.name}}</h1>
 <div class="cookbook-info">
-Num recipes made: {{cookbook.num_recipes_made()}}<br/>
-Success rate: {{cookbook.success_percentage()}}%<br/>
-Num recipes we want to make: {{cookbook.num_recipes_want_to_make()}}<br/>
-Notes: {{cookbook.notes}}<br/>
+  <table class="infotable">
+    <tr>
+      <td>Num recipes made:</td><td>{{cookbook.num_recipes_made()}}</td>
+    </tr>
+    <tr>
+      <td>Success rate:</td><td>{{cookbook.success_percentage()}}%</td>
+    </tr>
+    <tr>
+      <td>Num recipes we want to make:</td><td>{{cookbook.num_recipes_want_to_make()}}</td>
+    </tr>
+    <tr>
+      <td>Notes:</td><td>{{cookbook.notes}}</td>
+    </tr>
+  </table>
 </div>
 <div class="recipe-list">
   <table class="table">

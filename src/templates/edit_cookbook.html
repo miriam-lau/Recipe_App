@@ -6,9 +6,15 @@
 <h1>{{cookbook.name}}</h1>
 <div class="cookbook-info">
   <form action="/editcookbook/{{cookbook.id}}">
-    Name: <input class="input" type="text" id="cookbook_name" name="cookbook_name" value="{{cookbook.name}}"><br/>
-    Notes: <input class="input" type="text" id="cookbook_notes" name="cookbook_notes" value="{{cookbook.notes}}"><br/>
-    <input type="submit" value="Submit" formmethod="post"><br/>
+    <table class="infotable">
+      <tr>
+        <td>Name</td><td><input type="text" id="cookbook_name" name="cookbook_name" value="{{cookbook.name}}"></td>
+      </tr>
+      <tr>
+        <td>Notes</td><td><input type="text" id="cookbook_notes" name="cookbook_notes" value="{{cookbook.notes}}"></td>
+      </tr>
+      <tr><td></td><td><input type="submit" value="Submit" formmethod="post"></td></tr>
+    </table>
   </form>
 </div>
 {% endblock %}
