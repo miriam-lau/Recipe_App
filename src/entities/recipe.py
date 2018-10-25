@@ -1,7 +1,7 @@
 from typing import List
 from .entry import Entry
 import datetime
-from src.settings import settings
+from src.settings.settings import Settings
 
 
 # TODO: There's a bug where has image is true but it should be false.
@@ -120,8 +120,7 @@ class Recipe:
     def get_today_date(self):
         return datetime.datetime.today().strftime('%Y-%m-%d')
 
-    def get_image_filename(self):
-        dropbox_directory = settings.get_dropbox_directory()
-        return "%sRecipeImages/%s.jpg" % (dropbox_directory, self.id)
+    def get_image_filename(self, settings: Settings):
+        return "%sRecipeImages/%s.jpg" % (settings.recipe_app_directory, self.id)
 
 

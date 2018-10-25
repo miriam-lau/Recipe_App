@@ -5,9 +5,14 @@ from .recipe import Recipe
 from .entry import Entry
 from .cookbook_manager import CookbookManager
 import datetime
+from src.testing import test_utils
 
 
 class TestRecipe(unittest.TestCase):
+
+    def setUp(self):
+        self.cookbook_manager, self.recipe_manager, self.entry_manager, self.settings = \
+            test_utils.initialize_test_environment()
 
     def test_setters(self):
         recipe = Recipe(0, 0, "default", 0, False, "default", "default")
@@ -42,51 +47,24 @@ class TestRecipe(unittest.TestCase):
         self.assertEqual(recipe.to_tuple(), (123, 234, "Chicken pot pie", 3, True, "Lunch", "Okay"))
 
     def test_get_num_times_made(self):
-        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("src/testing/cookbooks.txt")
-        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "src/testing/recipes.txt")
-        entry_manager = EntryManager.create_and_initialize_entry_manager(recipe_manager, "src/testing/entries.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        recipe = recipe_manager.get_recipe(8)
+        self.entry_manager.add_new_entry(self.recipe_manager, "8", "2017-05-24", "7", "6", "Okay", "Meh")
+        self.entry_manager.add_new_entry(self.recipe_manager, "8", "2017-05-24", "7", "6", "Okay", "Meh")
+        self.entry_manager.add_new_entry(self.recipe_manager, "8", "2017-05-24", "7", "6", "Okay", "Meh")
+        recipe = self.recipe_manager.get_recipe(8)
         self.assertEqual(recipe.get_num_times_made(), 4)
 
     def test_get_best_rating(self):
-        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("src/testing/cookbooks.txt")
-        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "src/testing/recipes.txt")
-        entry_manager = EntryManager.create_and_initialize_entry_manager(recipe_manager, "src/testing/entries.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        recipe = recipe_manager.get_recipe(8)
+        self.entry_manager.add_new_entry(self.recipe_manager, "8", "2017-05-24", "7", "6", "Okay", "Meh")
+        self.entry_manager.add_new_entry(self.recipe_manager, "8", "2017-05-24", "7", "6", "Okay", "Meh")
+        self.entry_manager.add_new_entry(self.recipe_manager, "8", "2017-05-24", "7", "6", "Okay", "Meh")
+        recipe = self.recipe_manager.get_recipe(8)
         self.assertAlmostEqual(recipe.get_best_rating(), 9.3)
 
     def test_get_latest_rating(self):
-        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("src/testing/cookbooks.txt")
-        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "src/testing/recipes.txt")
-        entry_manager = EntryManager.create_and_initialize_entry_manager(recipe_manager, "src/testing/entries.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, datetime.datetime(2018, 10, 23), 3, 4, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 8, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        recipe = recipe_manager.get_recipe(8)
+        self.entry_manager.add_new_entry(self.recipe_manager, "8", "2018-10-23", "3", "4", "Okay", "Meh")
+        self.entry_manager.add_new_entry(self.recipe_manager, "8", "2017-05-24", "7", "6", "Okay", "Meh")
+        self.entry_manager.add_new_entry(self.recipe_manager, "8", "2017-05-24", "7", "6", "Okay", "Meh")
+        recipe = self.recipe_manager.get_recipe(8)
         self.assertAlmostEqual(recipe.get_latest_rating(), 3.5)
 
 

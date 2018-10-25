@@ -6,9 +6,14 @@ from .recipe import Recipe
 from .entry import Entry
 from .cookbook_manager import CookbookManager
 import datetime
+from src.testing import test_utils
 
 
 class TestCookbook(unittest.TestCase):
+
+    def setUp(self):
+        self.cookbook_manager, self.recipe_manager, self.entry_manager, self.settings = \
+            test_utils.initialize_test_environment()
 
     def test_setters(self):
         cookbook = Cookbook(1, "default", "default")
@@ -40,45 +45,24 @@ class TestCookbook(unittest.TestCase):
         self.assertEqual(cookbook.notes, "Okay")
 
     def test_num_recipes_made(self):
-        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("src/testing/cookbooks.txt")
-        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "src/testing/recipes.txt")
-        entry_manager = EntryManager.create_and_initialize_entry_manager(recipe_manager, "src/testing/entries.txt")
-        recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Beef stew", 2, True, "Lunch", "Needs salt"),
-                                      "src/testing/test_add_recipe.txt")
-        recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Test", 2, True, "Lunch", "Needs salt"),
-                                      "src/testing/test_add_recipe.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 1, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        cookbook = cookbook_manager.get_cookbook(6)
+        self.recipe_manager.add_new_recipe(self.cookbook_manager, "6", "Beef stew", "2", "Lunch", "Needs salt")
+        self.recipe_manager.add_new_recipe(self.cookbook_manager, "6", "Test", "2", "Lunch", "Needs salt")
+        self.entry_manager.add_new_entry(self.recipe_manager, "1", "2017-05-24", "7", "6", "Okay", "Meh")
+        cookbook = self.cookbook_manager.get_cookbook(6)
         self.assertEqual(cookbook.num_recipes_made(), 2)
 
     def test_num_recipes_want_to_make(self):
-        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("src/testing/cookbooks.txt")
-        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "src/testing/recipes.txt")
-        entry_manager = EntryManager.create_and_initialize_entry_manager(recipe_manager, "src/testing/entries.txt")
-        recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Beef stew", 2, True, "Lunch", "Needs salt"),
-                                      "src/testing/test_add_recipe.txt")
-        recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Test", 0, True, "Lunch", "Needs salt"),
-                                      "src/testing/test_add_recipe.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 1, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        cookbook = cookbook_manager.get_cookbook(6)
+        self.recipe_manager.add_new_recipe(self.cookbook_manager, "6", "Beef stew", "2", "Lunch", "Needs salt")
+        self.recipe_manager.add_new_recipe(self.cookbook_manager, "6", "Test", "0", "Lunch", "Needs salt")
+        self.entry_manager.add_new_entry(self.recipe_manager, "1", "2017-05-24", "7", "6", "Okay", "Meh")
+        cookbook = self.cookbook_manager.get_cookbook(6)
         self.assertEqual(cookbook.num_recipes_want_to_make(), 2)
 
     def test_success_percentage(self):
-        cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager("src/testing/cookbooks.txt")
-        recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, "src/testing/recipes.txt")
-        entry_manager = EntryManager.create_and_initialize_entry_manager(recipe_manager, "src/testing/entries.txt")
-        recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Beef stew", 2, True, "Lunch", "Needs salt"),
-                                      "src/testing/test_add_recipe.txt")
-        recipe_manager.add_new_recipe(cookbook_manager, Recipe(None, 6, "Test", 0, True, "Lunch", "Needs salt"),
-                                      "src/testing/test_add_recipe.txt")
-        entry_manager.add_new_entry(
-            recipe_manager, Entry(None, 1, datetime.datetime(2017, 5, 24), 7, 6, "Okay", "Meh"), \
-            "src/testing/test_add_entry.txt")
-        cookbook = cookbook_manager.get_cookbook(6)
+        self.recipe_manager.add_new_recipe(self.cookbook_manager, "6", "Beef stew", "2", "Lunch", "Needs salt")
+        self.recipe_manager.add_new_recipe(self.cookbook_manager, "6", "Test", "0", "Lunch", "Needs salt")
+        self.entry_manager.add_new_entry(self.recipe_manager, "1", "2017-05-24", "7", "6", "Okay", "Meh")
+        cookbook = self.cookbook_manager.get_cookbook(6)
         self.assertEqual(cookbook.success_percentage(), 50)
 
 

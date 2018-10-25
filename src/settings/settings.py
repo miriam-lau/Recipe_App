@@ -6,19 +6,27 @@ DROPBOX_FILE_PREFIXES = ["/Users/miriamlau", "/home/james"]
 DROPBOX_FILE = "/Dropbox/RecipeApp/"
 
 
-def get_dropbox_directory():
-    recipes_filename = ""
-    for recipes_file_prefix in DROPBOX_FILE_PREFIXES:
-        recipes_directory = recipes_file_prefix + DROPBOX_FILE
-        recipe_file = Path(recipes_directory)
-        if recipe_file.is_dir():
-            return recipes_directory
+class Settings:
 
+    def __init__(self):
+        self.recipe_app_directory = self._get_recipe_app_directory()
+        self._debug_mode = self._get_debug_mode()
 
-def get_debug_mode():
-    debug_mode = False
-    for arg in sys.argv:
-        if arg == "--debugger":
-            debug_mode = True
-    return debug_mode
+    def _get_recipe_app_directory(self):
+        for recipes_file_prefix in DROPBOX_FILE_PREFIXES:
+            recipes_directory = recipes_file_prefix + DROPBOX_FILE
+            recipe_file = Path(recipes_directory)
+            if recipe_file.is_dir():
+                return recipes_directory
+        raise ValueError("A valid dropbox directory could not be found")
 
+    def _get_debug_mode(self):
+        debug_mode = False
+        for arg in sys.argv:
+            if arg == "--debugger":
+                debug_mode = True
+        return debug_mode
+
+    @property
+    def debug_mode(self):
+        return self._debug_mode
