@@ -15,15 +15,6 @@ class TestCookbook(unittest.TestCase):
         self.cookbook_manager, self.recipe_manager, self.entry_manager, self.settings = \
             test_utils.initialize_test_environment()
 
-    def test_setters(self):
-        cookbook = Cookbook(1, "default", "default")
-        cookbook.name = "changed_name"
-        cookbook.id = 2
-        cookbook.notes = "Okay"
-        self.assertEqual(cookbook.id, 2)
-        self.assertEqual(cookbook.name, "changed_name")
-        self.assertEqual(cookbook.notes, "Okay")
-
     def test_from_values(self):
         values = ["123", "Harry Potter Cookbook", "Magical"]
         cookbook = Cookbook.from_values(values)
@@ -38,9 +29,7 @@ class TestCookbook(unittest.TestCase):
     def test_num_recipes_made(self):
         cookbook = Cookbook(1, "default", "default")
         cookbook.name = "changed_name"
-        cookbook.id = 2
         cookbook.notes = "Okay"
-        self.assertEqual(cookbook.id, 2)
         self.assertEqual(cookbook.name, "changed_name")
         self.assertEqual(cookbook.notes, "Okay")
 

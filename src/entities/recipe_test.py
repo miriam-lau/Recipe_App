@@ -14,23 +14,6 @@ class TestRecipe(unittest.TestCase):
         self.cookbook_manager, self.recipe_manager, self.entry_manager, self.settings = \
             test_utils.initialize_test_environment()
 
-    def test_setters(self):
-        recipe = Recipe(0, 0, "default", 0, False, "default", "default")
-        recipe.name = "changed_name"
-        recipe.id = 2
-        recipe.cookbook_id = 7
-        recipe.priority = 3
-        recipe.has_image = True
-        recipe.category = "Breakfast"
-        recipe.notes = "Okay"
-        self.assertEqual(recipe.id, 2)
-        self.assertEqual(recipe.cookbook_id, 7)
-        self.assertEqual(recipe.name, "changed_name")
-        self.assertEqual(recipe.category, "Breakfast")
-        self.assertEqual(recipe.priority, 3)
-        self.assertEqual(recipe.has_image, True)
-        self.assertEqual(recipe.notes, "Okay")
-
     def test_from_values(self):
         values = ["123", "234", "Chicken pot pie", "3", "True", "Lunch", "Okay"]
         recipe = Recipe.from_values(values)

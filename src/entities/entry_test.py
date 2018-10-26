@@ -5,23 +5,6 @@ import datetime
 
 class TestEntry(unittest.TestCase):
 
-    def test_setters(self):
-        entry = Entry(0, 0, "default", 0, 0, "default", "default")
-        entry.date = datetime.datetime(2018, 1, 2)
-        entry.id = 2
-        entry.recipe_id = 7
-        entry.miriam_rating = 9.5
-        entry.james_rating = 9.1
-        entry.miriam_comments = "Good"
-        entry.james_comments = "Delicious"
-        self.assertEqual(entry.id, 2)
-        self.assertEqual(entry.recipe_id, 7)
-        entry.date = datetime.datetime(2018, 1, 2)
-        self.assertAlmostEqual(entry.miriam_rating, 9.5)
-        self.assertAlmostEqual(entry.james_rating, 9.1)
-        self.assertEqual(entry.miriam_comments, "Good")
-        self.assertEqual(entry.james_comments, "Delicious")
-
     def test_from_values(self):
         values = ["123", "234", "2018-01-02", "9.5", "9.1", "Good", "Delicious"]
         entry = Entry.from_values(values)

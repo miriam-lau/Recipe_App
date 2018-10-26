@@ -9,67 +9,19 @@ class Entry:
                  miriam_comments: str, james_comments: str):
         self._id: int = id
         self._recipe_id: int = recipe_id
-        self._date: str = date
-        self._miriam_rating: float = miriam_rating
-        self._james_rating: float = james_rating
-        self._miriam_comments: str = miriam_comments
-        self._james_comments: str = james_comments
+        self.date: str = date
+        self.miriam_rating: float = miriam_rating
+        self.james_rating: float = james_rating
+        self.miriam_comments: str = miriam_comments
+        self.james_comments: str = james_comments
 
     @property
     def id(self):
         return self._id
 
-    @id.setter
-    def id(self, id):
-        self._id = id
-
     @property
     def recipe_id(self):
         return self._recipe_id
-
-    @recipe_id.setter
-    def recipe_id(self, recipe_id):
-        self._recipe_id = recipe_id
-
-    @property
-    def date(self):
-        return self._date
-
-    @date.setter
-    def date(self, date):
-        self._date = date
-
-    @property
-    def miriam_rating(self):
-        return round(self._miriam_rating, 1)
-
-    @miriam_rating.setter
-    def miriam_rating(self, miriam_rating):
-        self._miriam_rating = round(miriam_rating, 1)
-
-    @property
-    def james_rating(self):
-        return round(self._james_rating, 1)
-
-    @james_rating.setter
-    def james_rating(self, james_rating):
-        self._james_rating = round(james_rating, 1)
-
-    @property
-    def james_comments(self):
-        return self._james_comments
-
-    @james_comments.setter
-    def james_comments(self, james_comments):
-        self._james_comments = james_comments
-
-    @property
-    def miriam_comments(self):
-        return self._miriam_comments
-
-    @miriam_comments.setter
-    def miriam_comments(self, miriam_comments):
-        self._miriam_comments = miriam_comments
 
     # Generates an entry from a text string that represents it.
     @staticmethod
@@ -78,11 +30,11 @@ class Entry:
                      float(values[3]), float(values[4]), values[5], values[6])
 
     def to_tuple(self):
-        return self._id, self._recipe_id, self._date.strftime("%Y-%m-%d"), self._miriam_rating, self._james_rating, \
-               self._miriam_comments, self._james_comments
+        return self.id, self.recipe_id, self.date.strftime("%Y-%m-%d"), self.miriam_rating, self.james_rating, \
+               self.miriam_comments, self.james_comments
 
     def date_string(self):
-        return self._date.strftime("%Y-%m-%d")
+        return self.date.strftime("%Y-%m-%d")
 
     def get_overall_rating(self):
         rating = 0.0
