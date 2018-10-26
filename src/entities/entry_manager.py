@@ -1,8 +1,6 @@
 from .entry import Entry
-from pathlib import Path
 import csv
-from .files.atomic_write import atomic_write
-from .recipe_manager import RecipeManager
+from .files.files import write_entities_to_file
 from src.settings.settings import Settings
 import datetime
 
@@ -65,10 +63,7 @@ class EntryManager:
         self._write_entries_to_file()
 
     def _write_entries_to_file(self):
-        with atomic_write(self.get_entries_file(), keep=False) as f:
-            writer = csv.writer(f, dialect=csv.excel)
-            for entry in sorted(self._entries.values(), key=lambda entry: entry.id):
-                writer.writerow(entry.to_tuple())
+        write_entities_to_file(self.get_entries_file(), self._entries.values())
 
     def _generate_entry_id(self):
         i = 1

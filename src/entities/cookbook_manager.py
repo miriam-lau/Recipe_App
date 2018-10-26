@@ -1,8 +1,7 @@
 from .cookbook import Cookbook
-from pathlib import Path
-import csv
-from .files.atomic_write import atomic_write
+from .files.files import write_entities_to_file
 from src.settings.settings import Settings
+import csv
 
 PROD_FILE = "Recipe Database - cookbooks.csv"
 DEBUG_FILE = "Recipe Database - cookbooks (copy).csv"
@@ -57,12 +56,6 @@ class CookbookManager:
         del self._cookbooks[id]
         self._write_cookbooks_to_file()
 
-    def _write_cookbooks_to_file(self):
-        with atomic_write(self.get_cookbooks_file(), keep=False) as f:
-            writer = csv.writer(f, dialect=csv.excel)
-            for cookbook in sorted(self._cookbooks.values(), key=lambda cookbook: cookbook.id):
-                writer.writerow(cookbook.to_tuple())
-
     def _generate_cookbook_id(self):
         i = 1
         while i in self._cookbooks:
@@ -74,3 +67,6 @@ class CookbookManager:
 
     def get_cookbook(self, id: int):
         return self._cookbooks[id]
+
+    def _write_cookbooks_to_file(self):
+        write_entities_to_file(self.get_cookbooks_file(), self._cookbooks.values())

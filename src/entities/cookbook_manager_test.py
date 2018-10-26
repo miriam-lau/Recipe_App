@@ -1,7 +1,5 @@
 import unittest
-from .cookbook_manager import CookbookManager
 from .cookbook import Cookbook
-from src.settings.settings import Settings
 from src.testing import test_utils
 
 

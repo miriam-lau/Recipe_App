@@ -37,7 +37,7 @@ class Cookbook:
         return Cookbook(int(values[0]), values[1], values[2])
 
     def to_tuple(self):
-        return self._id, self.name, self.notes
+        return self.id, self.name, self.notes
 
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name and self.notes == other.notes

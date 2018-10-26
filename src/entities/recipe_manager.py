@@ -1,8 +1,6 @@
 from .recipe import Recipe
-from pathlib import Path
 import csv
-from .files.atomic_write import atomic_write
-from .cookbook_manager import CookbookManager
+from .files.files import write_entities_to_file
 import os
 
 from src.settings.settings import Settings
@@ -80,10 +78,7 @@ class RecipeManager:
         self._write_recipes_to_file()
 
     def _write_recipes_to_file(self):
-        with atomic_write(self.get_recipes_file(), keep=False) as f:
-            writer = csv.writer(f, dialect=csv.excel)
-            for recipe in sorted(self._recipes.values(), key=lambda recipe: recipe.id):
-                writer.writerow(recipe.to_tuple())
+        write_entities_to_file(self.get_recipes_file(), self._recipes.values())
 
     def _generate_recipe_id(self):
         i = 1
