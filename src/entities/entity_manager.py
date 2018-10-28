@@ -50,8 +50,8 @@ class EntityManager:
         entity.modify(values)
         self.write_entities_to_file()
 
-    def delete_entity(self, id: int):
-        entity = self.get_entity(id)
+    def delete_entity(self, entity_id: int):
+        entity = self.get_entity(entity_id)
         if self.children_entity_manager:
             entity_children = []
             for child in entity.children:
@@ -60,7 +60,7 @@ class EntityManager:
                 self.children_entity_manager.delete_entity(child.entity_id)
         if self.parent_entity_manager:
             self.parent_entity_manager.get_entity(entity.parent_id).remove_child(entity)
-        del self._entity_map[id]
+        del self._entity_map[entity_id]
         self.write_entities_to_file()
 
     def write_entities_to_file(self):
