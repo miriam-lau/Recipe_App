@@ -47,7 +47,7 @@ def add_cookbook():
 
 @app.route("/editcookbook/<int:entity_id>", methods=["POST"])
 def edit_cookbook(entity_id: int):
-    cookbook_manager.modify_entity(entity_id, {'name': request.form["cookbook_name"], 'notes': request.form["cookbook_notes"]})
+    cookbook_manager.modify_entity(entity_id, {"name": request.form["cookbook_name"], "notes": request.form["cookbook_notes"]})
     return redirect(url_for("render_cookbook", entity_id=entity_id))
 
 
@@ -94,8 +94,8 @@ def edit_recipe(entity_id: int):
     if "recipe_has_image" in request.form:
         recipe_has_image = request.form["recipe_has_image"].lower() == "true"
     recipe_manager.modify_recipe(
-        entity_id, (request.form["recipe_name"], request.form["recipe_priority"], \
-        "True" if recipe_has_image else "False", request.form["recipe_category"], request.form["recipe_notes"]))
+        entity_id, {"name": request.form["recipe_name"], "priority": request.form["recipe_priority"], \
+        "has_image" : "True" if recipe_has_image else "False", "category": request.form["recipe_category"], "notes": request.form["recipe_notes"]})
     return redirect(url_for("render_recipe", entity_id=entity_id))
 
 
@@ -137,9 +137,9 @@ def add_entry():
 @app.route("/editentry/<int:entity_id>", methods=["POST"])
 def edit_entry(entity_id: int):
     entry_manager.modify_entity(
-        entity_id, (request.form["entry_date"], \
-        request.form["entry_miriam_rating"], request.form["entry_james_rating"], \
-        request.form["entry_miriam_comments"], request.form["entry_james_comments"]))
+        entity_id, {"date": request.form["entry_date"], \
+        "miriam_rating": request.form["entry_miriam_rating"], "james_rating": request.form["entry_james_rating"], \
+        "miriam_comments": request.form["entry_miriam_comments"], "james_comments": request.form["entry_james_comments"]})
     return redirect(url_for("render_entry", entity_id=entity_id))
 
 

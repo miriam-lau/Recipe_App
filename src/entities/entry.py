@@ -1,5 +1,5 @@
 import math
-from typing import Tuple
+from typing import Tuple, Dict
 import datetime
 from .entity import Entity
 
@@ -16,20 +16,20 @@ class Entry(Entity):
         self.james_comments: str = james_comments
 
     @staticmethod
-    def from_tuple(id: int, parent_id: int, values: Tuple[str]):
-        return Entry(id, parent_id, datetime.datetime.strptime(values[0], '%Y-%m-%d'), \
+    def from_tuple(entity_id: int, parent_id: int, values: Tuple[str]):
+        return Entry(entity_id, parent_id, datetime.datetime.strptime(values[0], "%Y-%m-%d"), \
                      float(values[1]), float(values[2]), values[3], values[4])
 
     def to_tuple(self):
         return self.entity_id, self.recipe_id, self.date.strftime("%Y-%m-%d"), self.miriam_rating, self.james_rating, \
                self.miriam_comments, self.james_comments
 
-    def modify(self, values: Tuple[str]):
-        self.date = datetime.datetime.strptime(values[0], '%Y-%m-%d')
-        self.miriam_rating = float(values[1])
-        self.james_rating = float(values[2])
-        self.miriam_comments = values[3]
-        self.james_comments = values[4]
+    def modify(self, values: Dict[str, str]):
+        self.date = datetime.datetime.strptime(values["date"], '%Y-%m-%d')
+        self.miriam_rating = float(values["miriam_rating"])
+        self.james_rating = float(values["james_rating"])
+        self.miriam_comments = values["miriam_comments"]
+        self.james_comments = values["james_comments"]
 
     @property
     def recipe_id(self):

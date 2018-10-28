@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Dict
 import datetime
 from .entity import Entity
 
@@ -16,18 +16,18 @@ class Recipe(Entity):
 
     @staticmethod
     def from_tuple(id: int, parent_id: int, values: Tuple[str]):
-        return Recipe(id, parent_id, values[0], int(values[1]), values[2].lower() == 'true', \
+        return Recipe(id, parent_id, values[0], int(values[1]), values[2].lower() == "true", \
                       values[3], values[4])
 
     def to_tuple(self):
         return self.entity_id, self.cookbook_id, self.name, self.priority, self.has_image, self.category, self.notes
 
-    def modify(self, values: Tuple[str]):
-        self.name = values[0]
-        self.priority = int(values[1])
-        self.has_image = values[2].lower() == 'true'
-        self.category = values[3]
-        self.notes = values[4]
+    def modify(self, values: Dict[str, str]):
+        self.name = values["name"]
+        self.priority = int(values["priority"])
+        self.has_image = values["has_image"].lower() == "true"
+        self.category = values["category"]
+        self.notes = values["notes"]
 
     @property
     def cookbook_id(self):

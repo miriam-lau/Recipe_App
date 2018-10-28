@@ -22,8 +22,8 @@ class Cookbook(Entity):
         return self.entity_id, "0", self.name, self.notes
 
     def modify(self, values: Dict[str, str]):
-        self.name = values['name']
-        self.notes = values['notes']
+        self.name = values["name"]
+        self.notes = values["notes"]
 
     @property
     def recipes(self):

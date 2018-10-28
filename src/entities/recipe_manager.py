@@ -1,6 +1,6 @@
 from .recipe import Recipe
 from .entity_manager import EntityManager
-from typing import Tuple
+from typing import Dict
 import os
 
 from src.settings.settings import Settings
@@ -27,9 +27,9 @@ class RecipeManager(EntityManager):
         recipe.has_image = True
         self.write_entities_to_file()
 
-    def modify_recipe(self, id: int, values: Tuple[str]):
+    def modify_recipe(self, id: int, values: Dict[str, str]):
         self.modify_entity(id, values)
-        if values[2].lower() == 'false':
+        if values["has_image"].lower() == 'false':
             image_filename = self.get_entity(id).get_image_filename(self._settings)
             if os.path.exists(image_filename):
                 os.remove(image_filename)
