@@ -19,9 +19,16 @@ def initialize_app():
     global entry_manager
     global settings
     settings = Settings()
-    cookbook_manager = CookbookManager.create_and_initialize_cookbook_manager(settings)
-    recipe_manager = RecipeManager.create_and_initialize_recipe_manager(cookbook_manager, settings)
-    entry_manager = EntryManager.create_and_initialize_entry_manager(recipe_manager, settings)
+    cookbook_manager = CookbookManager(settings)
+    recipe_manager = RecipeManager(settings)
+    entry_manager = EntryManager(settings)
+    cookbook_manager.children_entity_manager = recipe_manager
+    recipe_manager.parent_entity_manager = cookbook_manager
+    recipe_manager.children_entity_manager = entry_manager
+    entry_manager.parent_entity_manager = recipe_manager
+    cookbook_manager.initialize()
+    recipe_manager.initialize()
+    entry_manager.initialize()
 
 
 @app.route("/")
@@ -34,13 +41,13 @@ def render_cookbooks():
 
 @app.route("/addcookbook", methods=["POST"])
 def add_cookbook():
-    cookbook_manager.add_new_cookbook(request.form["cookbook_name"], request.form["cookbook_notes"])
+    cookbook_manager.add_new_entity(None, (request.form["cookbook_name"], request.form["cookbook_notes"]))
     return redirect(url_for("render_cookbooks"))
 
 
 @app.route("/editcookbook/<int:id>", methods=["POST"])
 def edit_cookbook(id: int):
-    cookbook_manager.modify_cookbook(id, request.form["cookbook_name"], request.form["cookbook_notes"])
+    cookbook_manager.modify_entity(id, (request.form["cookbook_name"], request.form["cookbook_notes"]))
     return redirect(url_for("render_cookbook", id=id))
 
 
@@ -49,7 +56,7 @@ def delete_cookbook(id: int):
     if request.form["cookbook_delete"] != "delete":
         return redirect(url_for("render_edit_cookbook", id=id))
 
-    cookbook_manager.delete_cookbook(recipe_manager, entry_manager, id)
+    cookbook_manager.delete_entity(id)
     return redirect(url_for("render_cookbooks"))
 
 
@@ -69,9 +76,9 @@ def render_edit_cookbook(id: int):
 
 @app.route("/addrecipe", methods=["POST"])
 def add_recipe():
-    recipe = recipe_manager.add_new_recipe(
-        cookbook_manager, request.form["recipe_cookbook_id"], request.form["recipe_name"], \
-        request.form["recipe_priority"], request.form["recipe_category"], request.form["recipe_notes"])
+    recipe = recipe_manager.add_new_entity(
+        int(request.form["recipe_cookbook_id"]), (request.form["recipe_name"], \
+        request.form["recipe_priority"], "False", request.form["recipe_category"], request.form["recipe_notes"]))
     return redirect(url_for("render_cookbook", id=recipe.cookbook_id))
 
 
@@ -87,8 +94,8 @@ def edit_recipe(id: int):
     if "recipe_has_image" in request.form:
         recipe_has_image = request.form["recipe_has_image"].lower() == "true"
     recipe_manager.modify_recipe(
-        id, request.form["recipe_name"], request.form["recipe_category"], int(request.form["recipe_priority"]), \
-        recipe_has_image, request.form["recipe_notes"])
+        id, (request.form["recipe_name"], request.form["recipe_priority"], \
+        "True" if recipe_has_image else "False", request.form["recipe_category"], request.form["recipe_notes"]))
     return redirect(url_for("render_recipe", id=id))
 
 
@@ -98,7 +105,7 @@ def delete_recipe(id: int):
         return redirect(url_for("render_edit_recipe", id=id))
 
     cookbook_id = recipe_manager.get_recipe(id).cookbook_id
-    recipe_manager.delete_recipe(cookbook_manager, entry_manager, id)
+    recipe_manager.delete_entity(id)
     return redirect(url_for("render_cookbook", id=cookbook_id))
 
 
@@ -120,19 +127,19 @@ def render_edit_recipe(id: int):
 
 @app.route("/addentry", methods=["POST"])
 def add_entry():
-    entry = entry_manager.add_new_entry(
-        recipe_manager, request.form["entry_recipe_id"], request.form["entry_date"], \
+    entry = entry_manager.add_new_entity(
+        int(request.form["entry_recipe_id"]), (request.form["entry_date"], \
         request.form["entry_miriam_rating"], request.form["entry_james_rating"], \
-        request.form["entry_miriam_comments"], request.form["entry_james_comments"])
+        request.form["entry_miriam_comments"], request.form["entry_james_comments"]))
     return redirect(url_for("render_recipe", id=entry.recipe_id))
 
 
 @app.route("/editentry/<int:id>", methods=["POST"])
 def edit_entry(id: int):
-    entry_manager.modify_entry(
-        id, datetime.datetime.strptime(request.form["entry_date"], '%Y-%m-%d'), \
-        float(request.form["entry_miriam_rating"]), float(request.form["entry_james_rating"]), \
-        request.form["entry_miriam_comments"], request.form["entry_james_comments"])
+    entry_manager.modify_entity(
+        id, (request.form["entry_date"], \
+        request.form["entry_miriam_rating"], request.form["entry_james_rating"], \
+        request.form["entry_miriam_comments"], request.form["entry_james_comments"]))
     return redirect(url_for("render_entry", id=id))
 
 
@@ -142,7 +149,7 @@ def delete_entry(id: int):
         return redirect(url_for("render_edit_entry", id=id))
 
     recipe_id = entry_manager.get_entry(id).recipe_id
-    entry_manager.delete_entry(recipe_manager, id)
+    entry_manager.delete_entity(id)
     return redirect(url_for("render_recipe", id=recipe_id))
 
 

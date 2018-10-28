@@ -1,45 +1,40 @@
-from typing import List
-from .entry import Entry
+from typing import Tuple
 import datetime
 from src.settings.settings import Settings
+from .entity import Entity
 
 
 # TODO: There's a bug where has image is true but it should be false.
-class Recipe:
+class Recipe(Entity):
 
     def __init__(self, id: int, cookbook_id: int, name: str, priority: int, has_image: bool, category: str, notes: str):
-        self._id: int = id
-        self._cookbook_id: int = cookbook_id
+        Entity.__init__(self, id, cookbook_id)
         self.name: str = name
         self.priority: int = priority
         self.has_image: bool = has_image
         self.category: str = category
         self.notes: str = notes
-        self._entries: List[Entry] = []
-
-    def add_entry(self, entry: Entry):
-        self._entries.append(entry)
-
-    def remove_entry(self, entry: Entry):
-        self._entries.remove(entry)
-
-    @property
-    def id(self):
-        return self._id
 
     @property
     def cookbook_id(self):
-        return self._cookbook_id
+        return self._parent_id
 
     @property
     def entries(self):
-        return self._entries
+        return self._children
 
     # Generates a recipe from a text string that represents it.
     @staticmethod
-    def from_values(values: List[str]):
-        return Recipe(int(values[0]), int(values[1]), values[2], int(values[3]), values[4].lower() == 'true', \
-                      values[5], values[6])
+    def from_tuple(id: int, parent_id: int, values: Tuple[str]):
+        return Recipe(id, parent_id, values[0], int(values[1]), values[2].lower() == 'true', \
+                      values[3], values[4])
+
+    def modify(self, values: Tuple[str]):
+        self.name = values[0]
+        self.priority = int(values[1])
+        self.has_image = values[2].lower() == 'true'
+        self.category = values[3]
+        self.notes = values[4]
 
     def to_tuple(self):
         return self.id, self.cookbook_id, self.name, self.priority, self.has_image, self.category, self.notes
@@ -52,7 +47,7 @@ class Recipe:
         rating = 0.0
         for entry in self.entries:
             entry_rating = entry.get_overall_rating()
-            if (entry_rating > rating):
+            if entry_rating > rating:
                 rating = entry_rating
         return rating
 
@@ -72,7 +67,9 @@ class Recipe:
     def get_today_date(self):
         return datetime.datetime.today().strftime('%Y-%m-%d')
 
-    def get_image_filename(self, settings: Settings):
+    def get_image_filename(self, settings):
         return "%sRecipeImages/%s.jpg" % (settings.recipe_app_directory, self.id)
 
-
+    def __str__(self):
+        return "id: %s, parent id: %s, name: %s, priority: %s, has_image: %s, category: %s, notes: %s" % \
+               (self.id, self.parent_id, self.name, self.priority, self.has_image, self.category, self.notes)
