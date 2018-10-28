@@ -1,5 +1,6 @@
-from typing import Tuple
+from typing import Tuple, Dict, List
 from .entity import Entity
+from .recipe import Recipe
 
 
 SUCCESS_THRESHOLD = 6.99
@@ -8,32 +9,32 @@ PRIORITY_THRESHOLD = 0.99
 
 class Cookbook(Entity):
 
-    def __init__(self, id: int, name, notes):
-        Entity.__init__(self, id, None)
-        self.name: str = name
-        self.notes: str = notes
+    def __init__(self, entity_id: int, name, notes):
+        Entity.__init__(self, entity_id, None)
+        self.name = name
+        self.notes = notes
+
+    @staticmethod
+    def from_tuple(entity_id: int, parent_id_unused, values: Tuple[str]):
+        return Cookbook(entity_id, values[0], values[1])
+
+    def to_tuple(self):
+        return self.entity_id, "0", self.name, self.notes
+
+    def modify(self, values: Dict[str, str]):
+        self.name = values['name']
+        self.notes = values['notes']
 
     @property
     def recipes(self):
         return self._children
 
-    def recipes_by_best_rating_descending(self):
+    def recipes_by_best_rating_descending(self) -> List[Recipe]:
         return sorted(self.recipes, key=lambda recipe: recipe.get_best_rating(), reverse=True)
 
-    # Generates a cookbook from a text string that represents it.
-    @staticmethod
-    def from_tuple(id: int, parent_id_unused, values: Tuple[str]):
-        return Cookbook(id, values[0], values[1])
-
-    def to_tuple(self):
-        return self.id, "0", self.name, self.notes
-
-    def modify(self, values: Tuple[str]):
-        self.name = values[0]
-        self.notes = values[1]
-
+    # For unit testing.
     def __eq__(self, other):
-        return self.id == other.id and self.name == other.name and self.notes == other.notes
+        return self.entity_id == other.entity_id and self.name == other.name and self.notes == other.notes
 
     def num_recipes_made(self):
         made = 0
@@ -60,4 +61,4 @@ class Cookbook(Entity):
         return total
 
     def __str__(self):
-        return "id: %s, parent id: %s, name: %s, notes: %s" % (self.id, self.parent_id, self.name, self.notes)
+        return "entity id: %s, parent id: %s, name: %s, notes: %s" % (self.entity_id, self.parent_id, self.name, self.notes)

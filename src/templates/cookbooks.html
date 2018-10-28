@@ -12,7 +12,7 @@
   {% for cookbook in cookbooks %}
     <tr>
       <td>
-        <a href="/cookbook/view/{{cookbook.id}}">{{cookbook.name}}</a><br/>
+        <a href="/cookbook/view/{{cookbook.entity_id}}">{{cookbook.name}}</a><br/>
       </td>
       <td>
         {{cookbook.num_recipes_made()}}

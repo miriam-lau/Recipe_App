@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<a href="/recipe/view/{{recipe.id}}">Back to {{recipe.name}} page</a><br/>
-<a href="/entry/edit/{{entry.id}}">Edit page</a><br/>
+<a href="/recipe/view/{{recipe.entity_id}}">Back to {{recipe.name}} page</a><br/>
+<a href="/entry/edit/{{entry.entity_id}}">Edit page</a><br/>
 <h1>Entry for: {{recipe.name}}</h1>
 <div class="entry-info">
   <table class="infotable">

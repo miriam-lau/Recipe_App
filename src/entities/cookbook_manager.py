@@ -14,5 +14,5 @@ class CookbookManager(EntityManager):
     def get_cookbooks(self):
         return self._get_entities()
 
-    def get_cookbook(self, id: int):
-        return self.get_entity(id)
+    def get_cookbook(self, entity_id: int):
+        return self.get_entity(entity_id)

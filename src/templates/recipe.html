@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<a href="/cookbook/view/{{cookbook.id}}">Back to {{cookbook.name}} page</a><br/>
-<a href="/recipe/edit/{{recipe.id}}">Edit page</a><br/>
+<a href="/cookbook/view/{{cookbook.entity_id}}">Back to {{cookbook.name}} page</a><br/>
+<a href="/recipe/edit/{{recipe.entity_id}}">Edit page</a><br/>
 <h1>{{cookbook.name}}: {{recipe.name}}</h1>
 {% if recipe.has_image %}
-<img class="recipe-image" src="/serveimage/{{recipe.id}}.jpg"/>
+<img class="recipe-image" src="/serveimage/{{recipe.entity_id}}.jpg"/>
 {% endif %}
 <div class="recipe-info">
   <table class="infotable">
@@ -42,7 +42,7 @@
   {% for entry in recipe.entries_by_date_descending() %}
     <tr>
       <td>
-        <a href="/entry/view/{{entry.id}}">{{entry.date_string()}}</a><br/>
+        <a href="/entry/view/{{entry.entity_id}}">{{entry.date_string()}}</a><br/>
       </td>
       <td>
         {{entry.get_overall_rating()}}
@@ -111,7 +111,7 @@
       <div class="row">
         <input type="submit" value="Submit" formmethod="post">
       </div>
-      <input type="hidden" name="entry_recipe_id" value="{{recipe.id}}">
+      <input type="hidden" name="entry_recipe_id" value="{{recipe.entity_id}}">
     </form>
   </div>
 </div>

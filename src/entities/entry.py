@@ -6,27 +6,23 @@ from .entity import Entity
 
 class Entry(Entity):
 
-    def __init__(self, id: int, recipe_id: int, date: datetime, miriam_rating: float, james_rating: float, \
+    def __init__(self, entity_id: int, recipe_id: int, date: datetime, miriam_rating: float, james_rating: float, \
                  miriam_comments, james_comments):
-        Entity.__init__(self, id, recipe_id)
+        Entity.__init__(self, entity_id, recipe_id)
         self.date: datetime = date
         self.miriam_rating: float = miriam_rating
         self.james_rating: float = james_rating
         self.miriam_comments: str = miriam_comments
         self.james_comments: str = james_comments
 
-    @property
-    def id(self):
-        return self._id
-
-    @property
-    def recipe_id(self):
-        return self._parent_id
-
     @staticmethod
     def from_tuple(id: int, parent_id: int, values: Tuple[str]):
         return Entry(id, parent_id, datetime.datetime.strptime(values[0], '%Y-%m-%d'), \
                      float(values[1]), float(values[2]), values[3], values[4])
+
+    def to_tuple(self):
+        return self.entity_id, self.recipe_id, self.date.strftime("%Y-%m-%d"), self.miriam_rating, self.james_rating, \
+               self.miriam_comments, self.james_comments
 
     def modify(self, values: Tuple[str]):
         self.date = datetime.datetime.strptime(values[0], '%Y-%m-%d')
@@ -35,9 +31,9 @@ class Entry(Entity):
         self.miriam_comments = values[3]
         self.james_comments = values[4]
 
-    def to_tuple(self):
-        return self.id, self.recipe_id, self.date.strftime("%Y-%m-%d"), self.miriam_rating, self.james_rating, \
-               self.miriam_comments, self.james_comments
+    @property
+    def recipe_id(self):
+        return self._parent_id
 
     def date_string(self):
         return self.date.strftime("%Y-%m-%d")
@@ -53,7 +49,7 @@ class Entry(Entity):
         return round(rating, 1)
 
     def __eq__(self, other):
-        return self.id == other.id and self.recipe_id == other.recipe_id and self.date == other.date and \
+        return self.entity_id == other.entity_id and self.recipe_id == other.recipe_id and self.date == other.date and \
             math.isclose(self.miriam_rating, other.miriam_rating) and \
                math.isclose(self.james_rating, other.james_rating) and \
                self.miriam_comments == other.miriam_comments and self.james_comments == other.james_comments

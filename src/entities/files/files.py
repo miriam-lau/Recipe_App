@@ -97,17 +97,9 @@ def atomic_write(filename, text=True, keep=True,
                 pass
 
 
-def write_tuples_to_file(filename: str, values: List[Tuple]):
+# TODO: Needs a unit test.
+def write_tuples_to_file(filename, values: List[Tuple[str]]):
     with atomic_write(filename, keep=False) as f:
         writer = csv.writer(f, dialect=csv.excel)
         for value in values:
             writer.writerow(value)
-
-
-def write_entities_to_file(filename: str, entities: List):
-    sorted_entities = sorted(entities, key=lambda entity: entity.id)
-    entity_tuples = []
-    for entity in sorted_entities:
-        entity_tuples.append(entity.to_tuple())
-    write_tuples_to_file(filename, entity_tuples)
-

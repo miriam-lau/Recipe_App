@@ -1,7 +1,7 @@
 import csv
 from typing import Tuple
-from .files.files import write_entities_to_file
 from .entity import Entity
+from .files.files import write_tuples_to_file
 
 
 class EntityManager:
@@ -30,8 +30,8 @@ class EntityManager:
 
     # Adds entities that already have an id.
     def add_existing_entity(self, entity):
-        assert entity.id is not None, "Entity id should not be None"
-        self._entity_map[entity.id] = entity
+        assert entity.entity_id is not None, "Entity id should not be None"
+        self._entity_map[entity.entity_id] = entity
         if self.parent_entity_manager:
             self.parent_entity_manager.get_entity(entity.parent_id).add_child(entity)
 
@@ -56,14 +56,18 @@ class EntityManager:
             for child in entity.children:
                 entity_children.append(child)
             for child in entity_children:
-                self.children_entity_manager.delete_entity(child.id)
+                self.children_entity_manager.delete_entity(child.entity_id)
         if self.parent_entity_manager:
             self.parent_entity_manager.get_entity(entity.parent_id).remove_child(entity)
         del self._entity_map[id]
         self.write_entities_to_file()
 
     def write_entities_to_file(self):
-        write_entities_to_file(self.get_entities_file(), self._entity_map.values())
+        sorted_entities = sorted(self._entity_map.values(), key=lambda entity: entity.entity_id)
+        entity_tuples = []
+        for entity in sorted_entities:
+            entity_tuples.append(entity.to_tuple())
+        write_tuples_to_file(self.get_entities_file(), entity_tuples)
 
     def _generate_entity_id(self):
         i = 1

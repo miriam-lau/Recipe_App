@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 
 
-DROPBOX_FILE_PREFIXES = ["/Users/miriamlau", "/home/james"]
+DROPBOX_FILE_PREFIXES = ["/Users/miriamlau", "/Users/jameslee", "/home/james"]
 DROPBOX_FILE = "/Dropbox/RecipeApp/"
 
 
@@ -16,8 +16,11 @@ class Settings:
         for recipes_file_prefix in DROPBOX_FILE_PREFIXES:
             recipes_directory = recipes_file_prefix + DROPBOX_FILE
             recipe_file = Path(recipes_directory)
-            if recipe_file.is_dir():
-                return recipes_directory
+            try:
+                if recipe_file.is_dir():
+                    return recipes_directory
+            except IOError:
+                print("An error occurred trying to open %s", recipe_file)
         raise ValueError("A valid dropbox directory could not be found")
 
     def _get_debug_mode(self):

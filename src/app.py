@@ -45,32 +45,32 @@ def add_cookbook():
     return redirect(url_for("render_cookbooks"))
 
 
-@app.route("/editcookbook/<int:id>", methods=["POST"])
-def edit_cookbook(id: int):
-    cookbook_manager.modify_entity(id, (request.form["cookbook_name"], request.form["cookbook_notes"]))
-    return redirect(url_for("render_cookbook", id=id))
+@app.route("/editcookbook/<int:entity_id>", methods=["POST"])
+def edit_cookbook(entity_id: int):
+    cookbook_manager.modify_entity(entity_id, {'name': request.form["cookbook_name"], 'notes': request.form["cookbook_notes"]})
+    return redirect(url_for("render_cookbook", entity_id=entity_id))
 
 
-@app.route("/deletecookbook/<int:id>", methods=["POST"])
-def delete_cookbook(id: int):
+@app.route("/deletecookbook/<int:entity_id>", methods=["POST"])
+def delete_cookbook(entity_id: int):
     if request.form["cookbook_delete"] != "delete":
-        return redirect(url_for("render_edit_cookbook", id=id))
+        return redirect(url_for("render_edit_cookbook", entity_id=entity_id))
 
-    cookbook_manager.delete_entity(id)
+    cookbook_manager.delete_entity(entity_id)
     return redirect(url_for("render_cookbooks"))
 
 
-@app.route("/cookbook/view/<int:id>")
-def render_cookbook(id: int):
+@app.route("/cookbook/view/<int:entity_id>")
+def render_cookbook(entity_id: int):
     debug_mode = settings.debug_mode
-    cookbook = cookbook_manager.get_cookbook(id)
+    cookbook = cookbook_manager.get_cookbook(entity_id)
     return render_template('cookbook.html',**locals())
 
 
-@app.route("/cookbook/edit/<int:id>")
-def render_edit_cookbook(id: int):
+@app.route("/cookbook/edit/<int:entity_id>")
+def render_edit_cookbook(entity_id: int):
     debug_mode = settings.debug_mode
-    cookbook = cookbook_manager.get_cookbook(id)
+    cookbook = cookbook_manager.get_cookbook(entity_id)
     return render_template('edit_cookbook.html',**locals())
 
 
@@ -79,48 +79,48 @@ def add_recipe():
     recipe = recipe_manager.add_new_entity(
         int(request.form["recipe_cookbook_id"]), (request.form["recipe_name"], \
         request.form["recipe_priority"], "False", request.form["recipe_category"], request.form["recipe_notes"]))
-    return redirect(url_for("render_cookbook", id=recipe.cookbook_id))
+    return redirect(url_for("render_cookbook", entity_id=recipe.cookbook_id))
 
 
-@app.route("/recipe/uploadimage/<int:id>", methods=["POST", "GET"])
-def upload_recipe_image(id: int):
-    recipe_manager.upload_recipe_image(id, request.files['file'])
-    return redirect(url_for("render_recipe", id=id))
+@app.route("/recipe/uploadimage/<int:entity_id>", methods=["POST", "GET"])
+def upload_recipe_image(entity_id: int):
+    recipe_manager.upload_recipe_image(entity_id, request.files['file'])
+    return redirect(url_for("render_recipe", entity_id=entity_id))
 
 
-@app.route("/editrecipe/<int:id>", methods=["POST"])
-def edit_recipe(id: int):
+@app.route("/editrecipe/<int:entity_id>", methods=["POST"])
+def edit_recipe(entity_id: int):
     recipe_has_image = False
     if "recipe_has_image" in request.form:
         recipe_has_image = request.form["recipe_has_image"].lower() == "true"
     recipe_manager.modify_recipe(
-        id, (request.form["recipe_name"], request.form["recipe_priority"], \
+        entity_id, (request.form["recipe_name"], request.form["recipe_priority"], \
         "True" if recipe_has_image else "False", request.form["recipe_category"], request.form["recipe_notes"]))
-    return redirect(url_for("render_recipe", id=id))
+    return redirect(url_for("render_recipe", entity_id=entity_id))
 
 
-@app.route("/deleterecipe/<int:id>", methods=["POST"])
-def delete_recipe(id: int):
+@app.route("/deleterecipe/<int:entity_id>", methods=["POST"])
+def delete_recipe(entity_id: int):
     if request.form["recipe_delete"] != "delete":
-        return redirect(url_for("render_edit_recipe", id=id))
+        return redirect(url_for("render_edit_recipe", entity_id=entity_id))
 
-    cookbook_id = recipe_manager.get_recipe(id).cookbook_id
-    recipe_manager.delete_entity(id)
-    return redirect(url_for("render_cookbook", id=cookbook_id))
+    cookbook_id = recipe_manager.get_recipe(entity_id).cookbook_id
+    recipe_manager.delete_entity(entity_id)
+    return redirect(url_for("render_cookbook", entity_id=cookbook_id))
 
 
-@app.route("/recipe/view/<int:id>")
-def render_recipe(id: int):
+@app.route("/recipe/view/<int:entity_id>")
+def render_recipe(entity_id: int):
     debug_mode = settings.debug_mode
-    recipe = recipe_manager.get_recipe(id)
+    recipe = recipe_manager.get_recipe(entity_id)
     cookbook = cookbook_manager.get_cookbook(recipe.cookbook_id)
     return render_template('recipe.html',**locals())
 
 
-@app.route("/recipe/edit/<int:id>")
-def render_edit_recipe(id: int):
+@app.route("/recipe/edit/<int:entity_id>")
+def render_edit_recipe(entity_id: int):
     debug_mode = settings.debug_mode
-    recipe = recipe_manager.get_recipe(id)
+    recipe = recipe_manager.get_recipe(entity_id)
     cookbook = cookbook_manager.get_cookbook(recipe.cookbook_id)
     return render_template('edit_recipe.html',**locals())
 
@@ -131,40 +131,40 @@ def add_entry():
         int(request.form["entry_recipe_id"]), (request.form["entry_date"], \
         request.form["entry_miriam_rating"], request.form["entry_james_rating"], \
         request.form["entry_miriam_comments"], request.form["entry_james_comments"]))
-    return redirect(url_for("render_recipe", id=entry.recipe_id))
+    return redirect(url_for("render_recipe", entity_id=entry.recipe_id))
 
 
-@app.route("/editentry/<int:id>", methods=["POST"])
-def edit_entry(id: int):
+@app.route("/editentry/<int:entity_id>", methods=["POST"])
+def edit_entry(entity_id: int):
     entry_manager.modify_entity(
-        id, (request.form["entry_date"], \
+        entity_id, (request.form["entry_date"], \
         request.form["entry_miriam_rating"], request.form["entry_james_rating"], \
         request.form["entry_miriam_comments"], request.form["entry_james_comments"]))
-    return redirect(url_for("render_entry", id=id))
+    return redirect(url_for("render_entry", entity_id=entity_id))
 
 
-@app.route("/deleteentry/<int:id>", methods=["POST"])
-def delete_entry(id: int):
+@app.route("/deleteentry/<int:entity_id>", methods=["POST"])
+def delete_entry(entity_id: int):
     if request.form["entry_delete"] != "delete":
-        return redirect(url_for("render_edit_entry", id=id))
+        return redirect(url_for("render_edit_entry", entity_id=entity_id))
 
-    recipe_id = entry_manager.get_entry(id).recipe_id
-    entry_manager.delete_entity(id)
-    return redirect(url_for("render_recipe", id=recipe_id))
+    recipe_id = entry_manager.get_entry(entity_id).recipe_id
+    entry_manager.delete_entity(entity_id)
+    return redirect(url_for("render_recipe", entity_id=recipe_id))
 
 
-@app.route("/entry/view/<int:id>")
-def render_entry(id: int):
+@app.route("/entry/view/<int:entity_id>")
+def render_entry(entity_id: int):
     debug_mode = settings.debug_mode
-    entry = entry_manager.get_entry(id)
+    entry = entry_manager.get_entry(entity_id)
     recipe = recipe_manager.get_recipe(entry.recipe_id)
     return render_template('entry.html',**locals())
 
 
-@app.route("/entry/edit/<int:id>")
-def render_edit_entry(id: int):
+@app.route("/entry/edit/<int:entity_id>")
+def render_edit_entry(entity_id: int):
     debug_mode = settings.debug_mode
-    entry = entry_manager.get_entry(id)
+    entry = entry_manager.get_entry(entity_id)
     recipe = recipe_manager.get_recipe(entry.recipe_id)
     return render_template('edit_entry.html',**locals())
 
