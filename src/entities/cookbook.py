@@ -15,7 +15,7 @@ class Cookbook(Entity):
         self.notes = notes
 
     @staticmethod
-    def from_tuple(entity_id: int, parent_id_unused, values: Tuple[str]):
+    def from_tuple(entity_id: int, parent_id_unused, values: Tuple[str, str]):
         return Cookbook(entity_id, values[0], values[1])
 
     def to_tuple(self):
@@ -31,10 +31,6 @@ class Cookbook(Entity):
 
     def recipes_by_best_rating_descending(self) -> List[Recipe]:
         return sorted(self.recipes, key=lambda recipe: recipe.get_best_rating(), reverse=True)
-
-    # For unit testing.
-    def __eq__(self, other):
-        return self.entity_id == other.entity_id and self.name == other.name and self.notes == other.notes
 
     def num_recipes_made(self):
         made = 0
@@ -61,4 +57,9 @@ class Cookbook(Entity):
         return total
 
     def __str__(self):
-        return "entity id: %s, parent id: %s, name: %s, notes: %s" % (self.entity_id, self.parent_id, self.name, self.notes)
+        return "entity id: %s, parent id: %s, name: %s, notes: %s" % \
+               (self.entity_id, self.parent_id, self.name, self.notes)
+
+    # For unit testing.
+    def __eq__(self, other):
+        return self.entity_id == other.entity_id and self.name == other.name and self.notes == other.notes

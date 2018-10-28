@@ -14,12 +14,6 @@ class RecipeManager(EntityManager):
     def __init__(self, settings: Settings):
         EntityManager.__init__(self, Recipe, settings, PROD_FILE, DEBUG_FILE)
 
-    def get_recipes(self):
-        return self._get_entities()
-
-    def get_recipe(self, entity_id: int):
-        return self.get_entity(entity_id)
-
     # file is of type file found in flask
     def upload_recipe_image(self, entity_id: int, file):
         recipe = self.get_entity(entity_id)

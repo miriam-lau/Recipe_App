@@ -10,10 +10,3 @@ class EntryManager(EntityManager):
 
     def __init__(self, settings: Settings):
         EntityManager.__init__(self, Entry, settings, PROD_FILE, DEBUG_FILE)
-
-    def get_entries(self):
-        return self._get_entities()
-
-    def get_entry(self, id: int):
-        return self.get_entity(id)
-

@@ -3,7 +3,6 @@ from .entities.cookbook_manager import CookbookManager
 from .entities.recipe_manager import RecipeManager
 from .entities.entry_manager import EntryManager
 from .settings.settings import Settings
-import datetime
 
 
 app = Flask(__name__)
@@ -34,7 +33,7 @@ def initialize_app():
 @app.route("/")
 def render_cookbooks():
     debug_mode = settings.debug_mode
-    cookbooks = cookbook_manager.get_cookbooks()
+    cookbooks = cookbook_manager.get_entities()
     return render_template(
         'cookbooks.html',**locals())
 
@@ -63,14 +62,14 @@ def delete_cookbook(entity_id: int):
 @app.route("/cookbook/view/<int:entity_id>")
 def render_cookbook(entity_id: int):
     debug_mode = settings.debug_mode
-    cookbook = cookbook_manager.get_cookbook(entity_id)
+    cookbook = cookbook_manager.get_entity(entity_id)
     return render_template('cookbook.html',**locals())
 
 
 @app.route("/cookbook/edit/<int:entity_id>")
 def render_edit_cookbook(entity_id: int):
     debug_mode = settings.debug_mode
-    cookbook = cookbook_manager.get_cookbook(entity_id)
+    cookbook = cookbook_manager.get_entity(entity_id)
     return render_template('edit_cookbook.html',**locals())
 
 
@@ -104,7 +103,7 @@ def delete_recipe(entity_id: int):
     if request.form["recipe_delete"] != "delete":
         return redirect(url_for("render_edit_recipe", entity_id=entity_id))
 
-    cookbook_id = recipe_manager.get_recipe(entity_id).cookbook_id
+    cookbook_id = recipe_manager.get_entity(entity_id).cookbook_id
     recipe_manager.delete_entity(entity_id)
     return redirect(url_for("render_cookbook", entity_id=cookbook_id))
 
@@ -112,16 +111,16 @@ def delete_recipe(entity_id: int):
 @app.route("/recipe/view/<int:entity_id>")
 def render_recipe(entity_id: int):
     debug_mode = settings.debug_mode
-    recipe = recipe_manager.get_recipe(entity_id)
-    cookbook = cookbook_manager.get_cookbook(recipe.cookbook_id)
+    recipe = recipe_manager.get_entity(entity_id)
+    cookbook = cookbook_manager.get_entity(recipe.cookbook_id)
     return render_template('recipe.html',**locals())
 
 
 @app.route("/recipe/edit/<int:entity_id>")
 def render_edit_recipe(entity_id: int):
     debug_mode = settings.debug_mode
-    recipe = recipe_manager.get_recipe(entity_id)
-    cookbook = cookbook_manager.get_cookbook(recipe.cookbook_id)
+    recipe = recipe_manager.get_entity(entity_id)
+    cookbook = cookbook_manager.get_entity(recipe.cookbook_id)
     return render_template('edit_recipe.html',**locals())
 
 
@@ -148,7 +147,7 @@ def delete_entry(entity_id: int):
     if request.form["entry_delete"] != "delete":
         return redirect(url_for("render_edit_entry", entity_id=entity_id))
 
-    recipe_id = entry_manager.get_entry(entity_id).recipe_id
+    recipe_id = entry_manager.get_entity(entity_id).recipe_id
     entry_manager.delete_entity(entity_id)
     return redirect(url_for("render_recipe", entity_id=recipe_id))
 
@@ -156,16 +155,16 @@ def delete_entry(entity_id: int):
 @app.route("/entry/view/<int:entity_id>")
 def render_entry(entity_id: int):
     debug_mode = settings.debug_mode
-    entry = entry_manager.get_entry(entity_id)
-    recipe = recipe_manager.get_recipe(entry.recipe_id)
+    entry = entry_manager.get_entity(entity_id)
+    recipe = recipe_manager.get_entity(entry.recipe_id)
     return render_template('entry.html',**locals())
 
 
 @app.route("/entry/edit/<int:entity_id>")
 def render_edit_entry(entity_id: int):
     debug_mode = settings.debug_mode
-    entry = entry_manager.get_entry(entity_id)
-    recipe = recipe_manager.get_recipe(entry.recipe_id)
+    entry = entry_manager.get_entity(entity_id)
+    recipe = recipe_manager.get_entity(entry.recipe_id)
     return render_template('edit_entry.html',**locals())
 
 

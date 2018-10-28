@@ -1,9 +1,9 @@
 import unittest
-from .cookbook import Cookbook
+from .entity import Entity
 from src.testing import test_utils
 
 
-class TestCookbookManager(unittest.TestCase):
+class TestEntityManager(unittest.TestCase):
 
     def setUp(self):
         self.cookbook_manager, self.recipe_manager, self.entry_manager, self.settings = \

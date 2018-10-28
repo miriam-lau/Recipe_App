@@ -1,5 +1,5 @@
 import csv
-from typing import Tuple
+from typing import Tuple, Dict
 from .entity import Entity
 from .files.files import write_tuples_to_file
 
@@ -35,7 +35,7 @@ class EntityManager:
         if self.parent_entity_manager:
             self.parent_entity_manager.get_entity(entity.parent_id).add_child(entity)
 
-    def add_new_entity(self, parent_id: int, values: Tuple[str]) -> Entity:
+    def add_new_entity(self, parent_id: int, values: Tuple[str, ...]) -> Entity:
         entity_id = self._generate_entity_id()
         entity = self._entity_class.from_tuple(entity_id, parent_id, values)
         self._entity_map[entity_id] = entity
@@ -44,8 +44,8 @@ class EntityManager:
         self.write_entities_to_file()
         return entity
 
-    def modify_entity(self, id: int, values: Tuple[str]):
-        entity = self.get_entity(id)
+    def modify_entity(self, entity_id: int, values: Dict[str, str]):
+        entity = self.get_entity(entity_id)
         entity.modify(values)
         self.write_entities_to_file()
 
@@ -75,8 +75,8 @@ class EntityManager:
             i += 1
         return i
 
-    def _get_entities(self):
+    def get_entities(self):
         return sorted(self._entity_map.values(), key=lambda entity: entity.name.lower())
 
-    def get_entity(self, id: int):
-        return self._entity_map[id]
+    def get_entity(self, entity_id: int):
+        return self._entity_map[entity_id]

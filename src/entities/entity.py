@@ -1,8 +1,8 @@
-from typing import Tuple, Dict
+from typing import Tuple, Dict, Optional
 
 
 class Entity:
-    def __init__(self, entity_id: int, parent_id: int):
+    def __init__(self, entity_id: int, parent_id: Optional[int]):
         self._entity_id = entity_id
         self._children = []
         self._parent_id = parent_id
