@@ -1,5 +1,5 @@
 import csv
-from typing import Tuple, Dict
+from typing import Tuple, Dict, Type
 from .entity import Entity
 from .files.files import write_tuples_to_file
 
@@ -7,23 +7,24 @@ from .files.files import write_tuples_to_file
 class EntityManager:
 
     # entity_class needs a type.
-    def __init__(self, entity_class, settings, prod_file: str, debug_file: str):
-        self._entity_map = {}
+    def __init__(self, entity_class: Type[Entity], settings, prod_filename, debug_filename):
+        self._entity_map: Dict[int, Entity] = {}
         self._entity_class = entity_class
         self._settings = settings
-        self._prod_file = prod_file
-        self._debug_file = debug_file
+        self._prod_filename = prod_filename
+        self._debug_filename = debug_filename
         self.parent_entity_manager = None
         self.children_entity_manager = None
 
     def get_entities_file(self):
         file_prefix = self._settings.recipe_app_directory
-        file_postfix = self._debug_file if self._settings.debug_mode else self._prod_file
+        file_postfix = self._debug_filename if self._settings.debug_mode else self._prod_filename
         return file_prefix + file_postfix
 
+    # Both the parent and children entity managers must be set before initialize is called.
     def initialize(self):
-        with open(self.get_entities_file(), 'rt') as csvfile:
-            csv_reader = csv.reader(csvfile, dialect=csv.excel)
+        with open(self.get_entities_file(), 'rt') as csv_file:
+            csv_reader = csv.reader(csv_file, dialect=csv.excel)
             for entity_values in csv_reader:
                 entity = self._entity_class.from_tuple(int(entity_values[0]), int(entity_values[1]), entity_values[2:])
                 self.add_existing_entity(entity)
@@ -63,7 +64,7 @@ class EntityManager:
         self.write_entities_to_file()
 
     def write_entities_to_file(self):
-        sorted_entities = sorted(self._entity_map.values(), key=lambda entity: entity.entity_id)
+        sorted_entities = sorted(self._entity_map.values(), key=lambda cur_entity: cur_entity.entity_id)
         entity_tuples = []
         for entity in sorted_entities:
             entity_tuples.append(entity.to_tuple())

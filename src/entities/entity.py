@@ -27,7 +27,7 @@ class Entity:
 
     # For generating an entity by parsing the input csv file.
     @staticmethod
-    def from_tuple(entity_id: int, parent_id: int, values: Tuple[str]):
+    def from_tuple(entity_id: int, parent_id: int, values: Tuple[str, ...]):
         pass
 
     def to_tuple(self):
