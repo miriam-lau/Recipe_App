@@ -1,5 +1,5 @@
 import csv
-from typing import Tuple, Dict, Type
+from typing import Tuple, Dict, Type, Optional
 from .entity import Entity
 from .files.files import write_tuples_to_file
 
@@ -36,7 +36,7 @@ class EntityManager:
         if self.parent_entity_manager:
             self.parent_entity_manager.get_entity(entity.parent_id).add_child(entity)
 
-    def add_new_entity(self, parent_id: int, values: Tuple[str, ...]) -> Entity:
+    def add_new_entity(self, parent_id: Optional[int], values: Tuple[str, ...]) -> Entity:
         entity_id = self._generate_entity_id()
         entity = self._entity_class.from_tuple(entity_id, parent_id, values)
         self._entity_map[entity_id] = entity
