@@ -20,6 +20,8 @@
       <tr>
         <td>Has image</td><td><input type="text" id="recipe_has_image" name="recipe_has_image" value="{{recipe.has_image}}"></td>
       </tr>
+      {% else %}
+        <input type="hidden" name="recipe_has_image" value="False">
       {% endif %}
       <tr>
         <td>Notes</td><td><input type="text" id="recipe_notes" name="recipe_notes" value="{{recipe.notes}}"></td>

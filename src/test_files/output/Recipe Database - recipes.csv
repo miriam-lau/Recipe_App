@@ -1,4 +1,4 @@
-1,6,Beef stew,2,False,Lunch,Needs salt
-2,6,Test,0,False,Lunch,Needs salt
-8,6,Sashimi,1,True,Lunch,Great
-9,7,Chicken pot pie,3,True,Dinner,Okay
+entity id,parent id,name,priority,has image,category,notes
+1,70,default name,2,False,default category,default notes
+80,60,Sushi,1,True,Lunch,Great
+90,70,Chicken pot pie,3,True,Dinner,Okay

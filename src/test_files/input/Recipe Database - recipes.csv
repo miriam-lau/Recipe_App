@@ -1,2 +1,3 @@
-9,7,Chicken pot pie,3,True,Dinner,Okay
-8,6,Sashimi,1,True,Lunch,Great
+entity id,parent id,name,priority,has image,category,notes
+90,70,Chicken pot pie,3,True,Dinner,Okay
+80,60,Sushi,1,True,Lunch,Great

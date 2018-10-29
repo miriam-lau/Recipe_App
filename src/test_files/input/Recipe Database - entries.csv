@@ -1,2 +1,3 @@
-11,9,2018-01-02,4,2,Terrible,Disgusting
-10,8,2018-10-22,9.5,9.1,Good,Delicious
+entity id,parent id,date,miriam rating,james rating,miriam comments,james comments
+110,90,2018-01-02,4,2,Terrible,Disgusting
+100,80,2018-10-22,9.5,9.1,Good,Delicious

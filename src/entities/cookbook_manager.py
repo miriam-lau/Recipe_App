@@ -10,3 +10,6 @@ class CookbookManager(EntityManager):
 
     def __init__(self, settings: Settings):
         EntityManager.__init__(self, Cookbook, settings, PROD_FILE, DEBUG_FILE)
+
+    def get_sorted_cookbooks(self):
+        return sorted(self._entity_map.values(), key=lambda entity: entity.name)

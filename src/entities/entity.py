@@ -1,19 +1,32 @@
-from typing import Tuple, Dict, Optional
+from __future__ import annotations
+from typing import List, Dict, Optional
 
 
 class Entity:
-    def __init__(self, entity_id: int, parent_id: Optional[int]):
-        self._entity_id = entity_id
-        self._children = []
-        self._parent_id = parent_id
+
+    ENTITY_ID_HEADER = "entity id"
+    PARENT_ID_HEADER = "parent id"
+
+    def __init__(self, entity_id, parent: Optional[Entity]):
+        self._entity_id: int = entity_id
+        self._parent: Optional[Entity] = parent
+        if parent:
+            parent.add_child(self)
+        self._children: List[Entity] = []
 
     @property
     def entity_id(self):
         return self._entity_id
 
     @property
-    def parent_id(self):
-        return self._parent_id
+    def parent(self):
+        return self._parent
+
+    @property
+    def parent_id(self) -> Optional[int]:
+        if not self.parent:
+            return None
+        return self.parent.entity_id
 
     @property
     def children(self):
@@ -25,13 +38,16 @@ class Entity:
     def remove_child(self, child):
         self._children.remove(child)
 
-    # For generating an entity by parsing the input csv file.
     @staticmethod
-    def from_tuple(entity_id: int, parent_id: int, values: Tuple[str, ...]):
+    def from_dict(entity_id, parent, data: Dict[str, str]) -> Entity:
         pass
 
-    def to_tuple(self):
+    def to_dict(self) -> Dict[str, str]:
         pass
 
     def modify(self, values: Dict[str, str]):
+        pass
+
+    @staticmethod
+    def file_headers() -> List[str]:
         pass

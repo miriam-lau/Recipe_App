@@ -1,3 +1,6 @@
-1,1,2017-05-24,7.0,6.0,Okay,Meh
-10,8,2018-10-22,9.5,9.1,Good,Delicious
-11,9,2018-01-02,4.0,2.0,Terrible,Disgusting
+entity id,parent id,date,miriam rating,james rating,miriam comments,james comments
+1,1,2018-06-01,8.0,7.0,default miriam comments,default james comments
+2,1,2018-06-01,8.0,7.0,default miriam comments,default james comments
+3,1,2018-06-01,8.0,7.0,default miriam comments,default james comments
+100,80,2018-10-22,9.5,9.1,Good,Delicious
+110,90,2018-01-02,4.0,2.0,Terrible,Disgusting

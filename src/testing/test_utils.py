@@ -1,9 +1,12 @@
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 from src.settings.settings import Settings
 from src.entities.cookbook_manager import CookbookManager
 from src.entities.recipe_manager import RecipeManager
 from src.entities.entry_manager import EntryManager
 from src.entities.entity import Entity
+from src.entities.recipe import Recipe
+from src.entities.cookbook import Cookbook
+from src.entities.entry import Entry
 
 
 def initialize_test_environment() -> Tuple[CookbookManager, RecipeManager, EntryManager, Settings]:
@@ -27,3 +30,36 @@ def initialize_test_environment() -> Tuple[CookbookManager, RecipeManager, Entry
 def print_entities(entities: List[Entity]):
     for entity in entities:
         print(str(entity))
+
+
+def default_entry_dict_with_overrides(overrides: Dict[str, str] = {}) -> Dict[str, str]:
+    entry_dict = {
+        Entry.DATE_HEADER: "2018-06-01",
+        Entry.MIRIAM_RATING_HEADER: "8.0",
+        Entry.JAMES_RATING_HEADER: "7.0",
+        Entry.MIRIAM_COMMENTS_HEADER: "default miriam comments",
+        Entry.JAMES_COMMENTS_HEADER: "default james comments"
+    }
+    entry_dict.update(overrides)
+    return entry_dict
+
+
+def default_recipe_dict_with_overrides(overrides: Dict[str, str] = {}) -> Dict[str, str]:
+    recipe_dict = {
+        Recipe.NAME_HEADER: "default name",
+        Recipe.PRIORITY_HEADER: "2",
+        Recipe.HAS_IMAGE_HEADER: "False",
+        Recipe.CATEGORY_HEADER: "default category",
+        Recipe.NOTES_HEADER: "default notes"
+    }
+    recipe_dict.update(overrides)
+    return recipe_dict
+
+
+def default_cookbook_dict_with_overrides(overrides: Dict[str, str] = {}) -> Dict[str, str]:
+    cookbook_dict = {
+        Cookbook.NAME_HEADER: "default name",
+        Cookbook.NOTES_HEADER: "default notes"
+    }
+    cookbook_dict.update(overrides)
+    return cookbook_dict

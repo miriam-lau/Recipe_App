@@ -1,5 +1,4 @@
-1,Atelier Crenn,Superb
-2,Smitten Kitchen,Meh
-3,America's Test Kitchen,Bad
-6,Momofuku,Okay
-7,Joy of Cooking,Great
+entity id,parent id,name,notes
+1,0,default name,default notes
+60,0,Momofuku,Okay
+70,0,Joy of Cooking,Great

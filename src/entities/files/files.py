@@ -4,8 +4,6 @@ import os
 import stat
 import sys
 import tempfile
-from typing import Tuple, List
-import csv
 
 
 @contextlib.contextmanager
@@ -86,8 +84,6 @@ def atomic_write(filename, text=True, keep=True,
         # POSIX systems, and Windows for Python 3.3 or higher.
         replace(tmp, filename)
         tmp = None
-        os.chown(filename, uid, gid)
-        os.chmod(filename, mod)
     finally:
         if (tmp is not None) and (not keep):
             # Silently delete the temporary file. Ignore any errors.
@@ -95,11 +91,3 @@ def atomic_write(filename, text=True, keep=True,
                 os.unlink(tmp)
             except:
                 pass
-
-
-# TODO: Needs a unit test.
-def write_tuples_to_file(filename, values: List[Tuple[str]]):
-    with atomic_write(filename, keep=False) as f:
-        writer = csv.writer(f, dialect=csv.excel)
-        for value in values:
-            writer.writerow(value)
