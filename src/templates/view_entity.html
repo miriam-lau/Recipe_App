@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% if back_link %}
+<a href="{{back_link}}">{{back_text}}</a><br/>
+{% endif %}
+{% if edit_link %}
+<a href="{{edit_link}}">Edit page</a><br/>
+{% endif %}
+<h1>{{title}}</h1>
+{% if has_info_template %}
+{% if info_image_name %}
+<img class="info-image" src="{{info_image_name}}"/>
+{% endif %}
+<div class="info">
+  <table class="infotable">
+    {% for info in info_dicts %}
+    <tr>
+      <td>{{info.name}}:</td><td>{{info.value}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% if has_children_list_template %}
+<div class="children-list">
+  <table class="table">
+    <tr>
+      {% for header in child_table_headers %}
+      <th>{{header}}</th>
+      {% endfor %}
+    </tr>
+  {% for child_table_value in child_table_values %}
+    <tr>
+      {% for index in range(child_table_value.row|length) %}
+      <td>
+        {% if index == 0 %}
+          <a href="{{child_table_value.link}}">{{child_table_value.row[index]}}</a>
+        {% else %}
+          {{child_table_value.row[index]}}
+        {% endif %}{{value}}
+      </td>
+      {% endfor %}
+    </tr>
+  {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% if has_add_child_template %}
+<div class="add-child">
+  <h2>{{add_child_title}}</h2>
+  <div class="container">
+    <form action="{{add_child_link}}">
+      {% for add_child_dict in add_child_dicts %}
+      <div class="row">
+        <div class="col-25">
+          <label for="{{add_child_dict.child_id}}">{{add_child_dict.name}}</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="{{add_child_dict.child_id}}" name="{{add_child_dict.child_id}}"
+                 value="{{add_child_dict.value}}" placeholder="{{add_child_dict.placeholder}}">
+        </div>
+      </div>
+      {% endfor %}
+      <div class="row">
+        <input type="submit" value="Submit" formmethod="post">
+      </div>
+      {% for add_child_hidden_dict in add_child_hidden_dicts %}
+        <input type="hidden" name="{{add_child_hidden_dict.child_id}}" value="{{add_child_hidden_dict.value}}">
+      {% endfor %}
+    </form>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

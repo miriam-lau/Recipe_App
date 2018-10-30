@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<a href="{{back_link}}">{{back_text}}</a><br/>
+<a href="{{view_link}}">View page</a><br/>
+<h1>{{title}}</h1>
+<div class="info">
+  <table class="infotable">
+    <form action="{{edit_entity_link}}">
+      {% for info in edit_info_dicts %}
+      <tr>
+        <td>{{info.name}}</td><td><input type="text" id="{{info.entity_id}}" name="{{info.entity_id}}" value="{{info.value}}"></td>
+      </tr>
+      {% endfor %}
+      <tr><td></td><td><input type="submit" value="Submit" formmethod="post"></td></tr>
+    </form>
+    <form action="{{delete_link}}">
+      <tr><td>Type "delete" to delete this recipe</td><td><input type="text" id="{{delete_id}}" name="{{delete_id}}"/></td>
+      <tr><td></td><td><input type="submit" value="Delete" formmethod="post"></td></tr>
+    </form>
+  </table>
+</div>
+{% endblock %}
