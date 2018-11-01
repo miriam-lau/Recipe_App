@@ -28,6 +28,9 @@ dish_entry_manager: DishEntryManager = None
 settings: Settings = None
 
 
+DELETE_PARAM = "delete"
+
+
 def initialize_app():
     global cookbook_manager
     global recipe_manager
@@ -85,12 +88,14 @@ def render_cities():
     has_children_list_template = True
     has_add_child_template = True
 
+    back_link = "/"
+    back_text = "Back to main page"
+
     # Title section
     title = "Cities"
 
     # Children list section
-    child_table_headers = [
-        "Name", "State", "Country", "Notes"]
+    child_table_headers = ["Name", "State", "Country", "Notes"]
     child_table_values = []
 
     for city in cities:
@@ -99,14 +104,14 @@ def render_cities():
             "row": [city.name, city.state, city.country, city.notes]})
 
     # Add child section
-    add_child_link = "/addcity"
+    add_child_link = "/add/city/0"
     add_child_title = "Add City"
 
     add_child_dicts = [
-        create_add_child_dict("Name", "city_name", "", "Name"),
-        create_add_child_dict("State", "city_state", "", "State"),
-        create_add_child_dict("Country", "city_country", "", "Country"),
-        create_add_child_dict("Notes", "city_notes", "", "Notes")
+        create_add_child_dict("Name", City.NAME_HEADER, "", "Name"),
+        create_add_child_dict("State", City.STATE_HEADER, "", "State"),
+        create_add_child_dict("Country", City.COUNTRY_HEADER, "", "Country"),
+        create_add_child_dict("Notes", City.NOTES_HEADER, "", "Notes")
     ]
 
     return render_template('view_entity.html', **locals())
@@ -139,40 +144,138 @@ def render_cookbooks():
              str(cookbook.num_recipes_want_to_make())]})
 
     # Add child section
-    add_child_link = "/addcookbook"
+    add_child_link = "/add/cookbook/0"
     add_child_title = "Add Cookbook"
 
     add_child_dicts = [
-        create_add_child_dict("Name", "cookbook_name", "", "Cookbook name"),
-        create_add_child_dict("Notes", "cookbook_notes", "", "Cookbook notes")
+        create_add_child_dict("Name", Cookbook.NAME_HEADER, "", "Cookbook name"),
+        create_add_child_dict("Notes", Cookbook.NOTES_HEADER, "", "Cookbook notes")
     ]
 
     return render_template('view_entity.html', **locals())
 
 
-@app.route("/addcookbook", methods=["POST"])
-def add_cookbook():
-    cookbook_manager.add_new_entity(None, {
-        Cookbook.NAME_HEADER: request.form["cookbook_name"],
-        Cookbook.NOTES_HEADER: request.form["cookbook_notes"]})
-    return redirect(url_for("render_cookbooks"))
+@app.route("/add/<entity_type>/<int:entity_id>", methods=["POST"])
+def add_entity(entity_type: str, entity_id: int):
+    entity_manager = None
+    redirect_url = None
+    if entity_type == "cookbook":
+        entity_manager = cookbook_manager
+        redirect_url = "render_cookbooks"
+    elif entity_type == "recipe":
+        entity_manager = recipe_manager
+        redirect_url = "render_cookbook"
+    elif entity_type == "entry":
+        entity_manager = entry_manager
+        redirect_url = "render_recipe"
+    elif entity_type == "city":
+        entity_manager = city_manager
+        redirect_url = "render_cities"
+    elif entity_type == "restaurant":
+        entity_manager = restaurant_manager
+        redirect_url = "render_city"
+    elif entity_type == "dish":
+        entity_manager = dish_manager
+        redirect_url = "render_restaurant"
+    elif entity_type == "dishentry":
+        entity_manager = dish_entry_manager
+        redirect_url = "render_dish"
+    entity_manager.add_new_entity(entity_id, request.form.to_dict())
+    return redirect(url_for(redirect_url, entity_id=entity_id))
 
 
-@app.route("/editcookbook/<int:entity_id>", methods=["POST"])
-def edit_cookbook(entity_id: int):
-    cookbook_manager.modify_entity(entity_id,
-                                   {Cookbook.NAME_HEADER: request.form["cookbook_name"],
-                                    Cookbook.NOTES_HEADER: request.form["cookbook_notes"]})
-    return redirect(url_for("render_cookbook", entity_id=entity_id))
+@app.route("/edit/<entity_type>/<int:entity_id>", methods=["POST"])
+def edit_entity(entity_type: str, entity_id: int):
+    entity_manager = None
+    redirect_url = None
+    if entity_type == "cookbook":
+        entity_manager = cookbook_manager
+        redirect_url = "render_cookbook"
+    elif entity_type == "recipe":
+        entity_manager = recipe_manager
+        redirect_url = "render_recipe"
+    elif entity_type == "entry":
+        entity_manager = entry_manager
+        redirect_url = "render_entry"
+    elif entity_type == "city":
+        entity_manager = city_manager
+        redirect_url = "render_city"
+    elif entity_type == "restaurant":
+        entity_manager = restaurant_manager
+        redirect_url = "render_restaurant"
+    elif entity_type == "dish":
+        entity_manager = dish_manager
+        redirect_url = "render_dish"
+    elif entity_type == "dishentry":
+        entity_manager = dish_entry_manager
+        redirect_url = "render_dish_entry"
+    entity_manager.modify_entity(entity_id, request.form.to_dict())
+    return redirect(url_for(redirect_url, entity_id=entity_id))
 
 
-@app.route("/deletecookbook/<int:entity_id>", methods=["POST"])
-def delete_cookbook(entity_id: int):
-    if request.form["cookbook_delete"] != "delete":
-        return redirect(url_for("render_edit_cookbook", entity_id=entity_id))
+@app.route("/delete/<entity_type>/<int:entity_id>", methods=["POST"])
+def delete_entity(entity_type, entity_id: int):
+    entity_manager = None
+    unsuccessful_redirect_url = None
+    successful_redirect_url = None
+    if entity_type == "cookbook":
+        entity_manager = cookbook_manager
+        unsuccessful_redirect_url = "render_edit_cookbook"
+        successful_redirect_url = "render_cookbooks"
+    elif entity_type == "recipe":
+        entity_manager = recipe_manager
+        unsuccessful_redirect_url = "render_edit_recipe"
+        successful_redirect_url = "render_cookbook"
+    elif entity_type == "entry":
+        entity_manager = entry_manager
+        unsuccessful_redirect_url = "render_edit_entry"
+        successful_redirect_url = "render_recipe"
+    elif entity_type == "city":
+        entity_manager = city_manager
+        unsuccessful_redirect_url = "render_edit_city"
+        successful_redirect_url = "render_cities"
+    elif entity_type == "restaurant":
+        entity_manager = restaurant_manager
+        unsuccessful_redirect_url = "render_edit_restaurant"
+        successful_redirect_url = "render_city"
+    elif entity_type == "dish":
+        entity_manager = dish_manager
+        unsuccessful_redirect_url = "render_edit_dish"
+        successful_redirect_url = "render_restaurant"
+    elif entity_type == "dishentry":
+        entity_manager = dish_entry_manager
+        unsuccessful_redirect_url = "render_edit_dish_entry"
+        successful_redirect_url = "render_dish"
+    if request.form[DELETE_PARAM] != "delete":
+        return redirect(url_for(unsuccessful_redirect_url, entity_id=entity_id))
 
-    cookbook_manager.delete_entity(entity_id)
-    return redirect(url_for("render_cookbooks"))
+    parent_id = entity_manager.get_entity(entity_id).parent_id
+    entity_manager.delete_entity(entity_id)
+    return redirect(url_for(successful_redirect_url, entity_id=parent_id))
+
+
+@app.route("/cookbook/edit/<int:entity_id>")
+def render_edit_cookbook(entity_id: int):
+    debug_mode = settings.debug_mode
+    cookbook = cookbook_manager.get_entity(entity_id)
+
+    # Title section
+    back_link = "/"
+    back_text = "Back to main page"
+    view_link = "/cookbook/view/%s" % cookbook.entity_id
+    title = cookbook.name
+
+    # Info section
+    edit_entity_link = "/edit/cookbook/%s" % cookbook.entity_id
+
+    edit_info_dicts = [
+        create_edit_info_dict("Name", Cookbook.NAME_HEADER, cookbook.name),
+        create_edit_info_dict("Notes", Cookbook.NOTES_HEADER, cookbook.notes)
+    ]
+
+    delete_link = "/delete/cookbook/%s" % cookbook.entity_id
+
+    return render_template('edit_entity.html', **locals())
 
 
 @app.route("/cookbook/view/<int:entity_id>")
@@ -214,85 +317,22 @@ def render_cookbook(entity_id: int):
                     recipe.category]})
 
     # Add child section
-    add_child_link = "/addrecipe"
+    add_child_link = "/add/recipe/%s" % entity_id
     add_child_title = "Add Recipe"
 
     add_child_dicts = [
-        create_add_child_dict("Name", "recipe_name", "", "Name"),
-        create_add_child_dict("Category", "recipe_category", "", "Category"),
-        create_add_child_dict("Priority", "recipe_priority", "", "Priority"),
-        create_add_child_dict("Notes", "recipe_notes", "", "Notes")]
-
-    add_child_hidden_dicts = [
-        create_add_child_hidden_dict("recipe_cookbook_id", str(cookbook.entity_id))
-    ]
+        create_add_child_dict("Name", Recipe.NAME_HEADER, "", "Name"),
+        create_add_child_dict("Category", Recipe.CATEGORY_HEADER, "", "Category"),
+        create_add_child_dict("Priority", Recipe.PRIORITY_HEADER, "", "Priority"),
+        create_add_child_dict("Notes", Recipe.NOTES_HEADER, "", "Notes")]
 
     return render_template('view_entity.html', **locals())
-
-
-@app.route("/cookbook/edit/<int:entity_id>")
-def render_edit_cookbook(entity_id: int):
-    debug_mode = settings.debug_mode
-    cookbook = cookbook_manager.get_entity(entity_id)
-
-    # Title section
-    back_link = "/"
-    back_text = "Back to main page"
-    view_link = "/cookbook/view/%s" % cookbook.entity_id
-    title = cookbook.name
-
-    # Info section
-    edit_entity_link = "/editcookbook/%s" % cookbook.entity_id
-
-    edit_info_dicts = [
-        create_edit_info_dict("Name", "cookbook_name", cookbook.name),
-        create_edit_info_dict("Notes", "cookbook_notes", cookbook.notes)
-    ]
-
-    delete_link = "/deletecookbook/%s" % cookbook.entity_id
-    delete_id = "cookbook_delete"
-
-    return render_template('edit_entity.html', **locals())
-
-
-@app.route("/addrecipe", methods=["POST"])
-def add_recipe():
-    recipe = recipe_manager.add_new_entity(
-        int(request.form["recipe_cookbook_id"]), {
-            Recipe.NAME_HEADER: request.form["recipe_name"],
-            Recipe.PRIORITY_HEADER: request.form["recipe_priority"],
-            Recipe.HAS_IMAGE_HEADER: "False",
-            Recipe.CATEGORY_HEADER: request.form["recipe_category"],
-            Recipe.NOTES_HEADER: request.form["recipe_notes"]})
-    return redirect(url_for("render_cookbook", entity_id=recipe.parent_id))
 
 
 @app.route("/recipe/uploadimage/<int:entity_id>", methods=["POST", "GET"])
 def upload_recipe_image(entity_id: int):
     recipe_manager.upload_recipe_image(entity_id, request.files['file'])
     return redirect(url_for("render_recipe", entity_id=entity_id))
-
-
-@app.route("/editrecipe/<int:entity_id>", methods=["POST"])
-def edit_recipe(entity_id: int):
-    recipe_manager.modify_entity(
-        entity_id, {
-            Recipe.NAME_HEADER: request.form["recipe_name"],
-            Recipe.PRIORITY_HEADER: request.form["recipe_priority"],
-            Recipe.HAS_IMAGE_HEADER: request.form["recipe_has_image"],
-            Recipe.CATEGORY_HEADER: request.form["recipe_category"],
-            Recipe.NOTES_HEADER: request.form["recipe_notes"]})
-    return redirect(url_for("render_recipe", entity_id=entity_id))
-
-
-@app.route("/deleterecipe/<int:entity_id>", methods=["POST"])
-def delete_recipe(entity_id: int):
-    if request.form["recipe_delete"] != "delete":
-        return redirect(url_for("render_edit_recipe", entity_id=entity_id))
-
-    cookbook_id = recipe_manager.get_entity(entity_id).parent_id
-    recipe_manager.delete_entity(entity_id)
-    return redirect(url_for("render_cookbook", entity_id=cookbook_id))
 
 
 @app.route("/recipe/view/<int:entity_id>")
@@ -337,19 +377,15 @@ def render_recipe(entity_id: int):
              entry.james_rating, entry.james_comments]})
 
     # Add child section
-    add_child_link = "/addentry"
+    add_child_link = "/add/entry/%s" % entity_id
     add_child_title = "Add Entry"
 
     add_child_dicts = [
-        create_add_child_dict("Date", "entry_date", datetime.datetime.today().strftime('%Y-%m-%d'), ""),
-        create_add_child_dict("Miriam's Rating", "entry_miriam_rating", "", "Miriam's rating"),
-        create_add_child_dict("Miriam's Comments", "entry_miriam_comments", "", "Miriam's comments"),
-        create_add_child_dict("James' Rating", "entry_james_rating", "", "James' rating"),
-        create_add_child_dict("James' Comments", "entry_james_comments", "", "James' comments"),
-    ]
-
-    add_child_hidden_dicts = [
-        create_add_child_hidden_dict("entry_recipe_id", str(recipe.entity_id))
+        create_add_child_dict("Date", Entry.DATE_HEADER, datetime.datetime.today().strftime('%Y-%m-%d'), ""),
+        create_add_child_dict("Miriam's Rating", Entry.MIRIAM_RATING_HEADER, "", "Miriam's rating"),
+        create_add_child_dict("Miriam's Comments", Entry.MIRIAM_COMMENTS_HEADER, "", "Miriam's comments"),
+        create_add_child_dict("James' Rating", Entry.JAMES_RATING_HEADER, "", "James' rating"),
+        create_add_child_dict("James' Comments", Entry.JAMES_COMMENTS_HEADER, "", "James' comments"),
     ]
 
     return render_template('view_entity.html', **locals())
@@ -368,54 +404,19 @@ def render_edit_recipe(entity_id: int):
     title = "%s: %s" % (cookbook.name, recipe.name)
 
     # Info section
-    edit_entity_link = "/editrecipe/%s" % recipe.entity_id
+    edit_entity_link = "/edit/recipe/%s" % recipe.entity_id
 
     edit_info_dicts = [
-        create_edit_info_dict("Name", "recipe_name", recipe.name),
-        create_edit_info_dict("Category", "recipe_category", recipe.category),
-        create_edit_info_dict("Priority", "recipe_priority", str(recipe.priority)),
-        create_edit_info_dict("Has image", "recipe_has_image", str(recipe.has_image)),
-        create_edit_info_dict("Notes", "recipe_notes", recipe.notes)
+        create_edit_info_dict("Name", Recipe.NAME_HEADER, recipe.name),
+        create_edit_info_dict("Category", Recipe.CATEGORY_HEADER, recipe.category),
+        create_edit_info_dict("Priority", Recipe.PRIORITY_HEADER, str(recipe.priority)),
+        create_edit_info_dict("Has image", Recipe.HAS_IMAGE_HEADER, str(recipe.has_image)),
+        create_edit_info_dict("Notes", Recipe.NOTES_HEADER, recipe.notes)
     ]
 
-    delete_link = "/deleterecipe/%s" % recipe.entity_id
-    delete_id = "recipe_delete"
+    delete_link = "/delete/recipe/%s" % recipe.entity_id
 
     return render_template('edit_entity.html', **locals())
-
-
-@app.route("/addentry", methods=["POST"])
-def add_entry():
-    entry = entry_manager.add_new_entity(
-        int(request.form["entry_recipe_id"]), {
-            Entry.DATE_HEADER: request.form["entry_date"],
-            Entry.MIRIAM_RATING_HEADER: request.form["entry_miriam_rating"],
-            Entry.JAMES_RATING_HEADER: request.form["entry_james_rating"],
-            Entry.MIRIAM_COMMENTS_HEADER: request.form["entry_miriam_comments"],
-            Entry.JAMES_COMMENTS_HEADER: request.form["entry_james_comments"]})
-    return redirect(url_for("render_recipe", entity_id=entry.parent_id))
-
-
-@app.route("/editentry/<int:entity_id>", methods=["POST"])
-def edit_entry(entity_id: int):
-    entry_manager.modify_entity(
-        entity_id, {
-            Entry.DATE_HEADER: request.form["entry_date"],
-            Entry.MIRIAM_RATING_HEADER: request.form["entry_miriam_rating"],
-            Entry.JAMES_RATING_HEADER: request.form["entry_james_rating"],
-            Entry.MIRIAM_COMMENTS_HEADER: request.form["entry_miriam_comments"],
-            Entry.JAMES_COMMENTS_HEADER: request.form["entry_james_comments"]})
-    return redirect(url_for("render_entry", entity_id=entity_id))
-
-
-@app.route("/deleteentry/<int:entity_id>", methods=["POST"])
-def delete_entry(entity_id: int):
-    if request.form["entry_delete"] != "delete":
-        return redirect(url_for("render_edit_entry", entity_id=entity_id))
-
-    recipe_id = entry_manager.get_entity(entity_id).parent_id
-    entry_manager.delete_entity(entity_id)
-    return redirect(url_for("render_recipe", entity_id=recipe_id))
 
 
 @app.route("/entry/view/<int:entity_id>")
@@ -459,18 +460,17 @@ def render_edit_entry(entity_id: int):
     title = "Entry for: %s" % recipe.name
 
     # Info section
-    edit_entity_link = "/editentry/%s" % entry.entity_id
+    edit_entity_link = "/edit/entry/%s" % entry.entity_id
 
     edit_info_dicts = [
-        create_edit_info_dict("Date", "entry_date", entry.date_string()),
-        create_edit_info_dict("Miriam's rating", "entry_miriam_rating", entry.miriam_rating),
-        create_edit_info_dict("James' rating", "entry_james_rating", entry.james_rating),
-        create_edit_info_dict("Miriam's comments", "entry_miriam_comments", entry.miriam_comments),
-        create_edit_info_dict("James' comments", "entry_james_comments", entry.james_comments)
+        create_edit_info_dict("Date", Entry.DATE_HEADER, entry.date_string()),
+        create_edit_info_dict("Miriam's rating", Entry.MIRIAM_RATING_HEADER, entry.miriam_rating),
+        create_edit_info_dict("James' rating", Entry.JAMES_RATING_HEADER, entry.james_rating),
+        create_edit_info_dict("Miriam's comments", Entry.MIRIAM_COMMENTS_HEADER, entry.miriam_comments),
+        create_edit_info_dict("James' comments", Entry.JAMES_COMMENTS_HEADER, entry.james_comments)
     ]
 
-    delete_link = "/deleteentry/%s" % entry.entity_id
-    delete_id = "entry_delete"
+    delete_link = "/delete/entry/%s" % entry.entity_id
 
     return render_template('edit_entity.html', **locals())
 
@@ -508,36 +508,6 @@ initialize_app()
     </form>
 """
 
-@app.route("/addcity", methods=["POST"])
-def add_city():
-    city_manager.add_new_entity(None, {
-        City.NAME_HEADER: request.form["city_name"],
-        City.STATE_HEADER: request.form["city_state"],
-        City.COUNTRY_HEADER: request.form["city_country"],
-        City.NOTES_HEADER: request.form["city_notes"]})
-    return redirect(url_for("render_cities"))
-
-
-@app.route("/editcity/<int:entity_id>", methods=["POST"])
-def edit_city(entity_id: int):
-    city_manager.modify_entity(entity_id,
-                               {
-                                   City.NAME_HEADER: request.form["city_name"],
-                                   City.STATE_HEADER: request.form["city_state"],
-                                   City.COUNTRY_HEADER: request.form["city_country"],
-                                   City.NOTES_HEADER: request.form["city_notes"]})
-    return redirect(url_for("render_city", entity_id=entity_id))
-
-
-@app.route("/deletecity/<int:entity_id>", methods=["POST"])
-def delete_city(entity_id: int):
-    if request.form["city_delete"] != "delete":
-        return redirect(url_for("render_edit_city", entity_id=entity_id))
-
-    city_manager.delete_entity(entity_id)
-    return redirect(url_for("render_cities"))
-
-
 @app.route("/city/view/<int:entity_id>")
 def render_city(entity_id: int):
     has_info_template = True
@@ -573,17 +543,13 @@ def render_city(entity_id: int):
                     restaurant.category]})
 
     # Add child section
-    add_child_link = "/addrestaurant"
+    add_child_link = "/add/restaurant/%s" % entity_id
     add_child_title = "Add Restaurant"
 
     add_child_dicts = [
-        create_add_child_dict("Name", "restaurant_name", "", "Name"),
-        create_add_child_dict("Category", "restaurant_category", "", "Category"),
-        create_add_child_dict("Notes", "restaurant_notes", "", "Notes")]
-
-    add_child_hidden_dicts = [
-        create_add_child_hidden_dict("restaurant_city_id", str(city.entity_id))
-    ]
+        create_add_child_dict("Name", Restaurant.NAME_HEADER, "", "Name"),
+        create_add_child_dict("Category", Restaurant.CATEGORY_HEADER, "", "Category"),
+        create_add_child_dict("Notes", Restaurant.NOTES_HEADER, "", "Notes")]
 
     return render_template('view_entity.html', **locals())
 
@@ -600,49 +566,18 @@ def render_edit_city(entity_id: int):
     title = city.name
 
     # Info section
-    edit_entity_link = "/editcity/%s" % city.entity_id
+    edit_entity_link = "/edit/city/%s" % city.entity_id
 
     edit_info_dicts = [
-        create_edit_info_dict("Name", "city_name", city.name),
-        create_edit_info_dict("State", "city_state", city.state),
-        create_edit_info_dict("Country", "city_country", city.country),
-        create_edit_info_dict("Notes", "city_notes", city.notes)
+        create_edit_info_dict("Name", City.NAME_HEADER, city.name),
+        create_edit_info_dict("State", City.STATE_HEADER, city.state),
+        create_edit_info_dict("Country", City.COUNTRY_HEADER, city.country),
+        create_edit_info_dict("Notes", City.NOTES_HEADER, city.notes)
     ]
 
-    delete_link = "/deletecity/%s" % city.entity_id
-    delete_id = "city_delete"
+    delete_link = "/delete/city/%s" % city.entity_id
 
     return render_template('edit_entity.html', **locals())
-
-
-@app.route("/addrestaurant", methods=["POST"])
-def add_restaurant():
-    restaurant = restaurant_manager.add_new_entity(
-        int(request.form["restaurant_city_id"]), {
-            Restaurant.NAME_HEADER: request.form["restaurant_name"],
-            Restaurant.CATEGORY_HEADER: request.form["restaurant_category"],
-            Restaurant.NOTES_HEADER: request.form["restaurant_notes"]})
-    return redirect(url_for("render_city", entity_id=restaurant.parent_id))
-
-
-@app.route("/editrestaurant/<int:entity_id>", methods=["POST"])
-def edit_restaurant(entity_id: int):
-    restaurant_manager.modify_entity(
-        entity_id, {
-            Restaurant.NAME_HEADER: request.form["restaurant_name"],
-            Restaurant.CATEGORY_HEADER: request.form["restaurant_category"],
-            Restaurant.NOTES_HEADER: request.form["restaurant_notes"]})
-    return redirect(url_for("render_restaurant", entity_id=entity_id))
-
-
-@app.route("/deleterestaurant/<int:entity_id>", methods=["POST"])
-def delete_restaurant(entity_id: int):
-    if request.form["restaurant_delete"] != "delete":
-        return redirect(url_for("render_edit_restaurant", entity_id=entity_id))
-
-    city_id = restaurant_manager.get_entity(entity_id).parent_id
-    restaurant_manager.delete_entity(entity_id)
-    return redirect(url_for("render_city", entity_id=city_id))
 
 
 @app.route("/restaurant/view/<int:entity_id>")
@@ -684,18 +619,14 @@ def render_restaurant(entity_id: int):
                     dish.category]})
 
     # Add child section
-    add_child_link = "/adddish"
+    add_child_link = "/add/dish/%s" % entity_id
     add_child_title = "Add Dish"
 
     add_child_dicts = [
-        create_add_child_dict("Name", "dish_name", "", "Name"),
-        create_add_child_dict("Category", "dish_category", "", "Category"),
-        create_add_child_dict("Priority", "dish_priority", "", "Priority"),
-        create_add_child_dict("Notes", "dish_notes", "", "Notes")]
-
-    add_child_hidden_dicts = [
-        create_add_child_hidden_dict("dish_restaurant_id", str(restaurant.entity_id))
-    ]
+        create_add_child_dict("Name", Dish.NAME_HEADER, "", "Name"),
+        create_add_child_dict("Category", Dish.CATEGORY_HEADER, "", "Category"),
+        create_add_child_dict("Priority", Dish.PRIORITY_HEADER, "", "Priority"),
+        create_add_child_dict("Notes", Dish.NOTES_HEADER, "", "Notes")]
 
     return render_template('view_entity.html', **locals())
 
@@ -713,58 +644,23 @@ def render_edit_restaurant(entity_id: int):
     title = "%s: %s" % (city.name, restaurant.name)
 
     # Info section
-    edit_entity_link = "/editrestaurant/%s" % restaurant.entity_id
+    edit_entity_link = "/edit/restaurant/%s" % restaurant.entity_id
 
     edit_info_dicts = [
-        create_edit_info_dict("Name", "restaurant_name", restaurant.name),
-        create_edit_info_dict("Category", "restaurant_category", restaurant.category),
-        create_edit_info_dict("Notes", "restaurant_notes", restaurant.notes)
+        create_edit_info_dict("Name", Restaurant.NAME_HEADER, restaurant.name),
+        create_edit_info_dict("Category", Restaurant.CATEGORY_HEADER, restaurant.category),
+        create_edit_info_dict("Notes", Restaurant.NOTES_HEADER, restaurant.notes)
     ]
 
-    delete_link = "/deleterestaurant/%s" % restaurant.entity_id
-    delete_id = "restaurant_delete"
+    delete_link = "/delete/restaurant/%s" % restaurant.entity_id
 
     return render_template('edit_entity.html', **locals())
-
-
-@app.route("/adddish", methods=["POST"])
-def add_dish():
-    dish = dish_manager.add_new_entity(
-        int(request.form["dish_restaurant_id"]), {
-            Dish.NAME_HEADER: request.form["dish_name"],
-            Dish.PRIORITY_HEADER: request.form["dish_priority"],
-            Dish.HAS_IMAGE_HEADER: "False",
-            Dish.CATEGORY_HEADER: request.form["dish_category"],
-            Dish.NOTES_HEADER: request.form["dish_notes"]})
-    return redirect(url_for("render_restaurant", entity_id=dish.parent_id))
 
 
 @app.route("/dish/uploadimage/<int:entity_id>", methods=["POST", "GET"])
 def upload_dish_image(entity_id: int):
     dish_manager.upload_dish_image(entity_id, request.files['file'])
     return redirect(url_for("render_dish", entity_id=entity_id))
-
-
-@app.route("/editdish/<int:entity_id>", methods=["POST"])
-def edit_dish(entity_id: int):
-    dish_manager.modify_entity(
-        entity_id, {
-            Dish.NAME_HEADER: request.form["dish_name"],
-            Dish.PRIORITY_HEADER: request.form["dish_priority"],
-            Dish.HAS_IMAGE_HEADER: request.form["dish_has_image"],
-            Dish.CATEGORY_HEADER: request.form["dish_category"],
-            Dish.NOTES_HEADER: request.form["dish_notes"]})
-    return redirect(url_for("render_dish", entity_id=entity_id))
-
-
-@app.route("/deletedish/<int:entity_id>", methods=["POST"])
-def delete_dish(entity_id: int):
-    if request.form["dish_delete"] != "delete":
-        return redirect(url_for("render_edit_dish", entity_id=entity_id))
-
-    restaurant_id = dish_manager.get_entity(entity_id).parent_id
-    dish_manager.delete_entity(entity_id)
-    return redirect(url_for("render_restaurant", entity_id=restaurant_id))
 
 
 @app.route("/dish/view/<int:entity_id>")
@@ -809,19 +705,15 @@ def render_dish(entity_id: int):
              entry.james_rating, entry.james_comments]})
 
     # Add child section
-    add_child_link = "/adddishentry"
+    add_child_link = "/add/dishentry/%s" % entity_id
     add_child_title = "Add Entry"
 
     add_child_dicts = [
-        create_add_child_dict("Date", "dish_entry_date", datetime.datetime.today().strftime('%Y-%m-%d'), ""),
-        create_add_child_dict("Miriam's Rating", "dish_entry_miriam_rating", "", "Miriam's rating"),
-        create_add_child_dict("Miriam's Comments", "dish_entry_miriam_comments", "", "Miriam's comments"),
-        create_add_child_dict("James' Rating", "dish_entry_james_rating", "", "James' rating"),
-        create_add_child_dict("James' Comments", "dish_entry_james_comments", "", "James' comments"),
-    ]
-
-    add_child_hidden_dicts = [
-        create_add_child_hidden_dict("dish_entry_dish_id", str(dish.entity_id))
+        create_add_child_dict("Date", DishEntry.DATE_HEADER, datetime.datetime.today().strftime('%Y-%m-%d'), ""),
+        create_add_child_dict("Miriam's Rating", DishEntry.MIRIAM_RATING_HEADER, "", "Miriam's rating"),
+        create_add_child_dict("Miriam's Comments", DishEntry.MIRIAM_COMMENTS_HEADER, "", "Miriam's comments"),
+        create_add_child_dict("James' Rating", DishEntry.JAMES_RATING_HEADER, "", "James' rating"),
+        create_add_child_dict("James' Comments", DishEntry.JAMES_COMMENTS_HEADER, "", "James' comments"),
     ]
 
     return render_template('view_entity.html', **locals())
@@ -840,54 +732,19 @@ def render_edit_dish(entity_id: int):
     title = "%s: %s" % (restaurant.name, dish.name)
 
     # Info section
-    edit_entity_link = "/editdish/%s" % dish.entity_id
+    edit_entity_link = "/edit/dish/%s" % dish.entity_id
 
     edit_info_dicts = [
-        create_edit_info_dict("Name", "dish_name", dish.name),
-        create_edit_info_dict("Category", "dish_category", dish.category),
-        create_edit_info_dict("Priority", "dish_priority", str(dish.priority)),
-        create_edit_info_dict("Has image", "dish_has_image", str(dish.has_image)),
-        create_edit_info_dict("Notes", "dish_notes", dish.notes)
+        create_edit_info_dict("Name", Dish.NAME_HEADER, dish.name),
+        create_edit_info_dict("Category", Dish.CATEGORY_HEADER, dish.category),
+        create_edit_info_dict("Priority", Dish.PRIORITY_HEADER, str(dish.priority)),
+        create_edit_info_dict("Has image", Dish.HAS_IMAGE_HEADER, str(dish.has_image)),
+        create_edit_info_dict("Notes", Dish.NOTES_HEADER, dish.notes)
     ]
 
-    delete_link = "/deletedish/%s" % dish.entity_id
-    delete_id = "dish_delete"
+    delete_link = "/delete/dish/%s" % dish.entity_id
 
     return render_template('edit_entity.html', **locals())
-
-
-@app.route("/adddishentry", methods=["POST"])
-def add_dish_entry():
-    dish_entry = dish_entry_manager.add_new_entity(
-        int(request.form["dish_entry_dish_id"]), {
-            Entry.DATE_HEADER: request.form["dish_entry_date"],
-            Entry.MIRIAM_RATING_HEADER: request.form["dish_entry_miriam_rating"],
-            Entry.JAMES_RATING_HEADER: request.form["dish_entry_james_rating"],
-            Entry.MIRIAM_COMMENTS_HEADER: request.form["dish_entry_miriam_comments"],
-            Entry.JAMES_COMMENTS_HEADER: request.form["dish_entry_james_comments"]})
-    return redirect(url_for("render_dish", entity_id=dish_entry.parent_id))
-
-
-@app.route("/editdishentry/<int:entity_id>", methods=["POST"])
-def edit_dish_entry(entity_id: int):
-    dish_entry_manager.modify_entity(
-        entity_id, {
-            Entry.DATE_HEADER: request.form["dish_entry_date"],
-            Entry.MIRIAM_RATING_HEADER: request.form["dish_entry_miriam_rating"],
-            Entry.JAMES_RATING_HEADER: request.form["dish_entry_james_rating"],
-            Entry.MIRIAM_COMMENTS_HEADER: request.form["dish_entry_miriam_comments"],
-            Entry.JAMES_COMMENTS_HEADER: request.form["dish_entry_james_comments"]})
-    return redirect(url_for("render_dish_entry", entity_id=entity_id))
-
-
-@app.route("/deletedishentry/<int:entity_id>", methods=["POST"])
-def delete_dish_entry(entity_id: int):
-    if request.form["dish_entry_delete"] != "delete":
-        return redirect(url_for("render_edit_dish_entry", entity_id=entity_id))
-
-    dish_id = dish_entry_manager.get_entity(entity_id).parent_id
-    dish_entry_manager.delete_entity(entity_id)
-    return redirect(url_for("render_dish", entity_id=dish_id))
 
 
 @app.route("/dishentry/view/<int:entity_id>")
@@ -931,17 +788,16 @@ def render_edit_dish_entry(entity_id: int):
     title = "Entry for: %s" % dish.name
 
     # Info section
-    edit_entity_link = "/editdishentry/%s" % dish_entry.entity_id
+    edit_entity_link = "/edit/dishentry/%s" % dish_entry.entity_id
 
     edit_info_dicts = [
-        create_edit_info_dict("Date", "dish_entry_date", dish_entry.date_string()),
-        create_edit_info_dict("Miriam's rating", "dish_entry_miriam_rating", dish_entry.miriam_rating),
-        create_edit_info_dict("James' rating", "dish_entry_james_rating", dish_entry.james_rating),
-        create_edit_info_dict("Miriam's comments", "dish_entry_miriam_comments", dish_entry.miriam_comments),
-        create_edit_info_dict("James' comments", "dish_entry_james_comments", dish_entry.james_comments)
+        create_edit_info_dict("Date", DishEntry.DATE_HEADER, dish_entry.date_string()),
+        create_edit_info_dict("Miriam's rating", DishEntry.MIRIAM_RATING_HEADER, dish_entry.miriam_rating),
+        create_edit_info_dict("James' rating", DishEntry.JAMES_RATING_HEADER, dish_entry.james_rating),
+        create_edit_info_dict("Miriam's comments", DishEntry.MIRIAM_COMMENTS_HEADER, dish_entry.miriam_comments),
+        create_edit_info_dict("James' comments", DishEntry.JAMES_COMMENTS_HEADER, dish_entry.james_comments)
     ]
 
-    delete_link = "/deletedishentry/%s" % dish_entry.entity_id
-    delete_id = "dish_entry_delete"
+    delete_link = "/delete/dishentry/%s" % dish_entry.entity_id
 
     return render_template('edit_entity.html', **locals())
