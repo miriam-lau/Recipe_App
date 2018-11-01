@@ -22,7 +22,7 @@
   </table>
 </div>
 {% endif %}
-{% if has_children_list_template %}
+{% if has_children_list_template and (child_table_values|length) != 0 %}
 <div class="children-list">
   <table class="table">
     <tr>
@@ -57,8 +57,11 @@
           <label for="{{add_child_dict.child_id}}">{{add_child_dict.name}}</label>
         </div>
         <div class="col-75">
-          <input type="text" id="{{add_child_dict.child_id}}" name="{{add_child_dict.child_id}}"
-                 value="{{add_child_dict.value}}" placeholder="{{add_child_dict.placeholder}}">
+          <input id="{{add_child_dict.child_id}}" name="{{add_child_dict.child_id}}"
+                 value="{{add_child_dict.value}}" placeholder="{{add_child_dict.placeholder}}"
+          {% if add_child_dict.input_attributes %}
+            {{add_child_dict.input_attributes}}
+          {% endif %}>
         </div>
       </div>
       {% endfor %}

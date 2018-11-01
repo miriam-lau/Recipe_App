@@ -9,13 +9,18 @@
     <form action="{{edit_entity_link}}">
       {% for info in edit_info_dicts %}
       <tr>
-        <td>{{info.name}}</td><td><input type="text" id="{{info.entity_id}}" name="{{info.entity_id}}" value="{{info.value}}"></td>
+        <td>{{info.name}}</td><td>
+        <input id="{{info.entity_id}}" name="{{info.entity_id}}" value="{{info.value}}"
+        {% if info.input_attributes %}
+          {{info.input_attributes}}
+        {% endif %}></td>
       </tr>
       {% endfor %}
       <tr><td></td><td><input type="submit" value="Submit" formmethod="post"></td></tr>
     </form>
     <form action="{{delete_link}}">
-      <tr><td>Type "delete" to delete this recipe</td><td><input type="text" id="delete" name="delete"/></td>
+      <tr><td>Type "delete" to delete this {{delete_entity_type}}</td><td>
+        <input type="text" id="delete" pattern="delete" name="delete"/></td>
       <tr><td></td><td><input type="submit" value="Delete" formmethod="post"></td></tr>
     </form>
   </table>
