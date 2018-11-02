@@ -416,7 +416,8 @@ def render_edit_recipe(entity_id: int):
         create_edit_info_dict("Category", Recipe.CATEGORY_HEADER, recipe.category),
         create_edit_info_dict("Priority", Recipe.PRIORITY_HEADER, str(recipe.priority),
                               "required min=0 max=4 step=1 type=number"),
-        create_edit_info_dict("Has image", Recipe.HAS_IMAGE_HEADER, str(recipe.has_image), "pattern=true|false"),
+        create_edit_info_dict("Has image", Recipe.HAS_IMAGE_HEADER, str(recipe.has_image),
+                              "required pattern=true|false|True|False"),
         create_edit_info_dict("Notes", Recipe.NOTES_HEADER, recipe.notes)
     ]
 
@@ -728,7 +729,8 @@ def render_edit_dish(entity_id: int):
         create_edit_info_dict("Category", Dish.CATEGORY_HEADER, dish.category),
         create_edit_info_dict("Priority", Dish.PRIORITY_HEADER, str(dish.priority),
                               "required min=0 max=4 step=1 type=number"),
-        create_edit_info_dict("Has image", Dish.HAS_IMAGE_HEADER, str(dish.has_image), "pattern=true|false"),
+        create_edit_info_dict("Has image", Dish.HAS_IMAGE_HEADER, str(dish.has_image),
+                              "required pattern=true|false|True|False"),
         create_edit_info_dict("Notes", Dish.NOTES_HEADER, dish.notes)
     ]
 
