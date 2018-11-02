@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, url_for, send_from_directory
+from flask import Flask, redirect, render_template, request, url_for, send_from_directory, jsonify
 from .entities.cookbook_manager import CookbookManager
 from .entities.recipe_manager import RecipeManager
 from .entities.entry_manager import EntryManager
@@ -644,12 +644,6 @@ def render_edit_restaurant(entity_id: int):
     return render_template('edit_entity.html', **locals())
 
 
-@app.route("/dish/uploadimage/<int:entity_id>", methods=["POST", "GET"])
-def upload_dish_image(entity_id: int):
-    dish_manager.upload_dish_image(entity_id, request.files['file'])
-    return redirect(url_for("render_dish", entity_id=entity_id))
-
-
 @app.route("/dish/view/<int:entity_id>")
 def render_dish(entity_id: int):
     has_info_template = True
@@ -797,6 +791,31 @@ def render_edit_dish_entry(entity_id: int):
     delete_entity_type = "dish entry"
 
     return render_template('edit_entity.html', **locals())
+
+
+@app.route("/dish/uploadimage/<int:entity_id>", methods=["POST", "GET"])
+def upload_dish_image(entity_id: int):
+    dish_manager.upload_dish_image(entity_id, request.files['file'])
+    return redirect(url_for("render_dish", entity_id=entity_id))
+
+
+@app.route("/search_recipes")
+def render_search_recipe():
+    debug_mode = settings.debug_mode
+
+    recipes = recipe_manager.get_entities()
+
+    recipe_dicts = []
+
+    for recipe in recipes:
+        recipe_dict = recipe.to_dict()
+        recipe_dict["num_times_made"] = recipe.get_num_times_made()
+        recipe_dict["best_rating"] = recipe.get_best_rating()
+        recipe_dict["latest_rating"] = recipe.get_latest_rating()
+        recipe_dict["cookbook_name"] = recipe.parent.name
+        recipe_dicts.append(recipe_dict)
+
+    return render_template('search_recipes.html', **locals())
 
 
 def create_info_dict(name: str, value: str):
