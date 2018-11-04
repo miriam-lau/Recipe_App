@@ -1,9 +1,28 @@
 {% extends "layout.html" %}
 {% block body %}
+<a href="/">Back to main page</a><br/>
+<h1>Search Recipes</h1>
+<div>
+  <table>
+    <tr><td>Recipe Name</td><td><input id="name" oninput="handleInput()"></td></tr>
+    <tr><td>Cookbook name</td><td><input id="cookbook_name" oninput="handleInput()"></td></tr>
+    <tr><td>Min num times made</td><td><input id="min_num_times_made" type="number" value="0" oninput="handleInput()"></td>
+    <td>Max num times made</td><td><input id="max_num_times_made" type="number" value="9999" oninput="handleInput()"></td></tr>
+    <tr><td>Min best rating</td><td><input id="min_best_rating" type="number" value="0" oninput="handleInput()"></td>
+    <td>Max best rating</td><td><input id="max_best_rating" type="number" value="10" oninput="handleInput()"></td></tr>
+    <tr><td>Min priority</td><td><input id="min_priority" type="number" value="0" oninput="handleInput()"></td>
+    <td>Max priority</td><td><input id="max_priority" type="number" value="4" oninput="handleInput()"></td></tr>
+    <tr><td>Category</td><td><input id="category" oninput="handleInput()"></td></tr>
+  </table>
+</div>
+<div id="recipes_table">
+</div>
+
+<script src="/scripts.js"></script>
 <script>
   var recipe_dicts = {{recipe_dicts | tojson | safe}};
 
-  function renderTable() {
+  function handleInput() {
     var recipeName = getValue("name");
     var cookbookName = getValue("cookbook_name");
     var minNumTimesMade = parseInt(getValue("min_num_times_made"), 10);
@@ -39,50 +58,13 @@
       return true;
     });
 
-    var tableHtml = "<table class='table'>"
-        + renderTableHeaders(["Recipe name", "Cookbook name", "Category", "Best rating", "Latest rating", "Num times made", "Priority"])
-        + renderTableRows(filtered_recipes)
-        + "</table>";
-    document.getElementById("recipes_table").innerHTML = tableHtml;
+    var tableHeaders = ["Recipe name", "Cookbook name", "Category", "Best rating", "Latest rating", "Num times made", "Priority"];
+    var tableProperties = ["name", "cookbook_name", "category", "best_rating", "latest_rating", "num_times_made", "priority"];
+    var viewUrlBase = "/recipe/view/";
+    var viewUrlProperty = "entity id";
+    var tableElementId = "recipes_table";
+    renderTable(filtered_recipes, tableHeaders, tableProperties, viewUrlBase, viewUrlProperty, tableElementId);
   }
-
-  function renderTableHeaders(headers) {
-    return "<tr><th>" + headers.join("</th><th>") + "</th></tr>";
-  }
-
-  function renderTableRows(recipes) {
-    var ret = "";
-    for (i in recipes) {
-      var recipe = recipes[i];
-      ret += renderTableRow(["<a href='/recipe/view/" + recipe["entity id"] + "'>" + recipe.name + "</a>", recipe.cookbook_name, recipe.category, recipe.best_rating, recipe.latest_rating, recipe.num_times_made, recipe.priority]);
-    }
-    return ret;
-  }
-
-  function renderTableRow(cols) {
-    return "<tr><td>" + cols.join("</td><td>") + "</td></tr>";
-  }
-
-  function getValue(elementId) {
-    return document.getElementById(elementId).value.toLowerCase();
-  }
+  handleInput();
 </script>
-<a href="/">Back to main page</a><br/>
-<h1>Search Recipes</h1>
-<div>
-  <table>
-    <tr><td>Recipe Name</td><td><input id="name" oninput="renderTable()"></td></tr>
-    <tr><td>Cookbook name</td><td><input id="cookbook_name" oninput="renderTable()"></td></tr>
-    <tr><td>Min num times made</td><td><input id="min_num_times_made" type="number" value="0" oninput="renderTable()"></td>
-    <td>Max num times made</td><td><input id="max_num_times_made" type="number" value="9999" oninput="renderTable()"></td></tr>
-    <tr><td>Min best rating</td><td><input id="min_best_rating" type="number" value="0" oninput="renderTable()"></td>
-    <td>Max best rating</td><td><input id="max_best_rating" type="number" value="10" oninput="renderTable()"></td></tr>
-    <tr><td>Min priority</td><td><input id="min_priority" type="number" value="0" oninput="renderTable()"></td>
-    <td>Max priority</td><td><input id="max_priority" type="number" value="4" oninput="renderTable()"></td></tr>
-    <tr><td>Category</td><td><input id="category" oninput="renderTable()"></td></tr>
-  </table>
-</div>
-<div id="recipes_table">
-</div>
-
 {% endblock %}

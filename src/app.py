@@ -186,6 +186,11 @@ def render_main():
     return render_template('main.html', **locals())
 
 
+@app.route("/scripts.js")
+def render_scripts():
+    return render_template('scripts.js', **locals())
+
+
 @app.route("/cities")
 def render_cities():
     debug_mode = settings.debug_mode
