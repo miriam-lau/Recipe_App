@@ -821,6 +821,43 @@ def render_search_recipe():
     return render_template('search_recipes.html', **locals())
 
 
+@app.route("/search_dishes")
+def render_search_dish():
+    debug_mode = settings.debug_mode
+
+    dishes = dish_manager.get_entities()
+
+    dish_dicts = []
+
+    for dish in dishes:
+        dish_dict = dish.to_dict()
+        dish_dict["num_times_tried"] = dish.get_num_times_tried()
+        dish_dict["best_rating"] = dish.get_best_rating()
+        dish_dict["latest_rating"] = dish.get_latest_rating()
+        dish_dict["restaurant_name"] = dish.parent.name
+        dish_dict["city_name"] = dish.parent.parent.name
+        dish_dicts.append(dish_dict)
+
+    return render_template('search_dishes.html', **locals())
+
+
+@app.route("/search_restaurants")
+def render_search_restaurants():
+    debug_mode = settings.debug_mode
+
+    restaurants = restaurant_manager.get_entities()
+
+    restaurant_dicts = []
+
+    for restaurant in restaurants:
+        restaurant_dict = restaurant.to_dict()
+        restaurant_dict["best_rating"] = restaurant.get_best_rating()
+        restaurant_dict["city_name"] = restaurant.parent.name
+        restaurant_dicts.append(restaurant_dict)
+
+    return render_template('search_restaurants.html', **locals())
+
+
 def create_info_dict(name: str, value: str):
     return {"name": name, "value": value}
 

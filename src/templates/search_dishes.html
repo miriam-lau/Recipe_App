@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block body %}
+<a href="/">Back to main page</a><br/>
+<h1>Search Dishes</h1>
+<div>
+  <table>
+    <tr><td>Dish Name</td><td><input id="name" oninput="renderTable()"></td></tr>
+    <tr><td>Restaurant name</td><td><input id="restaurant_name" oninput="renderTable()"></td></tr>
+    <tr><td>City name</td><td><input id="city_name" oninput="renderTable()"></td></tr>
+    <tr><td>Min num times tried</td><td><input id="min_num_times_tried" type="number" value="0" oninput="renderTable()"></td>
+    <td>Max num times tried</td><td><input id="max_num_times_tried" type="number" value="9999" oninput="renderTable()"></td></tr>
+    <tr><td>Min best rating</td><td><input id="min_best_rating" type="number" value="0" oninput="renderTable()"></td>
+    <td>Max best rating</td><td><input id="max_best_rating" type="number" value="10" oninput="renderTable()"></td></tr>
+    <tr><td>Min priority</td><td><input id="min_priority" type="number" value="0" oninput="renderTable()"></td>
+    <td>Max priority</td><td><input id="max_priority" type="number" value="4" oninput="renderTable()"></td></tr>
+    <tr><td>Category</td><td><input id="category" oninput="renderTable()"></td></tr>
+  </table>
+</div>
+<div id="dishes_table">
+</div>
+<script>
+  var dish_dicts = {{dish_dicts | tojson | safe}};
+
+  function renderTable() {
+    var dishName = getValue("name");
+    var restaurantName = getValue("restaurant_name");
+    var cityName = getValue("city_name");
+    var minNumTimesMade = parseInt(getValue("min_num_times_tried"), 10);
+    var maxNumTimesMade = parseInt(getValue("max_num_times_tried"), 10);
+    var minBestRating = parseFloat(getValue("min_best_rating"));
+    var maxBestRating = parseFloat(getValue("max_best_rating"));
+    var minPriority = parseInt(getValue("min_priority"), 10);
+    var maxPriority = parseInt(getValue("max_priority"), 10);
+    var category = getValue("category");
+
+    var filtered_dishes = dish_dicts.filter(function(dish) {
+      if (!dish.name.toLowerCase().includes(dishName)) {
+        return false;
+      }
+      if (!dish.restaurant_name.toLowerCase().includes(restaurantName)) {
+        return false;
+      }
+      if (!dish.city_name.toLowerCase().includes(cityName)) {
+        return false;
+      }
+      var numTimesMade = parseInt(dish.num_times_tried, 10);
+      if (numTimesMade < minNumTimesMade || numTimesMade > maxNumTimesMade) {
+        return false;
+      }
+      var bestRating = parseFloat(dish.best_rating);
+      if (bestRating < minBestRating || bestRating > maxBestRating) {
+        return false;
+      }
+      var priority = parseInt(dish.priority, 10);
+      if (priority < minPriority || priority > maxPriority) {
+        return false;
+      }
+      if (!dish.category.toLowerCase().includes(category)) {
+        return false;
+      }
+      return true;
+    });
+
+    var tableHtml = "<table class='table'>"
+        + renderTableHeaders(["Dish name", "Restaurant name", "City name", "Category", "Best rating", "Latest rating", "Num times tried", "Priority"])
+        + renderTableRows(filtered_dishes)
+        + "</table>";
+    document.getElementById("dishes_table").innerHTML = tableHtml;
+  }
+
+  function renderTableHeaders(headers) {
+    return "<tr><th>" + headers.join("</th><th>") + "</th></tr>";
+  }
+
+  function renderTableRows(dishes) {
+    var ret = "";
+    for (i in dishes) {
+      var dish = dishes[i];
+      ret += renderTableRow(["<a href='/dish/view/" + dish["entity id"] + "'>" + dish.name + "</a>", dish.restaurant_name, dish.city_name, dish.category, dish.best_rating, dish.latest_rating, dish.num_times_tried, dish.priority]);
+    }
+    return ret;
+  }
+
+  function renderTableRow(cols) {
+    return "<tr><td>" + cols.join("</td><td>") + "</td></tr>";
+  }
+
+  function getValue(elementId) {
+    return document.getElementById(elementId).value.toLowerCase();
+  }
+</script>
+{% endblock %}

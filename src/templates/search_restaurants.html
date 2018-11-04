@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block body %}
+<a href="/">Back to main page</a><br/>
+<h1>Search Restaurants</h1>
+<div>
+  <table>
+    <tr><td>Restaurant Name</td><td><input id="name" oninput="renderTable()"></td></tr>
+    <tr><td>City name</td><td><input id="city_name" oninput="renderTable()"></td></tr>
+    <tr><td>Min best rating</td><td><input id="min_best_rating" type="number" value="0" oninput="renderTable()"></td>
+    <td>Max best rating</td><td><input id="max_best_rating" type="number" value="10" oninput="renderTable()"></td></tr>
+    <tr><td>Category</td><td><input id="category" oninput="renderTable()"></td></tr>
+  </table>
+</div>
+<div id="restaurants_table">
+</div>
+<script>
+  var restaurant_dicts = {{restaurant_dicts | tojson | safe}};
+
+  function renderTable() {
+    var restaurantName = getValue("name");
+    var cityName = getValue("city_name");
+    var minBestRating = parseFloat(getValue("min_best_rating"));
+    var maxBestRating = parseFloat(getValue("max_best_rating"));
+    var category = getValue("category");
+
+    var filtered_restaurants = restaurant_dicts.filter(function(restaurant) {
+      if (!restaurant.name.toLowerCase().includes(restaurantName)) {
+        return false;
+      }
+      if (!restaurant.city_name.toLowerCase().includes(cityName)) {
+        return false;
+      }
+      var bestRating = parseFloat(restaurant.best_rating);
+      if (bestRating < minBestRating || bestRating > maxBestRating) {
+        return false;
+      }
+      if (!restaurant.category.toLowerCase().includes(category)) {
+        return false;
+      }
+      return true;
+    });
+
+    var tableHtml = "<table class='table'>"
+        + renderTableHeaders(["Restaurant name", "City name", "Category", "Best rating"])
+        + renderTableRows(filtered_restaurants)
+        + "</table>";
+    document.getElementById("restaurants_table").innerHTML = tableHtml;
+  }
+
+  function renderTableHeaders(headers) {
+    return "<tr><th>" + headers.join("</th><th>") + "</th></tr>";
+  }
+
+  function renderTableRows(restaurants) {
+    var ret = "";
+    for (i in restaurants) {
+      var restaurant = restaurants[i];
+      ret += renderTableRow(["<a href='/restaurant/view/" + restaurant["entity id"] + "'>" + restaurant.name + "</a>", restaurant.city_name, restaurant.category, restaurant.best_rating]);
+    }
+    return ret;
+  }
+
+  function renderTableRow(cols) {
+    return "<tr><td>" + cols.join("</td><td>") + "</td></tr>";
+  }
+
+  function getValue(elementId) {
+    return document.getElementById(elementId).value.toLowerCase();
+  }
+  renderTable()
+</script>
+{% endblock %}
