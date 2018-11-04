@@ -5,7 +5,7 @@ from pathlib import Path
 # TODO: Needs a test.
 class Settings:
 
-    DROPBOX_FILE_PREFIXES = ["/Users/miriamlau", "/Users/jameslee", "/home/james"]
+    DROPBOX_FILE_PREFIXES = ["/Users/miriamlau", "/Users/jameslee", "/home/james", "C:\\Users\james"]
     DROPBOX_FILE = "/Dropbox/RecipeApp/"
 
     def __init__(self):

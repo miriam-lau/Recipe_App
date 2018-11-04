@@ -78,7 +78,7 @@ def atomic_write(filename, text=True, keep=True,
             # Atomic on POSIX. Not sure about Cygwin, OS/2 or others.
             replace = os.rename
     try:
-        with os.fdopen(fd, 'w' if text else 'wb') as f:
+        with os.fdopen(fd, 'w' if text else 'wb', encoding="utf8") as f:
             yield f
         # Perform an atomic rename (if possible). This will be atomic on
         # POSIX systems, and Windows for Python 3.3 or higher.

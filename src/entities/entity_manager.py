@@ -26,11 +26,13 @@ class EntityManager:
 
     # Both the parent and children entity managers must be set before initialize is called.
     def initialize(self):
-        with open(self.get_entities_file(), 'rt') as csv_file:
+        with open(self.get_entities_file(), "rt", encoding="utf8") as csv_file:
             csv_reader = csv.reader(csv_file, dialect=csv.excel)
             header_line = True
             header_map = {}
             for entity_values in csv_reader:
+                if len(entity_values) == 0:
+                    continue
                 if header_line:
                     header_line = False
                     for i in range(len(entity_values)):

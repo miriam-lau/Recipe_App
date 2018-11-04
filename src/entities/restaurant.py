@@ -8,6 +8,7 @@ from src.utils.utils import compare
 class Restaurant(Entity):
 
     NAME_HEADER = "name"
+    ADDRESS_HEADER = "address"
     CATEGORY_HEADER = "category"
     NOTES_HEADER = "notes"
 
@@ -15,6 +16,7 @@ class Restaurant(Entity):
         Entity.__init__(self, entity_id, parent)
         self.name: str = None
         self.category: str = None
+        self.address: str = None
         self.notes: str = None
         self.modify(data)
 
@@ -27,6 +29,7 @@ class Restaurant(Entity):
             Entity.ENTITY_ID_HEADER: str(self.entity_id),
             Entity.PARENT_ID_HEADER: str(self.parent.entity_id),
             Restaurant.NAME_HEADER: self.name,
+            Restaurant.ADDRESS_HEADER: self.address,
             Restaurant.CATEGORY_HEADER: self.category,
             Restaurant.NOTES_HEADER: self.notes
         }
@@ -34,6 +37,8 @@ class Restaurant(Entity):
     def modify(self, data):
         if Restaurant.NAME_HEADER in data:
             self.name = data[Restaurant.NAME_HEADER]
+        if Restaurant.ADDRESS_HEADER in data:
+            self.address = data[Restaurant.ADDRESS_HEADER]
         if Restaurant.CATEGORY_HEADER in data:
             self.category = data[Restaurant.CATEGORY_HEADER]
         if Restaurant.NOTES_HEADER in data:
@@ -42,7 +47,7 @@ class Restaurant(Entity):
     @staticmethod
     def file_headers():
         return [Entity.ENTITY_ID_HEADER, Entity.PARENT_ID_HEADER, Restaurant.NAME_HEADER, Restaurant.CATEGORY_HEADER,
-                Restaurant.NOTES_HEADER]
+                Restaurant.ADDRESS_HEADER, Restaurant.NOTES_HEADER]
 
     @property
     def dishes(self):
@@ -67,10 +72,10 @@ class Restaurant(Entity):
         return rating
 
     def __str__(self):
-        return "entity id: %s, name: %s, category: %s, notes: %s" % (
-            self.entity_id, self.name, self.category, self.notes)
+        return "entity id: %s, name: %s, address: %s, category: %s, notes: %s" % (
+            self.entity_id, self.name, self.address, self.category, self.notes)
 
     # For unit testing.
     def __eq__(self, other):
-        return self.entity_id == other.entity_id and self.name == other.name and self.category == other.category \
-                and self.notes == other.notes
+        return self.entity_id == other.entity_id and self.name == other.name and self.address == other.address and \
+               self.category == other.category and self.notes == other.notes

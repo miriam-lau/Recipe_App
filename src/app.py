@@ -532,6 +532,7 @@ def render_city(entity_id: int):
 
     add_child_dicts = [
         create_add_child_dict("Name", Restaurant.NAME_HEADER, "", "Name", NON_WHITESPACE_PATTERN),
+        create_add_child_dict("Address", Restaurant.ADDRESS_HEADER, "", "Address"),
         create_add_child_dict("Category", Restaurant.CATEGORY_HEADER, "", "Category"),
         create_add_child_dict("Notes", Restaurant.NOTES_HEADER, "", "Notes")]
 
@@ -584,6 +585,7 @@ def render_restaurant(entity_id: int):
     # Info section
     info_dicts = [
         create_info_dict("Best rating", str(restaurant.get_best_rating())),
+        create_info_dict("Address", str(restaurant.address)),
         create_info_dict("Category", str(restaurant.category)),
         create_info_dict("Notes", restaurant.notes)
     ]
@@ -634,6 +636,7 @@ def render_edit_restaurant(entity_id: int):
 
     edit_info_dicts = [
         create_edit_info_dict("Name", Restaurant.NAME_HEADER, restaurant.name, NON_WHITESPACE_PATTERN),
+        create_edit_info_dict("Address", Restaurant.ADDRESS_HEADER, restaurant.address, NON_WHITESPACE_PATTERN),
         create_edit_info_dict("Category", Restaurant.CATEGORY_HEADER, restaurant.category),
         create_edit_info_dict("Notes", Restaurant.NOTES_HEADER, restaurant.notes)
     ]
