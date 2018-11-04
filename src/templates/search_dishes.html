@@ -14,9 +14,12 @@
     <tr><td>Min priority</td><td><input id="min_priority" type="number" value="0" oninput="handleInput()"></td>
     <td>Max priority</td><td><input id="max_priority" type="number" value="4" oninput="handleInput()"></td></tr>
     <tr><td>Category</td><td><input id="category" oninput="handleInput()"></td></tr>
+    <tr><td>Limit</td><td><input id="limit" type="number" value="500" oninput="handleInput()"></td></tr>
   </table>
 </div>
 <div id="dishes_table">
+</div>
+<div id="has_more_entries">
 </div>
 <script src="/scripts.js"></script>
 <script>
@@ -33,8 +36,9 @@
     var minPriority = parseInt(getValue("min_priority"), 10);
     var maxPriority = parseInt(getValue("max_priority"), 10);
     var category = getValue("category");
+    var limit = parseInt(getValue("limit"), 10);
 
-    var filtered_dishes = dish_dicts.filter(function(dish) {
+    var filteredItems = dish_dicts.filter(function(dish) {
       if (!dish.name.toLowerCase().includes(dishName)) {
         return false;
       }
@@ -61,13 +65,16 @@
       }
       return true;
     });
+    var limitText = filteredItems.length > limit ? "Displaying first " + limit + " of " + filteredItems.length + " total." : "";
+    filteredItems = filteredItems.slice(0, limit);
+    document.getElementById("has_more_entries").innerHTML = limitText;
 
     var tableHeaders = ["Dish name", "Restaurant name", "City name", "Category", "Best rating", "Latest rating", "Num times tried", "Priority"];
     var tableProperties = ["name", "restaurant_name", "city_name", "category", "best_rating", "latest_rating", "num_times_tried", "priority"];
     var viewUrlBase = "/dish/view/";
     var viewUrlProperty = "entity id";
     var tableElementId = "dishes_table";
-    renderTable(filtered_dishes, tableHeaders, tableProperties, viewUrlBase, viewUrlProperty, tableElementId);
+    renderTable(filteredItems, tableHeaders, tableProperties, viewUrlBase, viewUrlProperty, tableElementId);
   }
   handleInput();
 </script>
