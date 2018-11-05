@@ -183,8 +183,7 @@ def upload_recipe_image(entity_id: int):
 
 @app.route("/")
 def render_main():
-    debug_mode = settings.debug_mode
-    return render_template('main.html', **locals())
+    return redirect(url_for("render_cookbooks"))
 
 
 @app.route("/scripts.js")
@@ -201,11 +200,9 @@ def render_cities():
     has_children_list_template = True
     has_add_child_template = True
 
-    back_link = "/"
-    back_text = "Back to main page"
-
     # Title section
     title = "Cities"
+    back_links = [{"url": "/cities", "name": "Cities"}]
 
     # Children list section
     child_table_headers = ["Name", "State", "Country", "Notes"]
@@ -239,11 +236,10 @@ def render_cookbooks():
     has_children_list_template = True
     has_add_child_template = True
 
-    back_link = "/"
-    back_text = "Back to main page"
-
     # Title section
     title = "Cookbooks"
+
+    back_links = [{"url": "/cookbooks", "name": "Cookbooks"}]
 
     # Children list section
     child_table_headers = [
@@ -274,9 +270,7 @@ def render_edit_cookbook(entity_id: int):
     cookbook = cookbook_manager.get_entity(entity_id)
 
     # Title section
-    back_link = "/cookbooks"
-    back_text = "Back to cookbooks page"
-    view_link = "/cookbook/view/%s" % cookbook.entity_id
+    back_links = [{"url": "/cookbooks", "name": "Cookbooks"}, {"url": "/cookbook/view/%s" % entity_id, "name": cookbook.name}];
     title = cookbook.name
 
     # Info section
@@ -303,8 +297,7 @@ def render_cookbook(entity_id: int):
     cookbook = cookbook_manager.get_entity(entity_id)
 
     # Title section
-    back_link = "/cookbooks"
-    back_text = "Back to cookbooks page"
+    back_links = [{"url": "/cookbooks", "name": "Cookbooks"}, {"url": "/cookbook/view/%s" % entity_id, "name": cookbook.name}];
     edit_link = "/cookbook/edit/%s" % cookbook.entity_id
     title = cookbook.name
 
@@ -355,8 +348,11 @@ def render_recipe(entity_id: int):
     cookbook = recipe.parent
 
     # Title section
-    back_link = "/cookbook/view/%s" % cookbook.entity_id
-    back_text = "Back to %s page" % cookbook.name
+    back_links = [
+        {"url": "/cookbooks", "name": "Cookbooks"},
+        {"url": "/cookbook/view/%s" % cookbook.entity_id, "name": cookbook.name},
+        {"url": "/recipe/view/%s" % entity_id, "name": recipe.name}
+    ]
     edit_link = "/recipe/edit/%s" % recipe.entity_id
     title = "%s: %s" % (cookbook.name, recipe.name)
 
@@ -409,9 +405,11 @@ def render_edit_recipe(entity_id: int):
     cookbook = recipe.parent
 
     # Title section
-    back_link = "/cookbook/view/%s" % cookbook.entity_id
-    back_text = "Back to %s page" % cookbook.name
-    view_link = "/recipe/view/%s" % recipe.entity_id
+    back_links = [
+        {"url": "/cookbooks", "name": "Cookbooks"},
+        {"url": "/cookbook/view/%s" % cookbook.entity_id, "name": cookbook.name},
+        {"url": "/recipe/view/%s" % entity_id, "name": recipe.name}
+    ]
     title = "%s: %s" % (cookbook.name, recipe.name)
 
     # Info section
@@ -444,10 +442,15 @@ def render_entry(entity_id: int):
     debug_mode = settings.debug_mode
     entry = entry_manager.get_entity(entity_id)
     recipe = entry.parent
+    cookbook = recipe.parent
 
     # Title section
-    back_link = "/recipe/view/%s" % recipe.entity_id
-    back_text = "Back to %s page" % recipe.name
+    back_links = [
+        {"url": "/cookbooks", "name": "Cookbooks"},
+        {"url": "/cookbook/view/%s" % cookbook.entity_id, "name": cookbook.name},
+        {"url": "/recipe/view/%s" % recipe.entity_id, "name": recipe.name},
+        {"url": "/entry/view/%s" % entity_id, "name": entry.date_string()}
+    ]
     edit_link = "/entry/edit/%s" % entry.entity_id
     title = "Entry for: %s" % recipe.name
 
@@ -468,11 +471,15 @@ def render_edit_entry(entity_id: int):
     debug_mode = settings.debug_mode
     entry = entry_manager.get_entity(entity_id)
     recipe = entry.parent
+    cookbook = recipe.parent
 
     # Title section
-    back_link = "/recipe/view/%s" % recipe.entity_id
-    back_text = "Back to %s page" % recipe.name
-    view_link = "/entry/view/%s" % entry.entity_id
+    back_links = [
+        {"url": "/cookbooks", "name": "Cookbooks"},
+        {"url": "/cookbook/view/%s" % cookbook.entity_id, "name": cookbook.name},
+        {"url": "/recipe/view/%s" % recipe.entity_id, "name": recipe.name},
+        {"url": "/entry/view/%s" % entity_id, "name": entry.date_string()}
+    ]
     title = "Entry for: %s" % recipe.name
 
     # Info section
@@ -516,8 +523,10 @@ def render_city(entity_id: int):
     city = city_manager.get_entity(entity_id)
 
     # Title section
-    back_link = "/cities"
-    back_text = "Back to cities page"
+    back_links = [
+        {"url": "/cities", "name": "Cities"},
+        {"url": "/city/view/%s" % entity_id, "name": city.name}
+    ]
     edit_link = "/city/edit/%s" % city.entity_id
     title = city.name
 
@@ -559,9 +568,10 @@ def render_edit_city(entity_id: int):
     city = city_manager.get_entity(entity_id)
 
     # Title section
-    back_link = "/cities"
-    back_text = "Back to cities page"
-    view_link = "/city/view/%s" % city.entity_id
+    back_links = [
+        {"url": "/cities", "name": "Cities"},
+        {"url": "/city/view/%s" % entity_id, "name": city.name}
+    ]
     title = city.name
 
     # Info section
@@ -591,8 +601,11 @@ def render_restaurant(entity_id: int):
     city = restaurant.parent
 
     # Title section
-    back_link = "/city/view/%s" % city.entity_id
-    back_text = "Back to %s page" % city.name
+    back_links = [
+        {"url": "/cities", "name": "Cities"},
+        {"url": "/city/view/%s" % city.entity_id, "name": city.name},
+        {"url": "/restaurant/view/%s" % entity_id, "name": restaurant.name}
+    ]
     edit_link = "/restaurant/edit/%s" % restaurant.entity_id
     title = "%s: %s" % (city.name, restaurant.name)
 
@@ -640,9 +653,11 @@ def render_edit_restaurant(entity_id: int):
     city = restaurant.parent
 
     # Title section
-    back_link = "/city/view/%s" % city.entity_id
-    back_text = "Back to %s page" % city.name
-    view_link = "/restaurant/view/%s" % restaurant.entity_id
+    back_links = [
+        {"url": "/cities", "name": "Cities"},
+        {"url": "/city/view/%s" % city.entity_id, "name": city.name},
+        {"url": "/restaurant/view/%s" % entity_id, "name": restaurant.name}
+    ]
     title = "%s: %s" % (city.name, restaurant.name)
 
     # Info section
@@ -670,10 +685,15 @@ def render_dish(entity_id: int):
     debug_mode = settings.debug_mode
     dish = dish_manager.get_entity(entity_id)
     restaurant = dish.parent
+    city = restaurant.parent
 
     # Title section
-    back_link = "/restaurant/view/%s" % restaurant.entity_id
-    back_text = "Back to %s page" % restaurant.name
+    back_links = [
+        {"url": "/cities", "name": "Cities"},
+        {"url": "/city/view/%s" % city.entity_id, "name": city.name},
+        {"url": "/restaurant/view/%s" % restaurant.entity_id, "name": restaurant.name},
+        {"url": "/dish/view/%s" % entity_id, "name": dish.name}
+    ]
     edit_link = "/dish/edit/%s" % dish.entity_id
     title = "%s: %s" % (restaurant.name, dish.name)
 
@@ -725,11 +745,15 @@ def render_edit_dish(entity_id: int):
     debug_mode = settings.debug_mode
     dish = dish_manager.get_entity(entity_id)
     restaurant = dish.parent
+    city = restaurant.parent
 
     # Title section
-    back_link = "/restaurant/view/%s" % restaurant.entity_id
-    back_text = "Back to %s page" % restaurant.name
-    view_link = "/dish/view/%s" % dish.entity_id
+    back_links = [
+        {"url": "/cities", "name": "Cities"},
+        {"url": "/city/view/%s" % city.entity_id, "name": city.name},
+        {"url": "/restaurant/view/%s" % restaurant.entity_id, "name": restaurant.name},
+        {"url": "/dish/view/%s" % entity_id, "name": dish.name}
+    ]
     title = "%s: %s" % (restaurant.name, dish.name)
 
     # Info section
@@ -761,13 +785,20 @@ def render_dish_entry(entity_id: int):
 
     debug_mode = settings.debug_mode
     dish_entry = dish_entry_manager.get_entity(entity_id)
-    recipe = dish_entry.parent
+    dish = dish_entry.parent
+    restaurant = dish.parent
+    city = restaurant.parent
 
     # Title section
-    back_link = "/dish/view/%s" % recipe.entity_id
-    back_text = "Back to %s page" % recipe.name
+    back_links = [
+        {"url": "/cities", "name": "Cities"},
+        {"url": "/city/view/%s" % city.entity_id, "name": city.name},
+        {"url": "/restaurant/view/%s" % restaurant.entity_id, "name": restaurant.name},
+        {"url": "/dish/view/%s" % dish.entity_id, "name": dish.name},
+        {"url": "/dishentry/view/%s" % entity_id, "name": dish_entry.date_string()}
+    ]
     edit_link = "/dishentry/edit/%s" % dish_entry.entity_id
-    title = "Entry for: %s" % recipe.name
+    title = "Entry for: %s" % dish.name
 
     # Info section
     info_dicts = [
@@ -786,11 +817,17 @@ def render_edit_dish_entry(entity_id: int):
     debug_mode = settings.debug_mode
     dish_entry = dish_entry_manager.get_entity(entity_id)
     dish = dish_entry.parent
+    restaurant = dish.parent
+    city = restaurant.parent
 
     # Title section
-    back_link = "/dish/view/%s" % dish.entity_id
-    back_text = "Back to %s page" % dish.name
-    view_link = "/dishentry/view/%s" % dish_entry.entity_id
+    back_links = [
+        {"url": "/cities", "name": "Cities"},
+        {"url": "/city/view/%s" % city.entity_id, "name": city.name},
+        {"url": "/restaurant/view/%s" % restaurant.entity_id, "name": restaurant.name},
+        {"url": "/dish/view/%s" % dish.entity_id, "name": dish.name},
+        {"url": "/dishentry/view/%s" % entity_id, "name": dish_entry.date_string()}
+    ]
     title = "Entry for: %s" % dish.name
 
     # Info section

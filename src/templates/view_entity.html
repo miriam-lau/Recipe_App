@@ -1,13 +1,17 @@
 {% extends "layout.html" %}
 {% block body %}
 
-{% if back_link %}
-<a href="{{back_link}}">{{back_text}}</a><br/>
-{% endif %}
-{% if edit_link %}
-<a href="{{edit_link}}">Edit page</a><br/>
-{% endif %}
-<h1>{{title}}</h1>
+{% for back_link in back_links %}
+  <a href="{{back_link.url}}">{{back_link.name}}</a>
+  {% if not loop.last %}
+    >
+  {% endif %}
+{% endfor %}
+<h1>{{title}}
+  {% if edit_link %}
+    <a href="{{edit_link}}"><i class="fas fa-edit"></i></a><br/>
+  {% endif %}
+</h1>
 {% if has_info_template %}
 {% if info_image_name %}
 <img class="info-image" src="{{info_image_name}}"/>

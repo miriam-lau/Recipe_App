@@ -1,8 +1,12 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<a href="{{back_link}}">{{back_text}}</a><br/>
-<a href="{{view_link}}">View page</a><br/>
+{% for back_link in back_links %}
+  <a href="{{back_link.url}}">{{back_link.name}}</a>
+  {% if not loop.last %}
+    >
+  {% endif %}
+{% endfor %}
 <h1>{{title}}</h1>
 <div class="info">
   <table class="infotable">
