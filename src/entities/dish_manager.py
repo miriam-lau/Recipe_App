@@ -2,6 +2,7 @@ from .dish import Dish
 from .entity_manager import EntityManager
 from typing import Dict
 import os
+from .entity import Entity
 
 from src.settings.settings import Settings
 

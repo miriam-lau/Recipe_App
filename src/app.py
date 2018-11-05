@@ -363,7 +363,7 @@ def render_recipe(entity_id: int):
     # Info section
     info_image_name = None
     if recipe.has_image:
-        info_image_name = "/serveimage/%s.jpg" % recipe.entity_id
+        info_image_name = "/serveimage/recipe/%s.jpg" % recipe.entity_id
 
     info_dicts = [
         create_info_dict("Best rating", str(recipe.get_best_rating())),
@@ -494,9 +494,15 @@ def render_edit_entry(entity_id: int):
     return render_template('edit_entity.html', **locals())
 
 
-@app.route('/serveimage/<path:filename>')
-def serve_image(filename):
-    return send_from_directory(settings.recipe_app_directory + "RecipeImages/",
+@app.route('/serveimage/<entity_type>/<path:filename>')
+def serve_image(filename, entity_type):
+    path = None
+    if entity_type == "dish":
+        path = "DishImages/"
+    elif entity_type == "recipe":
+        path = "RecipeImages/"
+
+    return send_from_directory(settings.recipe_app_directory + path,
                                filename, as_attachment=True)
 
 
@@ -674,7 +680,7 @@ def render_dish(entity_id: int):
     # Info section
     info_image_name = None
     if dish.has_image:
-        info_image_name = "/serveimage/%s.jpg" % dish.entity_id
+        info_image_name = "/serveimage/dish/%s.jpg" % dish.entity_id
 
     info_dicts = [
         create_info_dict("Best rating", str(dish.get_best_rating())),
@@ -738,6 +744,8 @@ def render_edit_dish(entity_id: int):
                               "required pattern=true|false|True|False"),
         create_edit_info_dict("Notes", Dish.NOTES_HEADER, dish.notes)
     ]
+
+    image_upload_link = "/dish/uploadimage/%s" % entity_id
 
     delete_link = "/delete/dish/%s" % dish.entity_id
     delete_entity_type = "dish"
