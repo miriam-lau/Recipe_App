@@ -14,6 +14,7 @@
 .info-image {
     display: block;
     margin: auto;
+    height: 500px;
 }
 
 /* Header */
@@ -139,20 +140,77 @@ input[type=submit]:hover {
 }
 
 .footer {
-  height: 40px;
-  margin-top: 30px;
-  background-color: blue;
+  height: 30px;
 }
 
+.index {
+  width: 20%;
+  float: left;
+}
+
+.header ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.header li {
+    float: left;
+}
+
+.header li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+.header li a:hover {
+    background-color: #111;
+}
+
+.debug {
+  color: red;
+  font-size: 20px;
+}
+
+.header {
+  margin-bottom: 30px;
+}
 </style>
 
 </head>
 <body>
+    <div class="debug">
     {% if debug_mode %}
-    Debug mode
+      Debug
     {% else %}
-    Production mode
-    {% endif %}<br/>
+      Production
+    {% endif %}
+    </div><br/>
+    <div class="header">
+      <ul>
+        <li>
+          <a href="/cookbooks">Cookbooks</a>
+        </li>
+        <li>
+          <a href="/cities">Cities</a>
+        </li>
+        <li>
+          <a href="/search_recipes">Search Recipes</a>
+        </li>
+        <li>
+          <a href="/search_restaurants">Search Restaurants</a>
+        </li>
+        <li>
+          <a href="/search_dishes">Search Dishes</a>
+        </li>
+      </ul>
+    </div>
     {% block body %}{% endblock %}
     <div class="footer">&nbsp;</div>
 </body>

@@ -274,8 +274,8 @@ def render_edit_cookbook(entity_id: int):
     cookbook = cookbook_manager.get_entity(entity_id)
 
     # Title section
-    back_link = "/"
-    back_text = "Back to main page"
+    back_link = "/cookbooks"
+    back_text = "Back to cookbooks page"
     view_link = "/cookbook/view/%s" % cookbook.entity_id
     title = cookbook.name
 
@@ -559,8 +559,8 @@ def render_edit_city(entity_id: int):
     city = city_manager.get_entity(entity_id)
 
     # Title section
-    back_link = "/"
-    back_text = "Back to main page"
+    back_link = "/cities"
+    back_text = "Back to cities page"
     view_link = "/city/view/%s" % city.entity_id
     title = city.name
 
