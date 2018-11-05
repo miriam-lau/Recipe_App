@@ -13,6 +13,7 @@ from .entities.entry import Entry
 from .entities.city import City
 from .entities.restaurant import Restaurant
 from .entities.dish import Dish
+from .entities.entity import Entity
 from .entities.dish_entry import DishEntry
 import datetime
 from typing import Optional
@@ -176,7 +177,7 @@ def delete_entity(entity_type, entity_id: int):
 
 @app.route("/recipe/uploadimage/<int:entity_id>", methods=["POST", "GET"])
 def upload_recipe_image(entity_id: int):
-    recipe_manager.upload_recipe_image(entity_id, request.files['file'])
+    recipe_manager.upload_image(entity_id, request.files['file'])
     return redirect(url_for("render_recipe", entity_id=entity_id))
 
 
@@ -421,10 +422,12 @@ def render_edit_recipe(entity_id: int):
         create_edit_info_dict("Category", Recipe.CATEGORY_HEADER, recipe.category),
         create_edit_info_dict("Priority", Recipe.PRIORITY_HEADER, str(recipe.priority),
                               "required min=0 max=4 step=1 type=number"),
-        create_edit_info_dict("Has image", Recipe.HAS_IMAGE_HEADER, str(recipe.has_image),
+        create_edit_info_dict("Has image", Entity.HAS_IMAGE_HEADER, str(recipe.has_image),
                               "required pattern=true|false|True|False"),
         create_edit_info_dict("Notes", Recipe.NOTES_HEADER, recipe.notes)
     ]
+
+    image_upload_link = "/recipe/uploadimage/%s" % entity_id
 
     delete_link = "/delete/recipe/%s" % recipe.entity_id
     delete_entity_type = "recipe"
@@ -731,7 +734,7 @@ def render_edit_dish(entity_id: int):
         create_edit_info_dict("Category", Dish.CATEGORY_HEADER, dish.category),
         create_edit_info_dict("Priority", Dish.PRIORITY_HEADER, str(dish.priority),
                               "required min=0 max=4 step=1 type=number"),
-        create_edit_info_dict("Has image", Dish.HAS_IMAGE_HEADER, str(dish.has_image),
+        create_edit_info_dict("Has image", Entity.HAS_IMAGE_HEADER, str(dish.has_image),
                               "required pattern=true|false|True|False"),
         create_edit_info_dict("Notes", Dish.NOTES_HEADER, dish.notes)
     ]
@@ -887,13 +890,3 @@ def create_add_child_dict(name: str, child_id: str, value: str, placeholder: str
 
 
 initialize_app()
-"""
-    TODO: Reincorporate this back into the view_entity page.
-    <form action="/recipe/uploadimage/{{recipe.entity_id}}" method=post enctype=multipart/form-data>
-      <tr>
-        <td><input type="file" name="file"></td>
-        <td><input type="submit" value="Upload">
-      </tr>
-    </form>
-"""
-

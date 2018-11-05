@@ -25,7 +25,7 @@ class DishManager(EntityManager):
     # TODO: Needs a test.
     def modify_entity(self, entity_id: int, data: Dict[str, str]):
         EntityManager.modify_entity(self, entity_id, data)
-        if data[Dish.HAS_IMAGE_HEADER].lower() != 'true':
+        if data[Entity.HAS_IMAGE_HEADER].lower() != 'true':
             image_filename = self.get_image_filename(entity_id)
             if os.path.exists(image_filename):
                 os.remove(image_filename)

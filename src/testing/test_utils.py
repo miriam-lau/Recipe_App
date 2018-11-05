@@ -48,7 +48,7 @@ def default_recipe_dict_with_overrides(overrides: Dict[str, str] = {}) -> Dict[s
     recipe_dict = {
         Recipe.NAME_HEADER: "default name",
         Recipe.PRIORITY_HEADER: "2",
-        Recipe.HAS_IMAGE_HEADER: "False",
+        Entity.HAS_IMAGE_HEADER: "False",
         Recipe.CATEGORY_HEADER: "default category",
         Recipe.NOTES_HEADER: "default notes"
     }

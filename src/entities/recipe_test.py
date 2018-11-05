@@ -36,7 +36,7 @@ class TestRecipe(unittest.TestCase):
         update_dict = {
             Recipe.NAME_HEADER: "Ice cream",
             Recipe.PRIORITY_HEADER: "3",
-            Recipe.HAS_IMAGE_HEADER: "False",
+            Entity.HAS_IMAGE_HEADER: "False",
             Recipe.CATEGORY_HEADER: "Dairy",
             Recipe.NOTES_HEADER: "Good",
         }

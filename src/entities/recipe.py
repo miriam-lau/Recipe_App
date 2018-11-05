@@ -7,7 +7,6 @@ from .entity import Entity
 class Recipe(Entity):
     NAME_HEADER = "name"
     PRIORITY_HEADER = "priority"
-    HAS_IMAGE_HEADER = "has image"
     CATEGORY_HEADER = "category"
     NOTES_HEADER = "notes"
 
@@ -30,7 +29,7 @@ class Recipe(Entity):
             Entity.PARENT_ID_HEADER: str(self.parent.entity_id),
             Recipe.NAME_HEADER: self.name,
             Recipe.PRIORITY_HEADER: str(self.priority),
-            Recipe.HAS_IMAGE_HEADER: str(self.has_image),
+            Entity.HAS_IMAGE_HEADER: str(self.has_image),
             Recipe.CATEGORY_HEADER: self.category,
             Recipe.NOTES_HEADER: self.notes
         }
@@ -40,8 +39,8 @@ class Recipe(Entity):
             self.name = data[Recipe.NAME_HEADER]
         if Recipe.PRIORITY_HEADER in data:
             self.priority = int(data[Recipe.PRIORITY_HEADER])
-        if Recipe.HAS_IMAGE_HEADER in data:
-            self.has_image = data[Recipe.HAS_IMAGE_HEADER].lower() == "true"
+        if Entity.HAS_IMAGE_HEADER in data:
+            self.has_image = data[Entity.HAS_IMAGE_HEADER].lower() == "true"
         if Recipe.CATEGORY_HEADER in data:
             self.category = data[Recipe.CATEGORY_HEADER]
         if Recipe.NOTES_HEADER in data:
@@ -50,7 +49,7 @@ class Recipe(Entity):
     @staticmethod
     def file_headers():
         return [Entity.ENTITY_ID_HEADER, Entity.PARENT_ID_HEADER, Recipe.NAME_HEADER, Recipe.PRIORITY_HEADER, \
-                Recipe.HAS_IMAGE_HEADER, Recipe.CATEGORY_HEADER, Recipe.NOTES_HEADER]
+                Entity.HAS_IMAGE_HEADER, Recipe.CATEGORY_HEADER, Recipe.NOTES_HEADER]
 
     @property
     def entries(self):

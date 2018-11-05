@@ -2,6 +2,7 @@ import csv
 from typing import Dict, Type, Optional
 from .entity import Entity
 from .files.files import atomic_write
+import os
 
 
 class EntityManager:
@@ -69,6 +70,10 @@ class EntityManager:
         entity = self.get_entity(entity_id)
         entity.modify(values)
         self._write_entities_to_file()
+        if Entity.HAS_IMAGE_HEADER in values and values[Entity.HAS_IMAGE_HEADER].lower() != 'true':
+            image_filename = self.get_image_filename(entity_id)
+            if os.path.exists(image_filename):
+                os.remove(image_filename)
 
     def delete_entity(self, entity_id: int):
         entity = self.get_entity(entity_id)
@@ -109,3 +114,15 @@ class EntityManager:
 
     def get_entity(self, entity_id: int):
         return self._entity_map[entity_id]
+
+
+    # file is of type file found in flask
+    # TODO: Needs a test.
+    def upload_image(self, entity_id: int, file):
+        entity = self.get_entity(entity_id)
+        file.save(self.get_image_filename(entity_id))
+        entity.has_image = True
+        self._write_entities_to_file()
+
+    def get_image_filename(self, entity_id):
+        pass

@@ -6,6 +6,7 @@ class Entity:
 
     ENTITY_ID_HEADER = "entity id"
     PARENT_ID_HEADER = "parent id"
+    HAS_IMAGE_HEADER = "has image"
 
     def __init__(self, entity_id, parent: Optional[Entity]):
         self._entity_id: int = entity_id

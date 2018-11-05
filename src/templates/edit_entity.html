@@ -18,6 +18,14 @@
       {% endfor %}
       <tr><td></td><td><input type="submit" value="Submit" formmethod="post"></td></tr>
     </form>
+    {% if image_upload_link %}
+    <form action="{{image_upload_link}}" method=post enctype=multipart/form-data>
+      <tr>
+        <td><input type="file" name="file"></td>
+        <td><input type="submit" value="Upload">
+      </tr>
+    </form>
+    {% endif %}
     <form action="{{delete_link}}">
       <tr><td>Type "delete" to delete this {{delete_entity_type}}</td><td>
         <input type="text" id="delete" pattern="delete" name="delete"/></td>

@@ -6,7 +6,6 @@ from .entity import Entity
 class Dish(Entity):
     NAME_HEADER = "name"
     PRIORITY_HEADER = "priority"
-    HAS_IMAGE_HEADER = "has image"
     CATEGORY_HEADER = "category"
     NOTES_HEADER = "notes"
 
@@ -29,7 +28,7 @@ class Dish(Entity):
             Entity.PARENT_ID_HEADER: str(self.parent.entity_id),
             Dish.NAME_HEADER: self.name,
             Dish.PRIORITY_HEADER: str(self.priority),
-            Dish.HAS_IMAGE_HEADER: str(self.has_image),
+            Entity.HAS_IMAGE_HEADER: str(self.has_image),
             Dish.CATEGORY_HEADER: self.category,
             Dish.NOTES_HEADER: self.notes
         }
@@ -39,8 +38,8 @@ class Dish(Entity):
             self.name = data[Dish.NAME_HEADER]
         if Dish.PRIORITY_HEADER in data:
             self.priority = int(data[Dish.PRIORITY_HEADER])
-        if Dish.HAS_IMAGE_HEADER in data:
-            self.has_image = data[Dish.HAS_IMAGE_HEADER].lower() == "true"
+        if Entity.HAS_IMAGE_HEADER in data:
+            self.has_image = data[Entity.HAS_IMAGE_HEADER].lower() == "true"
         if Dish.CATEGORY_HEADER in data:
             self.category = data[Dish.CATEGORY_HEADER]
         if Dish.NOTES_HEADER in data:
@@ -49,7 +48,7 @@ class Dish(Entity):
     @staticmethod
     def file_headers():
         return [Entity.ENTITY_ID_HEADER, Entity.PARENT_ID_HEADER, Dish.NAME_HEADER, Dish.PRIORITY_HEADER, \
-                Dish.HAS_IMAGE_HEADER, Dish.CATEGORY_HEADER, Dish.NOTES_HEADER]
+                Entity.HAS_IMAGE_HEADER, Dish.CATEGORY_HEADER, Dish.NOTES_HEADER]
 
     @property
     def dish_entries(self):
